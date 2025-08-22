@@ -1,4 +1,4 @@
-# Microsoft Defender for Endpoint Azure Connector for VMRay Advanced Malware Sandbox
+# Microsoft Sentinel Azure Connectors for ANY.RUN Interactive Malware Sandbox
 
 ## Overview
 
