@@ -11,11 +11,6 @@
 
 Данный сценарий извлекает URL's from incidents и отпрвляет его на анализ в ANY.RUN Sandbox, для обогащения вердиктом.
 
-Requirments:
-- ANY.RUN API-Key
-- Microsoft Sentinel
-- Azure Logic App (Flex Consumption plan) 
-
 [Open connector page](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-URL)
 
 ### Analyze files from Microsoft Sentinel incidents
