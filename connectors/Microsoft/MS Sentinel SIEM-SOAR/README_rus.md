@@ -7,9 +7,7 @@
 В конечном итоге инцидент в вашем Microsoft Sentinel будет содержать вердикт, Threat score и ссылку на анализ объекта в UI ANY.RUN, где вы можете более детально ознакомиться с тем, что происходит при использовании объекта в реальной инфраструктуре.
 Также ваш Threat Intelligence портал в Sentinel будет обогащаться IoC's, извлеченнымии в процессе анализа в Sandbox.
 
-## Connector capabilities
-
-### Analyze URL's from Microsoft Sentinel incidents
+## Analyze URL's from Microsoft Sentinel incidents
 
 Данный сценарий извлекает URL's from incidents и отпрвляет его на анализ в ANY.RUN Sandbox, для обогащения вердиктом.
 
