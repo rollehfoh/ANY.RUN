@@ -18,7 +18,7 @@ Requirments:
 - Microsoft Sentinel
 - Azure Logic App (Flex Consumption plan) 
 
-[Open connector page]
+[Open connector page](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-URL)
 
 ### Analyze files from Microsoft Sentinel incidents
 
