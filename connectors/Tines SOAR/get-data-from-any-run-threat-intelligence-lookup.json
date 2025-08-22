@@ -1,0 +1,952 @@
+{
+  "schema_version": 27,
+  "standard_lib_version": 83,
+  "action_runtime_version": 53,
+  "name": "Get data from ANY.RUN Threat Intelligence Lookup",
+  "description": null,
+  "guid": "44f54c3bb5f461f85b6525c4bce069e3",
+  "slug": "get_data_from_any_run_threat_intelligence_lookup",
+  "agents": [
+    {
+      "type": "Agents::HTTPRequestAgent",
+      "name": "Get data from ANY.RUN TI Lookup",
+      "disabled": false,
+      "description": null,
+      "guid": "37f59a16e6709bfa1658e8c659d0ea58",
+      "origin_story_identifier": "cloud:eabc78bc0eed3904c959330c5dc766b4:8269c1e0e5a66b116c98e50d822ac20c",
+      "options": {
+        "url": "https://api.any.run/v1/intelligence/api/search",
+        "content_type": "application_json",
+        "method": "post",
+        "payload": {
+          "query": "<<define_parameters.query>>",
+          "startDate": "<<define_parameters.startDate>>"
+        },
+        "headers": {
+          "Authorization": "API-Key <<CREDENTIAL.any_run>>",
+          "x-anyrun-connector": "Tines:2.0.0"
+        }
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Define Parameters",
+      "disabled": false,
+      "description": null,
+      "guid": "0da08e3d7446b5dab16e1bb6a0c62a7b",
+      "origin_story_identifier": "cloud:eabc78bc0eed3904c959330c5dc766b4:44f54c3bb5f461f85b6525c4bce069e3",
+      "options": {
+        "mode": "message_only",
+        "loop": false,
+        "payload": {
+          "query": "<<DEFAULT(declare_query_ti_lookup.body.query, input_a_parameter_by_webhook.body.query)>>",
+          "startDate": "<<define_period_60_days.output.startDate>>"
+        }
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::RunScriptAgent",
+      "name": "Define period 60 days",
+      "disabled": false,
+      "description": null,
+      "guid": "b01219f01d2327a7da313ef673f1e0b9",
+      "origin_story_identifier": "cloud:eabc78bc0eed3904c959330c5dc766b4:44f54c3bb5f461f85b6525c4bce069e3",
+      "options": {
+        "language": "python",
+        "script": "from datetime import datetime, timedelta\n\ndef main(_):  # underscore since we don't use the parameter\n    # Get date 60 days ago\n    past_date = datetime.now() - timedelta(days=60)\n    \n    # Format the date as YYYY-MM-DD and return with endDate key\n    return {\n        \"startDate\": past_date.strftime('%Y-%m-%d')\n    } ",
+        "requirements": "requests==2.32.3",
+        "timeout": "10",
+        "emit_failure_event": true
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::FormAgent",
+      "name": "Declare Query TI Lookup",
+      "disabled": false,
+      "description": null,
+      "guid": "6dea7eacd3a326b19639e0cc285a4e5a",
+      "origin_story_identifier": "cloud:eabc78bc0eed3904c959330c5dc766b4:44f54c3bb5f461f85b6525c4bce069e3",
+      "options": {
+        "fields": "",
+        "mode": "success_page",
+        "submissionMessage": "Thank you for your submission",
+        "visibility": "tenant",
+        "anonymize": false,
+        "auto_submit": false,
+        "page_logo": {
+          "contents": "iVBORw0KGgoAAAANSUhEUgAAAFQAAAAYCAYAAABk8drWAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAARCSURBVHgB7VhLctpAEB1k7LVyA/kEgRMEn8BQ5e8qcALjE1icAPsEkJW/VeATwA1QTmDlBCE7l3/kPblbTIiMJcVOeaFXBRrN9Mz0vOnu6ZExBQoUKFCgwAdByX4ZDAbuw8PDwWw2a+LVk+rAcZxgZWWl02g0QpMSl5eXXRlnvLq62kLfqcmIi4uLZqlU+lwulztJ/aGvJ/p+39nZ6cu8R3j30c/f3t7umP8MRwtXV1df7+/vb6iMmZNJVJ6enppom5ydnbVNCpAIjENZF786Fn1kMgLE1PDocRz0HyTJQKe2zNOjMbBO3o1sZgS2Ybw29KqYd0ZEKMg8AGl980zAS3BhqV0Sv0Qmsho8/iCQi5T6XED/WtJmoj7W9/b2Vgk9gXUGWM+JtoF4H/VdFEdK/HvB4UIxuZ+2A2SPlykFayLhXkJ9z/wDsJlHaTZld3fXR4ho7O3tHWudRbyrxC+Ca+L4rxFuyXlJ7c7j4yOtKcuuuXd3d+0XJvMkZPwFWpm4cV64sLTBawuGB/UYus7Pz7vUB3NOYLGxV+EsuIHrT2ydITNCn5/sxyfaKdO0x02Qo8wNY7Yt52ChmeOKraAN2ZxlyBxLZb6xFCuvxWN4UE361PGYYn1egli0KSQJxIy42VIfso959rCehplFOYYUkY0MCJvn68C5CDUJLi2ho7msExVa3Pk0QL9veJxIuZ3W0pkZIMNYR3GodSBjA3VVlsUAPK1HprCOuqoQpmHGRV3FzNfcQvZQpSx06YjcFx3fMW8E7mBK0W6egwEk+ObZKkjqIO0hR1Ih/0vfYeGhpmAwgLpUX4OkMQv7+/shCNV0i+GtBrlYX5Kn2QLjNTeCMVvby6KkZ7IhsF/E6jyTDhqDfZMBJAHzUHHGP1cOuR8mJ05PTz0zPzs2MfZM20BgLAfCXGzmEAYTWbN4YRPy3JQxNusauo1V3hF3yopg4T1TbISSB3nSKLhZgL6HLDN8oLxp3ga8vPSTfnD3MTcTzw1ypeHASI6NX88+5Jy1tTWmF1luMRw8voHIKeeZbHBTHGCJgGseW4dU7pySrm3m6w62trZa9o/kQcdrkTNwaw9c8fZVhcV+oqtb5FY0DDgSTw7TKgKT7+gkhH0jyQK6Tt4kG+7eMtmMIAasLj6ELULqtsfw8oJ1jdA+YGjgLYvvPCcoR84Yc63+UWiIxucf78HiSsuUZFvLTpgF73rzSAI3FMS0MnQJtUCSmD/KdwvdGFfyygnb5NZIBGI8ShzTpwnzUcpaWU2oh1p8ytOVmDIsxIlImOkB0w/9AGFDFhaabJhCmcNlH0zgYoGxXHKxHW451LSF86vXQPdQ6sYqy7BmhYlofs7NPpImaZumR5y3jzVvsFLI0nW6ko9WRG6oaVg0v/nA0JCwjHhx1aktw3jGA+yF8dykr2ZisRVsZLg4XpIcSGWOG+b5ilagQIECBZLxG5sJ41WbSDouAAAAAElFTkSuQmCC\n",
+          "display_logo": false,
+          "name": "nites.jpeg",
+          "type": "image/jpeg"
+        },
+        "page_width": "auto",
+        "pages_action_color": "#00baf5",
+        "pages_appearance_mode": "light",
+        "pages_background_color": "#1a0e59",
+        "auto_close_tab_on_submit": false,
+        "url_identifier": "7be44bf9c8124eb3e71cbc118174df18"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "No TI data for this Query",
+      "disabled": false,
+      "description": null,
+      "guid": "0eaf76db73cf89442385c0486fe8e21c",
+      "origin_story_identifier": "cloud:eabc78bc0eed3904c959330c5dc766b4:44f54c3bb5f461f85b6525c4bce069e3",
+      "options": {
+        "rules": [
+          {
+            "type": "field==value",
+            "value": "200",
+            "path": "<<get_data_from_any_run_ti_lookup.status>>"
+          },
+          {
+            "path": "<< get_data_from_any_run_ti_lookup.body.summary.lastSeen>>",
+            "type": "field==null"
+          }
+        ]
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "TI data found this Query",
+      "disabled": false,
+      "description": null,
+      "guid": "84de0ef1c067539a6ef4deaeddfb76ac",
+      "origin_story_identifier": "cloud:eabc78bc0eed3904c959330c5dc766b4:44f54c3bb5f461f85b6525c4bce069e3",
+      "options": {
+        "rules": [
+          {
+            "type": "field==value",
+            "value": "200",
+            "path": "<<get_data_from_any_run_ti_lookup.status>>"
+          },
+          {
+            "path": "<< get_data_from_any_run_ti_lookup.body.summary.lastSeen>>",
+            "type": "field!=null"
+          }
+        ]
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null
+    },
+    {
+      "type": "Agents::TriggerAgent",
+      "name": "Query is incorrect",
+      "disabled": false,
+      "description": null,
+      "guid": "4a6fb277cb576a5beb8a126a67065868",
+      "origin_story_identifier": "cloud:eabc78bc0eed3904c959330c5dc766b4:44f54c3bb5f461f85b6525c4bce069e3",
+      "options": {
+        "rules": [
+          {
+            "path": "<<get_data_from_any_run_ti_lookup.status>>",
+            "type": "field!=value",
+            "value": "200"
+          }
+        ]
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null
+    },
+    {
+      "type": "Agents::WebhookAgent",
+      "name": "Input a parameter by Webhook",
+      "disabled": false,
+      "description": null,
+      "guid": "4195aa00e0aad601cf65dae9e6d73b3f",
+      "origin_story_identifier": "cloud:eabc78bc0eed3904c959330c5dc766b4:44f54c3bb5f461f85b6525c4bce069e3",
+      "options": {
+        "path": "6a0e1419caf0e734160f686b8873aefb",
+        "secret": "858d363b131739f8a346b1e349944ea6",
+        "verbs": "get,post"
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null
+    },
+    {
+      "type": "Agents::EmailAgent",
+      "name": "Email no TI data for this Query",
+      "disabled": false,
+      "description": null,
+      "guid": "cd4acab1d8378e234a1ae6db2f6bcbf0",
+      "origin_story_identifier": "cloud:eabc78bc0eed3904c959330c5dc766b4:44f54c3bb5f461f85b6525c4bce069e3",
+      "options": {
+        "recipients": [
+          "example@mail.com"
+        ],
+        "reply_to": "example@mail.com",
+        "sender_name": "Example",
+        "subject": "NO DATA FOR YOUR TI LOOKUP QUERY",
+        "body": "<body style=\"margin: 0;background-color: #FCF9F5;\">\n        <center class=\"wrapper\" style=\"width: 100%;table-layout: fixed;background-color: #FCF9F5;padding-bottom: 40px;\">\n          <table class=\"main\" align=\"center\" style=\"border-spacing: 0px;margin: 0 auto;width: 100%;max-width: 600px;background-color: #FFFFFF;font-family: sans-serif;color: #4a4a4a;\">\n            <!-- HEADER -->\n            <tr>\n              <td style=\"padding: 0;\">\n                <table width=\"100%\" style=\"border-spacing: 0;\">\n                  <tr>\n                    <td style=\"text-align: center; padding: 8px 0 4px; border-top: 2px; border-bottom: 3px solid;\">\n                      <a href=\"#\"><img src=\"https://ci6.googleusercontent.com/proxy/nPFmlOl5u2tp9Og0HFrQEkCT2L2vaxxB--579Tp8GS4bvNHJR35InJt8XNXpMdI_FuElqu-m85JZAWn7nKQxNkbolPLRzHDUmruQVIGr-t-pYv92=s0-d-e1-ft#https://www.tines.com/logos/logo-tines-with-backdrop-light@2x.png\" width=\"100\" alt=\"Tines Logo\" style=\"border: 0;\"></a>\n                    </td>\n                  </tr>\n                </table>\n              </td>\n            </tr>\n            <!-- MAIN CONTENT -->\n            <tr>\n              <td style=\"padding: 0;\">\n                <table width=\"100%\" style=\"border-spacing: 0;\">\n                  <tr>\n                    <td style=\"padding: 35px 0 40px;text-align: center;\">\n                      <table style=\"border-spacing: 0;width: 100%;max-width: 500px;margin: 0 auto;\">\n                        <tr>\n                          <td style=\"padding: 20px;\">\n                            <!-- Info Message -->\n                            <h1 style=\"color: #32c1e3;font-size: 24px;margin-bottom: 20px;\">🔍 No Results Found in ANY.RUN TI Lookup</h1>\n                            <p style=\"font-size: 16px;line-height: 1.6;color: #4a4a4a;margin-bottom: 30px;\">\n                              Dear user,<br><br>\n                              The ANY.RUN Threat Intelligence service has processed your lookup request, but no reports were found matching your search parameters.\n                            </p>\n                            <!-- Query Details -->\n                            <div style=\"background-color: #f8f8f8; padding: 20px; border-radius: 6px; margin-bottom: 25px; text-align: left; border-left: 4px solid #FF4444;\">\n                              <p style=\"font-family: 'Courier New', monospace; font-size: 14px; margin: 0; color: #666;\">\n                                <strong>Query:</strong> <<build_ti_results.query>><br>\n                                <strong>Message:</strong> No data found in ANY.RUN Threat Intelligence for this indicator.\n                              </p>\n                            </div>\n                            <!-- Action Button -->\n                            <a href=\"https://aged-meadow-7143.tines.com/stories/14499\" style=\"background-color: #2C9469;color: #ffffff;text-decoration: none;padding: 12px 30px;border-radius: 8px;font-weight: bold;display: inline-block;margin-top: 20px;\">View Tines Story</a>\n                          </td>\n                        </tr>\n                      </table>\n                    </td>\n                  </tr>\n                </table>\n              </td>\n            </tr>\n            <!-- FOOTER -->\n            <tr>\n              <td style=\"padding: 0;\">\n                <table width=\"100%\" style=\"border-spacing: 0;\">\n                  <tr>\n                    <td style=\"text-align: center; padding: 20px 0; border-top: 1px solid #eee;\">\n                      <a href=\"#\"><img src=\"https://ci4.googleusercontent.com/proxy/Nu-KkbA1FI6A_6Vr064Q-PftJ6lv4BBas9_GToS_lZUOFGS4Ye2-bw-rJlnEG_UGF3iP0brWs9H5W2mWt9DBOjHI9sGxIMtp1wXfXGg=s0-d-e1-ft#https://www.tines.com/logos/tines-icon-light-circle@2x.png\" width=\"40\" alt=\"Tines Icon\" style=\"border: 0;\"></a>\n                      <p style=\"font-size: 12px;color: #666;margin-top: 10px;\">\n                        This is an automated message from your security automation workflow\n                      </p>\n                    </td>\n                  </tr>\n                </table>\n              </td>\n            </tr>\n          </table>\n        </center>\n      </body>",
+        "advanced_html": true
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EmailAgent",
+      "name": "Email incorrect Query",
+      "disabled": false,
+      "description": null,
+      "guid": "2bd4cad664203d3873898c4cad0c9536",
+      "origin_story_identifier": "cloud:eabc78bc0eed3904c959330c5dc766b4:44f54c3bb5f461f85b6525c4bce069e3",
+      "options": {
+        "recipients": [
+          "example@mail.com"
+        ],
+        "reply_to": "example@mail.com",
+        "sender_name": "Example",
+        "subject": "TI LOOKUP QUERY INCORRECT",
+        "body": "<body style=\"margin: 0;background-color: #FCF9F5;\">\n        <center class=\"wrapper\" style=\"width: 100%;table-layout: fixed;background-color: #FCF9F5;padding-bottom: 40px;\">\n          <table class=\"main\" align=\"center\" style=\"border-spacing: 0px;margin: 0 auto;width: 100%;max-width: 600px;background-color: #FFFFFF;font-family: sans-serif;color: #4a4a4a;\">\n            <!-- HEADER -->\n            <tr>\n              <td style=\"padding: 0;\">\n                <table width=\"100%\" style=\"border-spacing: 0;\">\n                  <tr>\n                    <td style=\"text-align: center; padding: 8px 0 4px; border-top: 2px; border-bottom: 3px solid;\">\n                      <a href=\"#\"><img src=\"https://ci6.googleusercontent.com/proxy/nPFmlOl5u2tp9Og0HFrQEkCT2L2vaxxB--579Tp8GS4bvNHJR35InJt8XNXpMdI_FuElqu-m85JZAWn7nKQxNkbolPLRzHDUmruQVIGr-t-pYv92=s0-d-e1-ft#https://www.tines.com/logos/logo-tines-with-backdrop-light@2x.png\" width=\"100\" alt=\"Tines Logo\" style=\"border: 0;\"></a>\n                    </td>\n                  </tr>\n                </table>\n              </td>\n            </tr>\n            <!-- MAIN CONTENT -->\n            <tr>\n              <td style=\"padding: 0;\">\n                <table width=\"100%\" style=\"border-spacing: 0;\">\n                  <tr>\n                    <td style=\"padding: 35px 0 40px;text-align: center;\">\n                      <table style=\"border-spacing: 0;width: 100%;max-width: 500px;margin: 0 auto;\">\n                        <tr>\n                          <td style=\"padding: 20px;\">\n                            <!-- Error Message -->\n                            <h1 style=\"color: #FF4444;font-size: 24px;margin-bottom: 20px;\">❌ Error in ANY.RUN TI Lookup Request</h1>\n                            <p style=\"font-size: 16px;line-height: 1.6;color: #4a4a4a;margin-bottom: 30px;\">\n                              Dear user,<br><br>\n                              An error occurred while processing your ANY.RUN Threat Intelligence Lookup query. The request appears to be invalid. Please verify your input parameters and try again.\n                            </p>\n                            <!-- Query Details -->\n                            <div style=\"background-color: #f8f8f8; padding: 20px; border-radius: 6px; margin-bottom: 25px; text-align: left; border-left: 4px solid #FF4444;\">\n                              <p style=\"font-family: 'Courier New', monospace; font-size: 14px; margin: 0; color: #666;\">\n                                <strong>Query:</strong> <<define_parameters.query>><br>\n                                <strong>Error Code:</strong> <<get_data_from_any_run_ti_lookup.status>><br>\n                                <strong>Error Message:</strong> <<get_data_from_any_run_ti_lookup.body.message>>\n                              </p>\n                            </div>\n                            <!-- Action Button -->\n                            <a href=\"https://aged-meadow-7143.tines.com/stories/14499\" style=\"background-color: #2C9469;color: #ffffff;text-decoration: none;padding: 12px 30px;border-radius: 8px;font-weight: bold;display: inline-block;margin-top: 20px;\">View Tines Story</a>\n                          </td>\n                        </tr>\n                      </table>\n                    </td>\n                  </tr>\n                </table>\n              </td>\n            </tr>\n            <!-- FOOTER -->\n            <tr>\n              <td style=\"padding: 0;\">\n                <table width=\"100%\" style=\"border-spacing: 0;\">\n                  <tr>\n                    <td style=\"text-align: center; padding: 20px 0; border-top: 1px solid #eee;\">\n                      <a href=\"#\"><img src=\"https://ci4.googleusercontent.com/proxy/Nu-KkbA1FI6A_6Vr064Q-PftJ6lv4BBas9_GToS_lZUOFGS4Ye2-bw-rJlnEG_UGF3iP0brWs9H5W2mWt9DBOjHI9sGxIMtp1wXfXGg=s0-d-e1-ft#https://www.tines.com/logos/tines-icon-light-circle@2x.png\" width=\"40\" alt=\"Tines Icon\" style=\"border: 0;\"></a>\n                      <p style=\"font-size: 12px;color: #666;margin-top: 10px;\">\n                        This is an automated message from your security automation workflow\n                      </p>\n                    </td>\n                  </tr>\n                </table>\n              </td>\n            </tr>\n          </table>\n        </center>\n      </body>",
+        "advanced_html": true
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EventTransformationAgent",
+      "name": "Build TI Results",
+      "disabled": false,
+      "description": null,
+      "guid": "07b7faa76b1b026b9fb6b57b4247440a",
+      "origin_story_identifier": "cloud:eabc78bc0eed3904c959330c5dc766b4:44f54c3bb5f461f85b6525c4bce069e3",
+      "options": {
+        "mode": "message_only",
+        "loop": false,
+        "payload": {
+          "query": "<<define_parameters.query>>",
+          "detectedType": "<<get_data_from_any_run_ti_lookup.body.summary.detectedType>>",
+          "threatLevel": "<<get_data_from_any_run_ti_lookup.body.summary.threatLevel>>",
+          "lastSeen": "<<get_data_from_any_run_ti_lookup.body.summary.lastSeen>>",
+          "full_json_report": "<<get_data_from_any_run_ti_lookup.body>>",
+          "lastSeen_format": "<<run_script_action.output.formatted_date>>",
+          "threatLevel_format": "<<run_script_action.output.severity>>"
+        }
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::RunScriptAgent",
+      "name": "Run Script Action",
+      "disabled": false,
+      "description": null,
+      "guid": "e6ef30fd081928c687216966a975356b",
+      "origin_story_identifier": "cloud:eabc78bc0eed3904c959330c5dc766b4:44f54c3bb5f461f85b6525c4bce069e3",
+      "options": {
+        "language": "python",
+        "script": "import json\nfrom datetime import datetime\n\ndef format_date(date_string):\n    # Parse the ISO format date string\n    dt = datetime.fromisoformat(date_string.replace('Z', '+00:00'))\n    # Format the date as requested\n    return dt.strftime('%Y-%m-%d %H:%M:%S (UTC+0)')\n\ndef map_reputation_to_severity(reputation):\n    if reputation is None or reputation == \"\":\n        return \"null\"\n    try:\n        reputation = int(reputation)\n        severity_map = {\n            0: 'unknown',\n            1: 'suspicious',\n            2: 'malicious',\n            3: 'whitelisted',\n            4: 'shared'\n        }\n        return severity_map.get(reputation)\n    except (ValueError, TypeError):\n        return \"null\"\n\ndef main(input_data):\n    # Get values from input dictionary\n    date_string = input_data.get('date_string')\n    reputation = input_data.get('reputation')\n    \n    # Process and return results\n    result = {\n        'severity': map_reputation_to_severity(reputation)\n    }\n    \n    # Only add formatted_date if date_string exists\n    if date_string:\n        result['formatted_date'] = format_date(date_string)\n    \n    return result ",
+        "requirements": "requests==2.32.3",
+        "input": {
+          "date_string": "<<get_data_from_any_run_ti_lookup.body.summary.lastSeen>>",
+          "reputation": "<<get_data_from_any_run_ti_lookup.body.summary.threatLevel>>"
+        },
+        "timeout": "10",
+        "emit_failure_event": true
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    },
+    {
+      "type": "Agents::EmailAgent",
+      "name": "Email TI Lookup Results",
+      "disabled": false,
+      "description": null,
+      "guid": "7bc5fe4bf8373219c242c78c292a19b8",
+      "origin_story_identifier": "cloud:eabc78bc0eed3904c959330c5dc766b4:44f54c3bb5f461f85b6525c4bce069e3",
+      "options": {
+        "reply_to": "example@mail.com",
+        "sender_name": "Example",
+        "subject": "RECIEVED TI DATA",
+        "body": "<body style=\"margin: 0;background-color: #FCF9F5;\">\n        <center class=\"wrapper\" style=\"width: 100%;table-layout: fixed;background-color: #FCF9F5;padding-bottom: 40px;\">\n          <table class=\"main\" align=\"center\" style=\"border-spacing: 0px;margin: 0 auto;width: 100%;max-width: 600px;background-color: #FFFFFF;font-family: sans-serif;color: #4a4a4a;\">\n            <!-- HEADER -->\n            <tr>\n              <td style=\"padding: 0;\">\n                <table width=\"100%\" style=\"border-spacing: 0;\">\n                  <tr>\n                    <td style=\"text-align: center; padding: 8px 0 4px; border-top: 2px; border-bottom: 3px solid;\">\n                      <a href=\"#\"><img src=\"https://ci6.googleusercontent.com/proxy/nPFmlOl5u2tp9Og0HFrQEkCT2L2vaxxB--579Tp8GS4bvNHJR35InJt8XNXpMdI_FuElqu-m85JZAWn7nKQxNkbolPLRzHDUmruQVIGr-t-pYv92=s0-d-e1-ft#https://www.tines.com/logos/logo-tines-with-backdrop-light@2x.png\" width=\"100\" alt=\"Tines Logo\" style=\"border: 0;\"></a>\n                    </td>\n                  </tr>\n                </table>\n              </td>\n            </tr>\n            <!-- MAIN CONTENT -->\n            <tr>\n              <td style=\"padding: 0;\">\n                <table width=\"100%\" style=\"border-spacing: 0;\">\n                  <tr>\n                    <td style=\"padding: 35px 0 40px;text-align: center;\">\n                      <table style=\"border-spacing: 0;width: 100%;max-width: 500px;margin: 0 auto;\">\n                        <tr>\n                          <td style=\"padding: 20px;\">\n                            <!-- Warning Message -->\n                            <h1 style=\"color: #FF4444;font-size: 24px;margin-bottom: 20px;\">🔍 ANY.RUN Threat Intelligence Lookup Results</h1>\n                            <p style=\"font-size: 16px;line-height: 1.6;color: #4a4a4a;margin-bottom: 30px;\">\n                              Dear user,<br><br>\n                              The ANY.RUN Threat Intelligence service has successfully processed your lookup request. Below are the details of the query and its findings.\n                            </p>\n                            <!-- Analysis Details -->\n                            <div style=\"background-color: #f8f8f8; padding: 20px; border-radius: 6px; margin-bottom: 25px; text-align: left; border-left: 4px solid #FF4444;\">\n                              <p style=\"font-family: 'Courier New', monospace; font-size: 14px; margin: 0; color: #666;\">\n                                <strong>Query:</strong> <<build_ti_results.query>><br>\n                                <strong>Detected Type:</strong> <<build_ti_results.detectedType>><br>\n                                <strong>Threat Level:</strong> <<build_ti_results.threatLevel_format>><br>\n                                <strong>Last Seen:</strong> <<build_ti_results.lastSeen_format>>\n                              </p>\n                            </div>\n                            <!-- Attachment Notice -->\n                            <div style=\"background-color: #E3F2FD; padding: 15px; border-radius: 6px; margin-bottom: 25px; text-align: left; border-left: 4px solid #2196F3;\">\n                              <p style=\"font-size: 14px; margin: 0; color: #1565C0;\">\n                               📄 The complete results of ANY.RUN TI Lookup for your query are provided in <strong>JSON format</strong> in the attachment \"Report--Lookup--<<DATE(\"now\", \"%Y-%m-%d-%H:%M\")>>.json\"\n                              </p>\n                            </div>\n                            <!-- Action Buttons -->\n                            <div style=\"margin-top: 30px;\">\n                              <a href=\"https://aged-meadow-7143.tines.com/stories/14499\" style=\"background-color: #2C9469;color: #ffffff;text-decoration: none;padding: 12px 30px;border-radius: 8px;font-weight: bold;display: inline-block;\">View Tines Story</a>\n                            </div>\n                          </td>\n                        </tr>\n                      </table>\n                    </td>\n                  </tr>\n                </table>\n              </td>\n            </tr>\n            <!-- FOOTER -->\n            <tr>\n              <td style=\"padding: 0;\">\n                <table width=\"100%\" style=\"border-spacing: 0;\">\n                  <tr>\n                    <td style=\"text-align: center; padding: 20px 0; border-top: 1px solid #eee;\">\n                      <a href=\"#\"><img src=\"https://ci4.googleusercontent.com/proxy/Nu-KkbA1FI6A_6Vr064Q-PftJ6lv4BBas9_GToS_lZUOFGS4Ye2-bw-rJlnEG_UGF3iP0brWs9H5W2mWt9DBOjHI9sGxIMtp1wXfXGg=s0-d-e1-ft#https://www.tines.com/logos/tines-icon-light-circle@2x.png\" width=\"40\" alt=\"Tines Icon\" style=\"border: 0;\"></a>\n                      <p style=\"font-size: 12px;color: #666;margin-top: 10px;\">\n                        This is an automated message from your security automation workflow\n                      </p>\n                    </td>\n                  </tr>\n                </table>\n              </td>\n            </tr>\n          </table>\n        </center>\n      </body>",
+        "advanced_html": true,
+        "attachments": [
+          {
+            "filename": "Report--Lookup--<<DATE(\"now\", \"%Y-%m-%d-%H:%M\")>>",
+            "base64encodedcontents": "<<BASE64_ENCODE(build_ti_results.full_json_report)>>",
+            "content_type": "application/json"
+          }
+        ],
+        "recipients": [
+          "alice@example.com"
+        ]
+      },
+      "reporting": {
+        "time_saved_value": 0,
+        "time_saved_unit": "minutes"
+      },
+      "monitoring": {
+        "monitor_all_events": false,
+        "monitor_failures": false,
+        "monitor_no_events_emitted": null
+      },
+      "template": {
+        "created_from_template_guid": null,
+        "created_from_template_version": null,
+        "template_tags": []
+      },
+      "width": null,
+      "schedule": null
+    }
+  ],
+  "diagram_notes": [
+    {
+      "content": "This Story enables you to use the ANY.RUN Threat Intelligence Lookup to retrieve detailed information on malware activity, including Indicators of Compromise (IOCs), OS event fields, threat classifications, and their interrelationships. This data is derived from an extensive database of interactive malware analysis sessions.\n\nThe Story supports two methods for submitting queries to the ANY.RUN Threat Intelligence Lookup:\n\n- Form-based submission: Utilize the form located on the left side, which mirrors the functionality of the web interface available at https://intelligence.any.run/analysis/lookup. Enter your query in the provided text field, incorporating all necessary parameters, adhering to the required syntax, and including logical operators as appropriate.\n\n- Webhook-based submission: Submit only the values (such as IP addresses, domains, hashes, or URLs) without specifying additional parameters or logical conditions. This method simplifies automation workflows. Note that hash values must be provided in SHA-256 format.",
+      "position": [
+        -165,
+        -690
+      ],
+      "guid": "39b56c6e7b80595fe2eba30584ec0459",
+      "width": 477
+    },
+    {
+      "content": "This Story automates obtaining indicator data from the ANY.RUN Threat Intelligence Lookup.\n\nTo use this Story, you need an ANY.RUN account with a \"Hunter\" plan or higher. Make sure your API key is added to your Tines credentials. \n\nANY.RUN Threat Intelligence Lookup provides data about IOCs, OS event fields, threat classification, and relationships between entities, extracted from a large database of interactive malware analysis sessions.\nBased on the results of the request to ANY.RUN Threat Intelligence Lookup, you will receive a notification indicating whether there are matches for the query or not.  \n\nFor more information about the ANY.RUN Threat Intelligence Lookup, please visit https://intelligence.any.run/docs",
+      "position": [
+        -810,
+        -540
+      ],
+      "guid": "c1a5ae3eafadea4e85df81daf7bf9a94",
+      "width": 270
+    },
+    {
+      "content": "By default, the time period searched in ANY.RUN TI Lookup is 60 days",
+      "position": [
+        60,
+        -150
+      ],
+      "guid": "0a493574611ef88c5f020c94485d422a",
+      "width": 270
+    },
+    {
+      "content": "Upon completion of the query processing in ANY.RUN TI Lookup, a detailed report is generated if matches are identified according to the specified parameters.\n\nThe \"Build Results\" action extracts key elements from the report, including the threat level and the date of the most recent detection. Additionally, this action stores the complete source report in JSON format.\n\nYou can integrate this with other tools in your environment and develop automated workflows for threat response, leveraging the results from ANY.RUN Threat Intelligence Lookup. Finally, an email notification will be sent, containing all the details captured in the \"Build Results\" action.",
+      "position": [
+        -450,
+        360
+      ],
+      "guid": "d2b1ae9678ff157c302cda692e500de5",
+      "width": 270
+    }
+  ],
+  "links": [
+    {
+      "source": 0,
+      "receiver": 4
+    },
+    {
+      "source": 0,
+      "receiver": 5
+    },
+    {
+      "source": 0,
+      "receiver": 6
+    },
+    {
+      "source": 1,
+      "receiver": 0
+    },
+    {
+      "source": 2,
+      "receiver": 1
+    },
+    {
+      "source": 3,
+      "receiver": 2
+    },
+    {
+      "source": 4,
+      "receiver": 8
+    },
+    {
+      "source": 5,
+      "receiver": 11
+    },
+    {
+      "source": 6,
+      "receiver": 9
+    },
+    {
+      "source": 7,
+      "receiver": 2
+    },
+    {
+      "source": 10,
+      "receiver": 12
+    },
+    {
+      "source": 11,
+      "receiver": 10
+    }
+  ],
+  "diagram_layout": "{\"07b7faa76b1b026b9fb6b57b4247440a\":[-165,360],\"0da08e3d7446b5dab16e1bb6a0c62a7b\":[-165,-60],\"0eaf76db73cf89442385c0486fe8e21c\":[-420,150],\"2bd4cad664203d3873898c4cad0c9536\":[90,255],\"37f59a16e6709bfa1658e8c659d0ea58\":[-165,45],\"4195aa00e0aad601cf65dae9e6d73b3f\":[-165,-345],\"4a6fb277cb576a5beb8a126a67065868\":[90,150],\"6dea7eacd3a326b19639e0cc285a4e5a\":[-495,-540],\"7bc5fe4bf8373219c242c78c292a19b8\":[-165,480],\"84de0ef1c067539a6ef4deaeddfb76ac\":[-165,150],\"b01219f01d2327a7da313ef673f1e0b9\":[-165,-150],\"cd4acab1d8378e234a1ae6db2f6bcbf0\":[-420,255],\"e6ef30fd081928c687216966a975356b\":[-165,255]}",
+  "story_library_metadata": {
+    "tags": [
+      "Any.Run",
+      "Intermediate",
+      "Records",
+      "Threat intelligence"
+    ]
+  },
+  "monitor_failures": false,
+  "synchronous_webhooks_enabled": false,
+  "integrations": [],
+  "parent_only_send_to_story": false,
+  "keep_events_for": 86400,
+  "reporting_status": true,
+  "send_to_story_enabled": false,
+  "entry_agent_guid": null,
+  "exit_agent_guids": [],
+  "api_entry_action_guids": [],
+  "api_exit_action_guids": [],
+  "send_to_story_access": null,
+  "send_to_story_access_source": 0,
+  "send_to_story_skill_use_requires_confirmation": true,
+  "pages": [
+    {
+      "containers": [
+        {
+          "guid": "66627636762f89d49b9fdd6cf136c116",
+          "ranking": 0,
+          "category": 0,
+          "name": "Container",
+          "layout": "vertical",
+          "alignment": "no_alignment",
+          "loop": "",
+          "spacing": "no_spacing",
+          "user_driven_loop": false
+        },
+        {
+          "guid": "51fabd59c2a77407fd897e8073cc8e5e",
+          "ranking": 1,
+          "category": 0,
+          "name": "Container",
+          "layout": "vertical",
+          "alignment": "no_alignment",
+          "loop": "",
+          "spacing": "no_spacing",
+          "user_driven_loop": false
+        },
+        {
+          "guid": "99774c6922d71b85cff6efb8efa0ef99",
+          "ranking": 2,
+          "category": 0,
+          "name": "Container",
+          "layout": "vertical",
+          "alignment": "no_alignment",
+          "loop": "",
+          "spacing": "no_spacing",
+          "user_driven_loop": false
+        },
+        {
+          "guid": "b2e4ba2e63988e6510e41aac22b52178",
+          "ranking": 3,
+          "category": 0,
+          "name": "Container",
+          "layout": "vertical",
+          "alignment": "no_alignment",
+          "loop": "",
+          "spacing": "no_spacing",
+          "user_driven_loop": false
+        },
+        {
+          "guid": "bfac3b940077741bfa596bf5eb9043b1",
+          "ranking": 4,
+          "category": 0,
+          "name": "Container",
+          "layout": "vertical",
+          "alignment": "no_alignment",
+          "loop": "",
+          "spacing": "no_spacing",
+          "user_driven_loop": false
+        },
+        {
+          "guid": "892a7b1b4b53824c58d74fafc22bc87a",
+          "ranking": 5,
+          "category": 0,
+          "name": "Container",
+          "layout": "vertical",
+          "alignment": "no_alignment",
+          "loop": "",
+          "spacing": "no_spacing",
+          "user_driven_loop": false
+        },
+        {
+          "guid": "131984cbcf01e46a8947a5bf5dfda014",
+          "ranking": 6,
+          "category": 0,
+          "name": "Container",
+          "layout": "vertical",
+          "alignment": "no_alignment",
+          "loop": "",
+          "spacing": "no_spacing",
+          "user_driven_loop": false
+        }
+      ],
+      "conditions": [],
+      "fields": [
+        {
+          "guid": "7ed0af82016e4a843690a1040c35a13d",
+          "name": "Image",
+          "description": "",
+          "required": false,
+          "type": "IMAGE",
+          "multi_select": false,
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "ranking": 0,
+          "max_characters": null,
+          "default_value": null,
+          "content": "{\"name\":\"With tagline_light Background.svg\",\"contents\":\"PHN2ZyB3aWR0aD0iMTMzNSIgaGVpZ2h0PSI1MDAiIHZpZXdCb3g9IjAgMCAxMzM1IDUwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTgxMS40MDMgMTUxLjA2N0w2MTMuNzYxIDI3LjM3NzhDNjA3Ljc3MSAyMy44Nzg5IDYwMS42NzQgMjIuMzgxOSA1OTUuNTcyIDI1LjY4MTFDNTkwLjQ1NCAyOC41MjQzIDU4Ny45NCAzNS4zMzczIDU4Ny45NCA0MS41MDYxVjI3OS4xMTRMNjEzLjgwNiAyNjIuODg2VjU3LjY1MDlMNzg3LjMzNCAxNjYuMjExTDc3NC43NjcgMTc0LjA3NEw3OTkuMjkxIDE4OS41MDlMODExLjc0IDE4MS42ODNDODE2LjcxOCAxNzguNjA0IDgyMC4zNjUgMTcyLjM4IDgyMC4zNjUgMTY2LjIxMUM4MjAuMzY1IDE2MC4wNDMgODE2LjQwMyAxNTQuMTk5IDgxMS40MDMgMTUxLjA2N1oiIGZpbGw9IiMwMEJBRjUiLz4KPHBhdGggZD0iTTgxMS43ODkgMjA5LjQ1Nkw2MjQuMzYxIDkyLjE2NzVWMTIyLjkzMUw3ODcuMjQzIDIyNC44NUw2MTMuNzMyIDMzMy40NDFWMzE3LjcyNEw1ODcuOTYyIDMzMy44NTZWMzQ5LjU0NkM1ODcuOTYyIDM1NS43MDQgNTkwLjk1NiAzNjIuMTI1IDU5Ni4wODQgMzY0Ljk0NkM2MDIuOTcyIDM2OC43MzQgNjExLjI4NiAzNjUuMjE2IDYxMy43MzIgMzYzLjcwM0w4MTEuNDg4IDI0MC4wMjZDODE2LjM4IDIzNi44OTMgODIwLjM2NiAyMzAuNTM5IDgyMC4zNjYgMjI0LjM4QzgyMC4zNjYgMjE4LjIyMiA4MTYuNzQ2IDIxMi41MzUgODExLjc4OSAyMDkuNDU2WiIgZmlsbD0iIzAwQkFGNSIvPgo8cGF0aCBkPSJNNzMwLjg0MiAyMDEuNDg4TDU2NC4yNzQgMzA1LjgyOVY4NS4zNDY3TDU3Ny40MTYgOTMuNjUwM1Y2Mi43NTI1TDU2NC4yNzQgNTQuMzE2M0M1NTkuMjEgNTEuNDE5NiA1NTEuMzU2IDUxLjE2MjEgNTQ2LjQ1MyA1NC4zMTYzQzU0MS41NSA1Ny40NzA1IDUzOC40NCA2My40Njg3IDUzOC40NCA2OS42MTYzVjMyMS45MjZDNTM4LjQ0IDMyOC4wOTQgNTM4LjUxNCAzMzQuOTg0IDU0Ni40NTMgMzM4LjgzNkM1NTMuNTIzIDM0Mi4yNjkgNTYxLjg4NiAzMzcuNzg0IDU2NC4zMSAzMzYuMjgyTDc1NS41IDIxNi44OTdMNzMwLjg0MiAyMDEuNDg4WiIgZmlsbD0iIzAwQkFGNSIvPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTE2NS4zNjEgMjQ3LjkwNUw5MS43NTQ2IDI0OC4xMzhMNzkuMzAyNiAyODIuODA4Qzc4Ljg2NjEgMjg0LjAyMyA3Ny43MTM5IDI4NC44MzMgNzYuNDIzIDI4NC44MzNINTUuMjI1MUM1NC4yMjkxIDI4NC44MzMgNTMuMjk1NSAyODQuMzQ5IDUyLjcyMjUgMjgzLjUzNEM1Mi4xNDk0IDI4Mi43MiA1Mi4wMDg2IDI4MS42NzcgNTIuMzQ1MSAyODAuNzRMMTE0LjIyIDEwOC4zNzdDMTE0LjY1NiAxMDcuMTYxIDExNS44MDggMTA2LjM1MSAxMTcuMSAxMDYuMzUxSDEzOS44MjVDMTQxLjExNyAxMDYuMzUxIDE0Mi4yNjkgMTA3LjE2MSAxNDIuNzA1IDEwOC4zNzdMMjA0LjU4IDI4MC43NEMyMDQuOTE2IDI4MS42NzcgMjA0Ljc3NSAyODIuNzIgMjA0LjIwMyAyODMuNTM0QzIwMy42MjkgMjg0LjM0OSAyMDIuNjk2IDI4NC44MzMgMjAxLjcgMjg0LjgzM0gxODAuNjkzQzE3OS40IDI4NC44MzMgMTc4LjI0NiAyODQuMDIgMTc3LjgxMSAyODIuODAyQzE3Ny44MTEgMjgyLjgwMiAxNjcuNzA5IDI1NC40ODUgMTY1LjY4OSAyNDguODIyTDE2NS4zNjEgMjQ3LjkwNVpNMTY1LjMzNCAyNDcuODEzQzE2NS4zMzQgMjQ3LjgyNCAxNjUuMzM2IDI0Ny44MzQgMTY1LjMzOSAyNDcuODQ0QzE2NS4zMzkgMjQ3Ljg0NCAxNjUuNDI2IDI0Ny45MDUgMTY1LjQyNyAyNDcuOTA1QzE2NS40MjcgMjQ3LjkwNSAxNjUuNDMzIDI0Ny44ODMgMTY1LjQ0MiAyNDcuODU3QzE2NS40MzIgMjQ3LjgyOCAxNjUuNDI3IDI0Ny44MTMgMTY1LjQyNyAyNDcuODEzSDE2NS4zMzRaTTE1NC41ODEgMjE3LjY2NUwxMjguNTYyIDE0NS4wODNMMTAyLjU0MyAyMTcuODc2QzEwNS4xMzIgMjE3Ljg2NiAxNDUuMDUxIDIxNy43MDQgMTUzLjI0OCAyMTcuNjcxTDE1NC41ODEgMjE3LjY2NVoiIGZpbGw9IiMwODJBNDEiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yNDEuNDk5IDI4NC43NEgyMjEuNjM4QzIxOS45OTkgMjg0Ljc0IDIxOC42NzEgMjgzLjQxMSAyMTguNjcxIDI4MS43NzJWMTA5LjQwOUMyMTguNjcxIDEwNy43NzEgMjE5Ljk5OSAxMDYuNDQyIDIyMS42MzggMTA2LjQ0MkgyNDEuNDk5QzI0Mi40OTcgMTA2LjQ0MiAyNDMuNDI5IDEwNi45NDQgMjQzLjk3NyAxMDcuNzc4TDMyNy41MjQgMjM0LjY4N1YxMDkuNDA5QzMyNy41MjQgMTA3Ljc3MSAzMjguODUyIDEwNi40NDIgMzMwLjQ5MSAxMDYuNDQySDM1MC4zNTJDMzUxLjk5MSAxMDYuNDQyIDM1My4zMiAxMDcuNzcxIDM1My4zMiAxMDkuNDA5VjI4MS43NzJDMzUzLjMyIDI4My40MTEgMzUxLjk5MSAyODQuNzQgMzUwLjM1MiAyODQuNzRIMzMwLjQ5MUMzMjkuNDkzIDI4NC43NCAzMjguNTYyIDI4NC4yMzggMzI4LjAxMyAyODMuNDA0TDI0NC40NjYgMTU2LjQ5NFYyODEuNzcyQzI0NC40NjYgMjgzLjQxMSAyNDMuMTM4IDI4NC43NCAyNDEuNDk5IDI4NC43NFoiIGZpbGw9IiMwODJBNDEiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik00MjcuOTQxIDIxNC4xMjNMMzY3LjgwNiAxMTAuOTA1QzM2Ny4yNzIgMTA5Ljk4NyAzNjcuMjY4IDEwOC44NTQgMzY3Ljc5NyAxMDcuOTMzQzM2OC4zMjcgMTA3LjAxMiAzNjkuMzA4IDEwNi40NDQgMzcwLjM3IDEwNi40NDRIMzk0LjA1QzM5NS4xIDEwNi40NDQgMzk2LjA3MiAxMDYuOTk5IDM5Ni42MDYgMTA3LjkwM0w0NDAuODMzIDE4Mi44NTFMNDg0Ljg3NyAxMDcuOTA4QzQ4NS40MSAxMDcuMDAxIDQ4Ni4zODMgMTA2LjQ0NCA0ODcuNDM1IDEwNi40NDRINTExLjExNkM1MTIuMTc4IDEwNi40NDQgNTEzLjE1OSAxMDcuMDEyIDUxMy42ODggMTA3LjkzMkM1MTQuMjE3IDEwOC44NTMgNTE0LjIxNCAxMDkuOTg3IDUxMy42OCAxMTAuOTA0TDQ1My43MzYgMjEzLjg3NlYyODEuNzc0QzQ1My43MzYgMjgzLjQxMyA0NTIuNDA4IDI4NC43NDIgNDUwLjc2OSAyODQuNzQySDQzMC45MDhDNDI5LjI2OSAyODQuNzQyIDQyNy45NDEgMjgzLjQxMyA0MjcuOTQxIDI4MS43NzRWMjE0LjEyM1oiIGZpbGw9IiMwODJBNDEiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik04NzIuNjE0IDI4NC43NEg4NTIuNzUzQzg1MS4xMTQgMjg0Ljc0IDg0OS43ODYgMjgzLjQxMSA4NDkuNzg2IDI4MS43NzJWMTA5LjQwOUM4NDkuNzg2IDEwNy43NzEgODUxLjExNCAxMDYuNDQyIDg1Mi43NTMgMTA2LjQ0Mkg5MjIuMjY2QzkzOS4zNDEgMTA2LjQ0MiA5NTEuNjczIDExMC44MzIgOTU5LjM5NyAxMTkuMjE5Qzk2Ny4wNDcgMTI3LjUyNSA5NzEuMDY3IDE0MC44NzkgOTcxLjA2NyAxNTkuMzk1Qzk3MS4wNjcgMTgwLjU3MiA5NjUuNjEgMTk1LjIzIDk1NS4xODYgMjAzLjU3M0M5NjQuODYyIDIxMC41OTMgOTY5LjkyMSAyMjIuOTY2IDk2OS45MjEgMjQwLjg5OFYyODEuNzcyQzk2OS45MjEgMjgzLjQxMSA5NjguNTkyIDI4NC43NCA5NjYuOTU0IDI4NC43NEg5NDcuMDgxQzk0NS40NDIgMjg0Ljc0IDk0NC4xMTQgMjgzLjQxMSA5NDQuMTE0IDI4MS43NzJWMjQyLjA2Qzk0NC4xMTQgMjM0LjAzNCA5NDIuNTA3IDIyOC4xNzIgOTM4Ljg4NSAyMjQuNTk2QzkzNS4yNjQgMjIxLjAyMSA5MjkuNDkxIDIxOS40MTkgOTIxLjY4MiAyMTkuNDE5SDg3NS41ODFWMjgxLjc3MkM4NzUuNTgxIDI4My40MTEgODc0LjI1MyAyODQuNzQgODcyLjYxNCAyODQuNzRaTTg3NS41ODEgMTg5LjE3Nkg5MjEuMTJDOTI5LjY0IDE4OS4xNzYgOTM1Ljg5NiAxODcuMjg1IDkzOS43NTkgMTgzLjExMUM5NDMuNjg5IDE3OC44NjIgOTQ1LjQ2MiAxNzEuOTg3IDk0NS40NjIgMTYyLjU5NkM5NDUuNDYyIDE1My4zNzggOTQzLjY5NyAxNDYuNjMyIDkzOS43NzYgMTQyLjQ2OUM5MzUuOTEgMTM4LjM2NCA5MjkuNjQ5IDEzNi41MDggOTIxLjEyIDEzNi41MDhIODc1LjU4MVYxODkuMTc2WiIgZmlsbD0iIzA4MkE0MSIvPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTk5NC4xNjkgMTA2LjQ0SDEwMTQuMDNDMTAxNS42NyAxMDYuNDQgMTAxNyAxMDcuNzY4IDEwMTcgMTA5LjQwN1YyMDkuNDgxQzEwMTcgMjI3LjY0OCAxMDE2LjY4IDI1OS4zMzMgMTA1Ny41NyAyNTkuMzMzQzEwOTguNDYgMjU5LjMzMyAxMDk4LjE1IDIyNy42NTMgMTA5OC4xNSAyMDkuNDgxVjEwOS40MDdDMTA5OC4xNSAxMDcuNzY4IDEwOTkuNDcgMTA2LjQ0IDExMDEuMTEgMTA2LjQ0SDExMjAuOTdDMTEyMi42MSAxMDYuNDQgMTEyMy45NCAxMDcuNzY4IDExMjMuOTQgMTA5LjQwN1YyMTguMTM5QzExMjMuOTQgMjQ1Ljc4NyAxMTE0Ljk1IDI4Ni44OTcgMTA1Ny41NyAyODYuODk3QzEwMDAuMTkgMjg2Ljg5NyA5OTEuMjAyIDI0NS43OTEgOTkxLjIwMiAyMTguMTM5VjEwOS40MDdDOTkxLjIwMiAxMDcuNzY4IDk5Mi41MyAxMDYuNDQgOTk0LjE2OSAxMDYuNDRaIiBmaWxsPSIjMDgyQTQxIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTE2OC4yOSAyODQuNzRIMTE0OC40MkMxMTQ2Ljc5IDI4NC43NCAxMTQ1LjQ2IDI4My40MTEgMTE0NS40NiAyODEuNzcyVjEwOS40MDlDMTE0NS40NiAxMDcuNzcxIDExNDYuNzkgMTA2LjQ0MiAxMTQ4LjQyIDEwNi40NDJIMTE2OC4yOUMxMTY5LjI4IDEwNi40NDIgMTE3MC4yMSAxMDYuOTQ0IDExNzAuNzYgMTA3Ljc3OEwxMjU0LjMxIDIzNC42ODdWMTA5LjQwOUMxMjU0LjMxIDEwNy43NzEgMTI1NS42NCAxMDYuNDQyIDEyNTcuMjggMTA2LjQ0MkgxMjc3LjE0QzEyNzguNzggMTA2LjQ0MiAxMjgwLjExIDEwNy43NzEgMTI4MC4xMSAxMDkuNDA5VjI4MS43NzJDMTI4MC4xMSAyODMuNDExIDEyNzguNzggMjg0Ljc0IDEyNzcuMTQgMjg0Ljc0SDEyNTcuMjhDMTI1Ni4yOCAyODQuNzQgMTI1NS4zNSAyODQuMjM4IDEyNTQuOCAyODMuNDA0TDExNzEuMjUgMTU2LjQ5NFYyODEuNzcyQzExNzEuMjUgMjgzLjQxMSAxMTY5LjkyIDI4NC43NCAxMTY4LjI5IDI4NC43NFoiIGZpbGw9IiMwODJBNDEiLz4KPHBhdGggZD0iTTY3LjkxOTYgNDA3LjU3NEg1Ny4xNzk2VjQ1OC4zNzJINjcuOTE5NlY0MDcuNTc0WiIgZmlsbD0iIzA4MkE0MSIvPgo8cGF0aCBkPSJNMTIwLjA1OSA0MDcuNTc0VjQ1OC4zNzJIMTEwLjc4M0w4OC42ODI1IDQyNi40SDg4LjMxMDRWNDU4LjM3Mkg3Ny41NzAxVjQwNy41NzRIODYuOTk1OEwxMDguOTIyIDQzOS41MjFIMTA5LjM2OVY0MDcuNTc0SDEyMC4wNTlaIiBmaWxsPSIjMDgyQTQxIi8+CjxwYXRoIGQ9Ik0xMjcuNzcyIDQxNi40MjZWNDA3LjU3MkgxNjkuNDkzVjQxNi40MjZIMTUzLjk0MVY0NTguMzdIMTQzLjMyNFY0MTYuNDI2SDEyNy43NzJaIiBmaWxsPSIjMDgyQTQxIi8+CjxwYXRoIGQ9Ik0xNzcuMTg0IDQ1OC4zNzJWNDA3LjU3M0gyMTEuNDE0VjQxNi40MjhIMTg3LjkyNFY0MjguNTMySDIwOS42NTJWNDM3LjM4N0gxODcuOTI0VjQ0OS41MTZIMjExLjUxM1Y0NTguMzcySDE3Ny4xODRaIiBmaWxsPSIjMDgyQTQxIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMjMxLjUwMyA0NDAuMzYyVjQ1OC4zN0gyMjAuNzYzVjQwNy41NzFIMjQwLjgwNEMyNDQuNjQxIDQwNy41NzEgMjQ3LjkxOSA0MDguMjUzIDI1MC42MzkgNDA5LjYxN0MyNTMuMzU5IDQxMC45ODEgMjU1LjQzNSA0MTIuOTA4IDI1Ni44NjUgNDE1LjM5N0MyNTguMjk1IDQxNy44ODUgMjU5LjAxMSA0MjAuODA4IDI1OS4wMTEgNDI0LjE2NUMyNTkuMDExIDQyNy41MzggMjU4LjI4MyA0MzAuNDM2IDI1Ni44MjggNDMyLjg1OUMyNTUuMzczIDQzNS4yODEgMjUzLjI2OCA0MzcuMTM3IDI1MC41MTUgNDM4LjQyN0MyNTAuMzYxIDQzOC41IDI1MC4yMDQgNDM4LjU3IDI1MC4wNDYgNDM4LjYzOEwyNjAuODIxIDQ1OC4zN0gyNDguOTY1TDIzOS4zNDMgNDQwLjM2MkgyMzEuNTAzWk0yMzEuNTAzIDQzMS43M0gyMzguNzk1QzI0MC44NDYgNDMxLjczIDI0Mi41NDkgNDMxLjQ0OSAyNDMuOTA1IDQzMC44ODdDMjQ1LjI2MSA0MzAuMzI1IDI0Ni4yNzQgNDI5LjQ4MSAyNDYuOTQzIDQyOC4zNTdDMjQ3LjYxMyA0MjcuMjMyIDI0Ny45NDggNDI1LjgzNSAyNDcuOTQ4IDQyNC4xNjVDMjQ3Ljk0OCA0MjIuNDc4IDI0Ny42MTMgNDIxLjA1NiAyNDYuOTQzIDQxOS44OTlDMjQ2LjI3NCA0MTguNzQxIDI0NS4yNTcgNDE3Ljg2IDI0My44OTMgNDE3LjI1N0MyNDIuNTI4IDQxNi42NTMgMjQwLjgxMyA0MTYuMzUyIDIzOC43NDYgNDE2LjM1MkgyMzEuNTAzVjQzMS43M1oiIGZpbGw9IiMwODJBNDEiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0yNzkuOTE3IDQ0Ni43ODlMMjc2LjE0OSA0NTguMzcySDI2NC42NEwyODIuMTc2IDQwNy41NzRIMjk2LjAxN0wzMTMuNTI5IDQ1OC4zNzJIMzAyLjAyTDI5OC4yNTkgNDQ2Ljc4OUgyNzkuOTE3Wk0yOTUuNTM3IDQzOC40MDVMMjg5LjI5NSA0MTkuMTgySDI4OC44OThMMjgyLjY0NSA0MzguNDA1SDI5NS41MzdaIiBmaWxsPSIjMDgyQTQxIi8+CjxwYXRoIGQ9Ik0zNjIuODY2IDQyNS4zNTVIMzUyLjAwMkMzNTEuODAzIDQyMy45NSAzNTEuMzk4IDQyMi42OTcgMzUwLjc4NiA0MjEuNTk3QzM1MC4xNzQgNDIwLjQ5OCAzNDkuMzg5IDQxOS41NiAzNDguNDMgNDE4Ljc4MkMzNDcuNDcgNDE4LjAwNSAzNDYuMzY3IDQxNy40MSAzNDUuMTE4IDQxNi45OTZDMzQzLjg3IDQxNi41ODMgMzQyLjUxOCA0MTYuMzc2IDM0MS4wNjMgNDE2LjM3NkMzMzguNDM0IDQxNi4zNzYgMzM2LjE0MyA0MTcuMDI1IDMzNC4xOTIgNDE4LjMyNEMzMzIuMjQxIDQxOS42MjIgMzMwLjcyOCA0MjEuNTA3IDMyOS42NTMgNDIzLjk3OUMzMjguNTc4IDQyNi40NTEgMzI4LjA0MSA0MjkuNDQ4IDMyOC4wNDEgNDMyLjk3QzMyOC4wNDEgNDM2LjU5MiAzMjguNTgyIDQzOS42MzQgMzI5LjY2NSA0NDIuMDk4QzMzMC43NDkgNDQ0LjU2MiAzMzIuMjY2IDQ0Ni40MjIgMzM0LjIxNyA0NDcuNjc5QzMzNi4xNjggNDQ4LjkzNiAzMzguNDI1IDQ0OS41NjQgMzQwLjk4OSA0NDkuNTY0QzM0Mi40MjcgNDQ5LjU2NCAzNDMuNzYyIDQ0OS4zNzQgMzQ0Ljk5NCA0NDguOTk0QzM0Ni4yMjYgNDQ4LjYxMyAzNDcuMzIyIDQ0OC4wNTUgMzQ4LjI4MSA0NDcuMzE5QzM0OS4yNCA0NDYuNTgzIDM1MC4wMzggNDQ1LjY4NyAzNTAuNjc1IDQ0NC42MjhDMzUxLjMxMSA0NDMuNTcgMzUxLjc1MyA0NDIuMzYzIDM1Mi4wMDIgNDQxLjAwN0wzNjIuODY2IDQ0MS4wNTZDMzYyLjU4NCA0NDMuMzg4IDM2MS44ODYgNDQ1LjYzMyAzNjAuNzcgNDQ3Ljc5MUMzNTkuNjUzIDQ0OS45NDkgMzU4LjE1NyA0NTEuODc1IDM1Ni4yOCA0NTMuNTdDMzU0LjQwMyA0NTUuMjY1IDM1Mi4xNzEgNDU2LjYwNCAzNDkuNTgzIDQ1Ny41ODhDMzQ2Ljk5NSA0NTguNTcyIDM0NC4wNzMgNDU5LjA2NCAzNDAuODE1IDQ1OS4wNjRDMzM2LjI4NCA0NTkuMDY0IDMzMi4yMzcgNDU4LjAzOSAzMjguNjczIDQ1NS45ODhDMzI1LjExIDQ1My45MzggMzIyLjI5OSA0NTAuOTcgMzIwLjI0IDQ0Ny4wODRDMzE4LjE4MSA0NDMuMTk4IDMxNy4xNTIgNDM4LjQ5MyAzMTcuMTUyIDQzMi45N0MzMTcuMTUyIDQyNy40MzEgMzE4LjE5NCA0MjIuNzE4IDMyMC4yNzcgNDE4LjgzMkMzMjIuMzYxIDQxNC45NDYgMzI1LjE4OCA0MTEuOTgyIDMyOC43NiA0MDkuOTRDMzMyLjMzMiA0MDcuODk4IDMzNi4zNSA0MDYuODc2IDM0MC44MTUgNDA2Ljg3NkMzNDMuNzU4IDQwNi44NzYgMzQ2LjQ5MSA0MDcuMjkgMzQ5LjAxMiA0MDguMTE3QzM1MS41MzQgNDA4Ljk0MyAzNTMuNzcxIDQxMC4xNDYgMzU1LjcyMiA0MTEuNzI2QzM1Ny42NzMgNDEzLjMwNSAzNTkuMjY1IDQxNS4yMzUgMzYwLjQ5NyA0MTcuNTE3QzM2MS43MjkgNDE5Ljc5OSAzNjIuNTE4IDQyMi40MTIgMzYyLjg2NiA0MjUuMzU1WiIgZmlsbD0iIzA4MkE0MSIvPgo8cGF0aCBkPSJNMzY5LjQzOSA0MTYuNDI3VjQwNy41NzJINDExLjE1OVY0MTYuNDI3SDM5NS42MDdWNDU4LjM3SDM4NC45OTFWNDE2LjQyN0gzNjkuNDM5WiIgZmlsbD0iIzA4MkE0MSIvPgo8cGF0aCBkPSJNNDI5LjU4NyA0MDcuNTc0SDQxOC44NDdWNDU4LjM3Mkg0MjkuNTg3VjQwNy41NzRaIiBmaWxsPSIjMDgyQTQxIi8+CjxwYXRoIGQ9Ik00NDguNDE2IDQwNy41NzRMNDYwLjY5NCA0NDYuMTY5SDQ2MS4xNjVMNDczLjQ2OCA0MDcuNTc0SDQ4NS4zNzRMNDY3Ljg2MiA0NTguMzcySDQ1NC4wMjFMNDM2LjQ4NSA0MDcuNTc0SDQ0OC40MTZaIiBmaWxsPSIjMDgyQTQxIi8+CjxwYXRoIGQ9Ik00OTIuMjY4IDQ1OC4zNzJWNDA3LjU3M0g1MjYuNDk3VjQxNi40MjhINTAzLjAwOFY0MjguNTMySDUyNC43MzZWNDM3LjM4OEg1MDMuMDA4VjQ0OS41MTdINTI2LjU5NlY0NTguMzcySDQ5Mi4yNjhaIiBmaWxsPSIjMDgyQTQxIi8+CjxwYXRoIGQ9Ik01NTIuMDQ2IDQwNy41NzRINTY1LjI5MUw1NzkuMjgxIDQ0MS43MDRINTc5Ljg3Nkw1OTMuODY1IDQwNy41NzRINjA3LjExMVY0NTguMzcySDU5Ni42OTNWNDI1LjMwOEg1OTYuMjcxTDU4My4xMjUgNDU4LjEyNEg1NzYuMDMyTDU2Mi44ODUgNDI1LjE4NEg1NjIuNDY0VjQ1OC4zNzJINTUyLjA0NlY0MDcuNTc0WiIgZmlsbD0iIzA4MkE0MSIvPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTYyOS4yNTggNDQ2Ljc4OUw2MjUuNDg5IDQ1OC4zNzJINjEzLjk4TDYzMS41MTYgNDA3LjU3NEg2NDUuMzU3TDY2Mi44NjkgNDU4LjM3Mkg2NTEuMzZMNjQ3LjU5OSA0NDYuNzg5SDYyOS4yNThaTTY0NC44NzcgNDM4LjQwNUw2MzguNjM1IDQxOS4xODJINjM4LjIzOUw2MzEuOTg1IDQzOC40MDVINjQ0Ljg3N1oiIGZpbGw9IiMwODJBNDEiLz4KPHBhdGggZD0iTTY2OS43NjUgNDU4LjM3MlY0MDcuNTczSDY4MC41MDVWNDQ5LjUxN0g3MDIuMjgzVjQ1OC4zNzJINjY5Ljc2NVoiIGZpbGw9IiMwODJBNDEiLz4KPHBhdGggZD0iTTcxOC43NzggNDU4LjM3Mkw3MDQuMjQzIDQwNy41NzNINzE1Ljk3NUw3MjQuMzg0IDQ0Mi44NjlINzI0LjgwNkw3MzQuMDgyIDQwNy41NzNINzQ0LjEyOEw3NTMuMzggNDQyLjk0NEg3NTMuODI2TDc2Mi4yMzUgNDA3LjU3M0g3NzMuOTY3TDc1OS40MzIgNDU4LjM3Mkg3NDguOTY1TDczOS4yOTEgNDI1LjE1OUg3MzguODk0TDcyOS4yNDYgNDU4LjM3Mkg3MTguNzc4WiIgZmlsbD0iIzA4MkE0MSIvPgo8cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTc4Ny44NTcgNDQ2Ljc4OUw3ODQuMDg5IDQ1OC4zNzJINzcyLjU4TDc5MC4xMTYgNDA3LjU3NEg4MDMuOTU3TDgyMS40NjggNDU4LjM3Mkg4MDkuOTZMODA2LjE5OSA0NDYuNzg5SDc4Ny44NTdaTTgwMy40NzYgNDM4LjQwNUw3OTcuMjM1IDQxOS4xODJINzk2LjgzOEw3OTAuNTg1IDQzOC40MDVIODAzLjQ3NloiIGZpbGw9IiMwODJBNDEiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik04MzkuMTAzIDQ0MC4zNjJWNDU4LjM3SDgyOC4zNjNWNDA3LjU3MUg4NDguNDA0Qzg1Mi4yNCA0MDcuNTcxIDg1NS41MTkgNDA4LjI1MyA4NTguMjM5IDQwOS42MTdDODYwLjk1OSA0MTAuOTgyIDg2My4wMzQgNDEyLjkwOCA4NjQuNDY1IDQxNS4zOTdDODY1Ljg5NSA0MTcuODg1IDg2Ni42MSA0MjAuODA4IDg2Ni42MSA0MjQuMTY1Qzg2Ni42MSA0MjcuNTM4IDg2NS44ODMgNDMwLjQzNiA4NjQuNDI3IDQzMi44NTlDODYyLjk3MiA0MzUuMjgxIDg2MC44NjggNDM3LjEzNyA4NTguMTE1IDQzOC40MjdDODU3Ljk2IDQzOC41IDg1Ny44MDMgNDM4LjU3IDg1Ny42NDUgNDM4LjYzOUw4NjguNDIxIDQ1OC4zN0g4NTYuNTY1TDg0Ni45NDMgNDQwLjM2Mkg4MzkuMTAzWk04MzkuMTAzIDQzMS43M0g4NDYuMzk1Qzg0OC40NDUgNDMxLjczIDg1MC4xNDkgNDMxLjQ0OSA4NTEuNTA1IDQzMC44ODdDODUyLjg2IDQzMC4zMjUgODUzLjg3NCA0MjkuNDgxIDg1NC41NDMgNDI4LjM1N0M4NTUuMjEzIDQyNy4yMzIgODU1LjU0OCA0MjUuODM1IDg1NS41NDggNDI0LjE2NUM4NTUuNTQ4IDQyMi40NzggODU1LjIxMyA0MjEuMDU2IDg1NC41NDMgNDE5Ljg5OUM4NTMuODc0IDQxOC43NDEgODUyLjg1NiA0MTcuODYxIDg1MS40OTIgNDE3LjI1N0M4NTAuMTI4IDQxNi42NTMgODQ4LjQxMiA0MTYuMzUyIDg0Ni4zNDUgNDE2LjM1Mkg4MzkuMTAzVjQzMS43M1oiIGZpbGw9IiMwODJBNDEiLz4KPHBhdGggZD0iTTg3NC45OTUgNDU4LjM3MlY0MDcuNTczSDkwOS4yMjRWNDE2LjQyOEg4ODUuNzM1VjQyOC41MzJIOTA3LjQ2M1Y0MzcuMzg4SDg4NS43MzVWNDQ5LjUxN0g5MDkuMzI0VjQ1OC4zNzJIODc0Ljk5NVoiIGZpbGw9IiMwODJBNDEiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik05NDcuMjk2IDQ0Ni43ODlMOTQzLjUyNyA0NTguMzcySDkzMi4wMThMOTQ5LjU1NSA0MDcuNTc0SDk2My4zOTVMOTgwLjkwNyA0NTguMzcySDk2OS4zOThMOTY1LjYzNyA0NDYuNzg5SDk0Ny4yOTZaTTk2Mi45MTUgNDM4LjQwNUw5NTYuNjczIDQxOS4xODJIOTU2LjI3N0w5NTAuMDIzIDQzOC40MDVIOTYyLjkxNVoiIGZpbGw9IiMwODJBNDEiLz4KPHBhdGggZD0iTTEwMzAuMjkgNDA3LjU3NFY0NTguMzcySDEwMjEuMDJMOTk4LjkxNSA0MjYuNEg5OTguNTQzVjQ1OC4zNzJIOTg3LjgwM1Y0MDcuNTc0SDk5Ny4yMjlMMTAxOS4xNiA0MzkuNTIxSDEwMTkuNlY0MDcuNTc0SDEwMzAuMjlaIiBmaWxsPSIjMDgyQTQxIi8+CjxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMTA1Mi40NiA0NDYuNzg5TDEwNDguNyA0NTguMzcySDEwMzcuMTlMMTA1NC43MiA0MDcuNTc0SDEwNjguNTZMMTA4Ni4wOCA0NTguMzcySDEwNzQuNTdMMTA3MC44MSA0NDYuNzg5SDEwNTIuNDZaTTEwNjguMDggNDM4LjQwNUwxMDYxLjg0IDQxOS4xODJIMTA2MS40NUwxMDU1LjE5IDQzOC40MDVIMTA2OC4wOFoiIGZpbGw9IiMwODJBNDEiLz4KPHBhdGggZD0iTTEwOTIuOTcgNDU4LjM3MlY0MDcuNTczSDExMDMuNzFWNDQ5LjUxNkgxMTI1LjQ5VjQ1OC4zNzJIMTA5Mi45N1oiIGZpbGw9IiMwODJBNDEiLz4KPHBhdGggZD0iTTExMjMuOTMgNDA3LjU3NEgxMTM1Ljk2TDExNDcuNTQgNDI5LjQ1MUgxMTQ4LjA0TDExNTkuNjIgNDA3LjU3NEgxMTcxLjY1TDExNTMuMTIgNDQwLjQxNFY0NTguMzcySDExNDIuNDVWNDQwLjQxNEwxMTIzLjkzIDQwNy41NzRaIiBmaWxsPSIjMDgyQTQxIi8+CjxwYXRoIGQ9Ik0xMjA1Ljg2IDQyMi4xODFDMTIwNS42NiA0MjAuMTggMTIwNC44MSA0MTguNjI2IDEyMDMuMyA0MTcuNTE4QzEyMDEuOCA0MTYuNDEgMTE5OS43NSA0MTUuODU2IDExOTcuMTcgNDE1Ljg1NkMxMTk1LjQyIDQxNS44NTYgMTE5My45NCA0MTYuMSAxMTkyLjczIDQxNi41ODhDMTE5MS41MyA0MTcuMDc2IDExOTAuNjEgNDE3Ljc1IDExODkuOTcgNDE4LjYxQzExODkuMzMgNDE5LjQ2OSAxMTg5LjAxIDQyMC40NDUgMTE4OS4wMSA0MjEuNTM2QzExODguOTggNDIyLjQ0NiAxMTg5LjE4IDQyMy4yNCAxMTg5LjYgNDIzLjkxOEMxMTkwLjAyIDQyNC41OTYgMTE5MC42IDQyNS4xNzggMTE5MS4zNSA0MjUuNjY2QzExOTIuMDkgNDI2LjE1NCAxMTkyLjk1IDQyNi41NzYgMTE5My45MyA0MjYuOTMxQzExOTQuOSA0MjcuMjg3IDExOTUuOTQgNDI3LjU4OSAxMTk3LjA1IDQyNy44MzdMMTIwMS42MSA0MjguOTI4QzEyMDMuODMgNDI5LjQyNCAxMjA1Ljg2IDQzMC4wODYgMTIwNy43MiA0MzAuOTEzQzEyMDkuNTcgNDMxLjczOSAxMjExLjE3IDQzMi43NTYgMTIxMi41MyA0MzMuOTYzQzEyMTMuODggNDM1LjE3IDEyMTQuOTQgNDM2LjU5MiAxMjE1LjY5IDQzOC4yM0MxMjE2LjQ0IDQzOS44NjcgMTIxNi44MyA0NDEuNzQzIDEyMTYuODQgNDQzLjg2QzEyMTYuODMgNDQ2Ljk2OSAxMjE2LjA0IDQ0OS42NiAxMjE0LjQ4IDQ1MS45MzRDMTIxMi45MSA0NTQuMjA4IDEyMTAuNjYgNDU1Ljk2OSAxMjA3LjczIDQ1Ny4yMTdDMTIwNC43OSA0NTguNDY2IDEyMDEuMjYgNDU5LjA5IDExOTcuMTMgNDU5LjA5QzExOTMuMDIgNDU5LjA5IDExODkuNDYgNDU4LjQ2MSAxMTg2LjQyIDQ1Ny4yMDVDMTE4My4zOSA0NTUuOTQ4IDExODEuMDIgNDU0LjA4NCAxMTc5LjMzIDQ1MS42MTFDMTE3Ny42MyA0NDkuMTM5IDExNzYuNzQgNDQ2LjA3NiAxMTc2LjY2IDQ0Mi40MjFIMTE4Ny4wNUMxMTg3LjE3IDQ0NC4xMjUgMTE4Ny42NiA0NDUuNTQzIDExODguNTMgNDQ2LjY3NUMxMTg5LjQgNDQ3LjgwOCAxMTkwLjU2IDQ0OC42NiAxMTkyLjAzIDQ0OS4yM0MxMTkzLjQ5IDQ0OS44MDEgMTE5NS4xNSA0NTAuMDg2IDExOTcgNDUwLjA4NkMxMTk4LjgyIDQ1MC4wODYgMTIwMC40IDQ0OS44MjEgMTIwMS43NSA0NDkuMjkyQzEyMDMuMSA0NDguNzYzIDEyMDQuMTQgNDQ4LjAyNyAxMjA0Ljg5IDQ0Ny4wODVDMTIwNS42MyA0NDYuMTQyIDEyMDYgNDQ1LjA1OSAxMjA2IDQ0My44MzVDMTIwNiA0NDIuNjk0IDEyMDUuNjcgNDQxLjczNSAxMjA1IDQ0MC45NThDMTIwNC4zMyA0NDAuMTgxIDEyMDMuMzUgNDM5LjUxOSAxMjAyLjA3IDQzOC45NzRDMTIwMC43OSA0MzguNDI4IDExOTkuMjIgNDM3LjkzMiAxMTk3LjM3IDQzNy40ODVMMTE5MS44NCA0MzYuMDk2QzExODcuNTYgNDM1LjA1NSAxMTg0LjE4IDQzMy40MjYgMTE4MS43IDQzMS4yMUMxMTc5LjIyIDQyOC45OTQgMTE3Ny45OCA0MjYuMDA5IDExNzggNDIyLjI1NkMxMTc3Ljk4IDQxOS4xOCAxMTc4LjgxIDQxNi40OTMgMTE4MC40NyA0MTQuMTk1QzExODIuMTMgNDExLjg5NiAxMTg0LjQyIDQxMC4xMDIgMTE4Ny4zMyA0MDguODEyQzExOTAuMjQgNDA3LjUyMiAxMTkzLjU0IDQwNi44NzcgMTE5Ny4yNSA0MDYuODc3QzEyMDEuMDIgNDA2Ljg3NyAxMjA0LjMxIDQwNy41MjIgMTIwNy4xMyA0MDguODEyQzEyMDkuOTUgNDEwLjEwMiAxMjEyLjE1IDQxMS44OTYgMTIxMy43MiA0MTQuMTk1QzEyMTUuMjkgNDE2LjQ5MyAxMjE2LjEgNDE5LjE1NSAxMjE2LjE1IDQyMi4xODFIMTIwNS44NloiIGZpbGw9IiMwODJBNDEiLz4KPHBhdGggZD0iTTEyMzUuNTcgNDA3LjU3M0gxMjI0LjgzVjQ1OC4zNzJIMTIzNS41N1Y0MDcuNTczWiIgZmlsbD0iIzA4MkE0MSIvPgo8cGF0aCBkPSJNMTI3Mi43OCA0MjIuMTgxQzEyNzIuNTggNDIwLjE4IDEyNzEuNzMgNDE4LjYyNiAxMjcwLjIyIDQxNy41MThDMTI2OC43MiA0MTYuNDEgMTI2Ni42NyA0MTUuODU2IDEyNjQuMDkgNDE1Ljg1NkMxMjYyLjM0IDQxNS44NTYgMTI2MC44NiA0MTYuMSAxMjU5LjY1IDQxNi41ODhDMTI1OC40NSA0MTcuMDc2IDEyNTcuNTMgNDE3Ljc1IDEyNTYuODkgNDE4LjYwOUMxMjU2LjI1IDQxOS40NjkgMTI1NS45MyA0MjAuNDQ1IDEyNTUuOTMgNDIxLjUzNkMxMjU1LjkgNDIyLjQ0NiAxMjU2LjA5IDQyMy4yNCAxMjU2LjUyIDQyMy45MThDMTI1Ni45NCA0MjQuNTk2IDEyNTcuNTIgNDI1LjE3OCAxMjU4LjI3IDQyNS42NjZDMTI1OS4wMSA0MjYuMTU0IDEyNTkuODcgNDI2LjU3NiAxMjYwLjg0IDQyNi45MzFDMTI2MS44MiA0MjcuMjg3IDEyNjIuODYgNDI3LjU4OSAxMjYzLjk3IDQyNy44MzdMMTI2OC41MyA0MjguOTI4QzEyNzAuNzUgNDI5LjQyNCAxMjcyLjc4IDQzMC4wODYgMTI3NC42NCA0MzAuOTEyQzEyNzYuNDkgNDMxLjczOSAxMjc4LjA5IDQzMi43NTYgMTI3OS40NSA0MzMuOTYzQzEyODAuOCA0MzUuMTcgMTI4MS44NiA0MzYuNTkyIDEyODIuNjEgNDM4LjIyOUMxMjgzLjM2IDQzOS44NjcgMTI4My43NSA0NDEuNzQzIDEyODMuNzYgNDQzLjg2QzEyODMuNzUgNDQ2Ljk2OSAxMjgyLjk2IDQ0OS42NiAxMjgxLjQgNDUxLjkzNEMxMjc5LjgzIDQ1NC4yMDcgMTI3Ny41OCA0NTUuOTY5IDEyNzQuNjUgNDU3LjIxN0MxMjcxLjcxIDQ1OC40NjUgMTI2OC4xOCA0NTkuMDkgMTI2NC4wNCA0NTkuMDlDMTI1OS45NCA0NTkuMDkgMTI1Ni4zOCA0NTguNDYxIDEyNTMuMzQgNDU3LjIwNEMxMjUwLjMxIDQ1NS45NDggMTI0Ny45NCA0NTQuMDgzIDEyNDYuMjUgNDUxLjYxMUMxMjQ0LjU1IDQ0OS4xMzkgMTI0My42NiA0NDYuMDc2IDEyNDMuNTggNDQyLjQyMUgxMjUzLjk3QzEyNTQuMDkgNDQ0LjEyNSAxMjU0LjU4IDQ0NS41NDMgMTI1NS40NSA0NDYuNjc1QzEyNTYuMzIgNDQ3LjgwOCAxMjU3LjQ4IDQ0OC42NiAxMjU4Ljk1IDQ0OS4yM0MxMjYwLjQxIDQ0OS44MDEgMTI2Mi4wNyA0NTAuMDg2IDEyNjMuOTIgNDUwLjA4NkMxMjY1Ljc0IDQ1MC4wODYgMTI2Ny4zMiA0NDkuODIxIDEyNjguNjcgNDQ5LjI5MkMxMjcwLjAyIDQ0OC43NjMgMTI3MS4wNiA0NDguMDI3IDEyNzEuODEgNDQ3LjA4NUMxMjcyLjU1IDQ0Ni4xNDIgMTI3Mi45MiA0NDUuMDU5IDEyNzIuOTIgNDQzLjgzNUMxMjcyLjkyIDQ0Mi42OTQgMTI3Mi41OSA0NDEuNzM1IDEyNzEuOTIgNDQwLjk1OEMxMjcxLjI1IDQ0MC4xODEgMTI3MC4yNyA0MzkuNTE5IDEyNjguOTkgNDM4Ljk3NEMxMjY3LjcxIDQzOC40MjggMTI2Ni4xNCA0MzcuOTMyIDEyNjQuMjkgNDM3LjQ4NUwxMjU4Ljc2IDQzNi4wOTZDMTI1NC40OCA0MzUuMDU1IDEyNTEuMSA0MzMuNDI2IDEyNDguNjIgNDMxLjIxQzEyNDYuMTQgNDI4Ljk5NCAxMjQ0LjkgNDI2LjAwOSAxMjQ0LjkyIDQyMi4yNTZDMTI0NC45IDQxOS4xOCAxMjQ1LjczIDQxNi40OTMgMTI0Ny4zOSA0MTQuMTk1QzEyNDkuMDUgNDExLjg5NiAxMjUxLjM0IDQxMC4xMDIgMTI1NC4yNSA0MDguODEyQzEyNTcuMTYgNDA3LjUyMiAxMjYwLjQ2IDQwNi44NzcgMTI2NC4xNyA0MDYuODc3QzEyNjcuOTQgNDA2Ljg3NyAxMjcxLjIzIDQwNy41MjIgMTI3NC4wNSA0MDguODEyQzEyNzYuODcgNDEwLjEwMiAxMjc5LjA3IDQxMS44OTYgMTI4MC42NCA0MTQuMTk1QzEyODIuMjEgNDE2LjQ5MyAxMjgzLjAyIDQxOS4xNTUgMTI4My4wNyA0MjIuMTgxSDEyNzIuNzhaIiBmaWxsPSIjMDgyQTQxIi8+Cjwvc3ZnPgo=\",\"type\":\"image/svg+xml\",\"text\":\"<svg width=\\\"1335\\\" height=\\\"500\\\" viewBox=\\\"0 0 1335 500\\\" fill=\\\"none\\\" xmlns=\\\"http://www.w3.org/2000/svg\\\">\\n<path d=\\\"M811.403 151.067L613.761 27.3778C607.771 23.8789 601.674 22.3819 595.572 25.6811C590.454 28.5243 587.94 35.3373 587.94 41.5061V279.114L613.806 262.886V57.6509L787.334 166.211L774.767 174.074L799.291 189.509L811.74 181.683C816.718 178.604 820.365 172.38 820.365 166.211C820.365 160.043 816.403 154.199 811.403 151.067Z\\\" fill=\\\"#00BAF5\\\"/>\\n<path d=\\\"M811.789 209.456L624.361 92.1675V122.931L787.243 224.85L613.732 333.441V317.724L587.962 333.856V349.546C587.962 355.704 590.956 362.125 596.084 364.946C602.972 368.734 611.286 365.216 613.732 363.703L811.488 240.026C816.38 236.893 820.366 230.539 820.366 224.38C820.366 218.222 816.746 212.535 811.789 209.456Z\\\" fill=\\\"#00BAF5\\\"/>\\n<path d=\\\"M730.842 201.488L564.274 305.829V85.3467L577.416 93.6503V62.7525L564.274 54.3163C559.21 51.4196 551.356 51.1621 546.453 54.3163C541.55 57.4705 538.44 63.4687 538.44 69.6163V321.926C538.44 328.094 538.514 334.984 546.453 338.836C553.523 342.269 561.886 337.784 564.31 336.282L755.5 216.897L730.842 201.488Z\\\" fill=\\\"#00BAF5\\\"/>\\n<path fill-rule=\\\"evenodd\\\" clip-rule=\\\"evenodd\\\" d=\\\"M165.361 247.905L91.7546 248.138L79.3026 282.808C78.8661 284.023 77.7139 284.833 76.423 284.833H55.2251C54.2291 284.833 53.2955 284.349 52.7225 283.534C52.1494 282.72 52.0086 281.677 52.3451 280.74L114.22 108.377C114.656 107.161 115.808 106.351 117.1 106.351H139.825C141.117 106.351 142.269 107.161 142.705 108.377L204.58 280.74C204.916 281.677 204.775 282.72 204.203 283.534C203.629 284.349 202.696 284.833 201.7 284.833H180.693C179.4 284.833 178.246 284.02 177.811 282.802C177.811 282.802 167.709 254.485 165.689 248.822L165.361 247.905ZM165.334 247.813C165.334 247.824 165.336 247.834 165.339 247.844C165.339 247.844 165.426 247.905 165.427 247.905C165.427 247.905 165.433 247.883 165.442 247.857C165.432 247.828 165.427 247.813 165.427 247.813H165.334ZM154.581 217.665L128.562 145.083L102.543 217.876C105.132 217.866 145.051 217.704 153.248 217.671L154.581 217.665Z\\\" fill=\\\"#082A41\\\"/>\\n<path fill-rule=\\\"evenodd\\\" clip-rule=\\\"evenodd\\\" d=\\\"M241.499 284.74H221.638C219.999 284.74 218.671 283.411 218.671 281.772V109.409C218.671 107.771 219.999 106.442 221.638 106.442H241.499C242.497 106.442 243.429 106.944 243.977 107.778L327.524 234.687V109.409C327.524 107.771 328.852 106.442 330.491 106.442H350.352C351.991 106.442 353.32 107.771 353.32 109.409V281.772C353.32 283.411 351.991 284.74 350.352 284.74H330.491C329.493 284.74 328.562 284.238 328.013 283.404L244.466 156.494V281.772C244.466 283.411 243.138 284.74 241.499 284.74Z\\\" fill=\\\"#082A41\\\"/>\\n<path fill-rule=\\\"evenodd\\\" clip-rule=\\\"evenodd\\\" d=\\\"M427.941 214.123L367.806 110.905C367.272 109.987 367.268 108.854 367.797 107.933C368.327 107.012 369.308 106.444 370.37 106.444H394.05C395.1 106.444 396.072 106.999 396.606 107.903L440.833 182.851L484.877 107.908C485.41 107.001 486.383 106.444 487.435 106.444H511.116C512.178 106.444 513.159 107.012 513.688 107.932C514.217 108.853 514.214 109.987 513.68 110.904L453.736 213.876V281.774C453.736 283.413 452.408 284.742 450.769 284.742H430.908C429.269 284.742 427.941 283.413 427.941 281.774V214.123Z\\\" fill=\\\"#082A41\\\"/>\\n<path fill-rule=\\\"evenodd\\\" clip-rule=\\\"evenodd\\\" d=\\\"M872.614 284.74H852.753C851.114 284.74 849.786 283.411 849.786 281.772V109.409C849.786 107.771 851.114 106.442 852.753 106.442H922.266C939.341 106.442 951.673 110.832 959.397 119.219C967.047 127.525 971.067 140.879 971.067 159.395C971.067 180.572 965.61 195.23 955.186 203.573C964.862 210.593 969.921 222.966 969.921 240.898V281.772C969.921 283.411 968.592 284.74 966.954 284.74H947.081C945.442 284.74 944.114 283.411 944.114 281.772V242.06C944.114 234.034 942.507 228.172 938.885 224.596C935.264 221.021 929.491 219.419 921.682 219.419H875.581V281.772C875.581 283.411 874.253 284.74 872.614 284.74ZM875.581 189.176H921.12C929.64 189.176 935.896 187.285 939.759 183.111C943.689 178.862 945.462 171.987 945.462 162.596C945.462 153.378 943.697 146.632 939.776 142.469C935.91 138.364 929.649 136.508 921.12 136.508H875.581V189.176Z\\\" fill=\\\"#082A41\\\"/>\\n<path fill-rule=\\\"evenodd\\\" clip-rule=\\\"evenodd\\\" d=\\\"M994.169 106.44H1014.03C1015.67 106.44 1017 107.768 1017 109.407V209.481C1017 227.648 1016.68 259.333 1057.57 259.333C1098.46 259.333 1098.15 227.653 1098.15 209.481V109.407C1098.15 107.768 1099.47 106.44 1101.11 106.44H1120.97C1122.61 106.44 1123.94 107.768 1123.94 109.407V218.139C1123.94 245.787 1114.95 286.897 1057.57 286.897C1000.19 286.897 991.202 245.791 991.202 218.139V109.407C991.202 107.768 992.53 106.44 994.169 106.44Z\\\" fill=\\\"#082A41\\\"/>\\n<path fill-rule=\\\"evenodd\\\" clip-rule=\\\"evenodd\\\" d=\\\"M1168.29 284.74H1148.42C1146.79 284.74 1145.46 283.411 1145.46 281.772V109.409C1145.46 107.771 1146.79 106.442 1148.42 106.442H1168.29C1169.28 106.442 1170.21 106.944 1170.76 107.778L1254.31 234.687V109.409C1254.31 107.771 1255.64 106.442 1257.28 106.442H1277.14C1278.78 106.442 1280.11 107.771 1280.11 109.409V281.772C1280.11 283.411 1278.78 284.74 1277.14 284.74H1257.28C1256.28 284.74 1255.35 284.238 1254.8 283.404L1171.25 156.494V281.772C1171.25 283.411 1169.92 284.74 1168.29 284.74Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M67.9196 407.574H57.1796V458.372H67.9196V407.574Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M120.059 407.574V458.372H110.783L88.6825 426.4H88.3104V458.372H77.5701V407.574H86.9958L108.922 439.521H109.369V407.574H120.059Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M127.772 416.426V407.572H169.493V416.426H153.941V458.37H143.324V416.426H127.772Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M177.184 458.372V407.573H211.414V416.428H187.924V428.532H209.652V437.387H187.924V449.516H211.513V458.372H177.184Z\\\" fill=\\\"#082A41\\\"/>\\n<path fill-rule=\\\"evenodd\\\" clip-rule=\\\"evenodd\\\" d=\\\"M231.503 440.362V458.37H220.763V407.571H240.804C244.641 407.571 247.919 408.253 250.639 409.617C253.359 410.981 255.435 412.908 256.865 415.397C258.295 417.885 259.011 420.808 259.011 424.165C259.011 427.538 258.283 430.436 256.828 432.859C255.373 435.281 253.268 437.137 250.515 438.427C250.361 438.5 250.204 438.57 250.046 438.638L260.821 458.37H248.965L239.343 440.362H231.503ZM231.503 431.73H238.795C240.846 431.73 242.549 431.449 243.905 430.887C245.261 430.325 246.274 429.481 246.943 428.357C247.613 427.232 247.948 425.835 247.948 424.165C247.948 422.478 247.613 421.056 246.943 419.899C246.274 418.741 245.257 417.86 243.893 417.257C242.528 416.653 240.813 416.352 238.746 416.352H231.503V431.73Z\\\" fill=\\\"#082A41\\\"/>\\n<path fill-rule=\\\"evenodd\\\" clip-rule=\\\"evenodd\\\" d=\\\"M279.917 446.789L276.149 458.372H264.64L282.176 407.574H296.017L313.529 458.372H302.02L298.259 446.789H279.917ZM295.537 438.405L289.295 419.182H288.898L282.645 438.405H295.537Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M362.866 425.355H352.002C351.803 423.95 351.398 422.697 350.786 421.597C350.174 420.498 349.389 419.56 348.43 418.782C347.47 418.005 346.367 417.41 345.118 416.996C343.87 416.583 342.518 416.376 341.063 416.376C338.434 416.376 336.143 417.025 334.192 418.324C332.241 419.622 330.728 421.507 329.653 423.979C328.578 426.451 328.041 429.448 328.041 432.97C328.041 436.592 328.582 439.634 329.665 442.098C330.749 444.562 332.266 446.422 334.217 447.679C336.168 448.936 338.425 449.564 340.989 449.564C342.427 449.564 343.762 449.374 344.994 448.994C346.226 448.613 347.322 448.055 348.281 447.319C349.24 446.583 350.038 445.687 350.675 444.628C351.311 443.57 351.753 442.363 352.002 441.007L362.866 441.056C362.584 443.388 361.886 445.633 360.77 447.791C359.653 449.949 358.157 451.875 356.28 453.57C354.403 455.265 352.171 456.604 349.583 457.588C346.995 458.572 344.073 459.064 340.815 459.064C336.284 459.064 332.237 458.039 328.673 455.988C325.11 453.938 322.299 450.97 320.24 447.084C318.181 443.198 317.152 438.493 317.152 432.97C317.152 427.431 318.194 422.718 320.277 418.832C322.361 414.946 325.188 411.982 328.76 409.94C332.332 407.898 336.35 406.876 340.815 406.876C343.758 406.876 346.491 407.29 349.012 408.117C351.534 408.943 353.771 410.146 355.722 411.726C357.673 413.305 359.265 415.235 360.497 417.517C361.729 419.799 362.518 422.412 362.866 425.355Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M369.439 416.427V407.572H411.159V416.427H395.607V458.37H384.991V416.427H369.439Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M429.587 407.574H418.847V458.372H429.587V407.574Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M448.416 407.574L460.694 446.169H461.165L473.468 407.574H485.374L467.862 458.372H454.021L436.485 407.574H448.416Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M492.268 458.372V407.573H526.497V416.428H503.008V428.532H524.736V437.388H503.008V449.517H526.596V458.372H492.268Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M552.046 407.574H565.291L579.281 441.704H579.876L593.865 407.574H607.111V458.372H596.693V425.308H596.271L583.125 458.124H576.032L562.885 425.184H562.464V458.372H552.046V407.574Z\\\" fill=\\\"#082A41\\\"/>\\n<path fill-rule=\\\"evenodd\\\" clip-rule=\\\"evenodd\\\" d=\\\"M629.258 446.789L625.489 458.372H613.98L631.516 407.574H645.357L662.869 458.372H651.36L647.599 446.789H629.258ZM644.877 438.405L638.635 419.182H638.239L631.985 438.405H644.877Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M669.765 458.372V407.573H680.505V449.517H702.283V458.372H669.765Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M718.778 458.372L704.243 407.573H715.975L724.384 442.869H724.806L734.082 407.573H744.128L753.38 442.944H753.826L762.235 407.573H773.967L759.432 458.372H748.965L739.291 425.159H738.894L729.246 458.372H718.778Z\\\" fill=\\\"#082A41\\\"/>\\n<path fill-rule=\\\"evenodd\\\" clip-rule=\\\"evenodd\\\" d=\\\"M787.857 446.789L784.089 458.372H772.58L790.116 407.574H803.957L821.468 458.372H809.96L806.199 446.789H787.857ZM803.476 438.405L797.235 419.182H796.838L790.585 438.405H803.476Z\\\" fill=\\\"#082A41\\\"/>\\n<path fill-rule=\\\"evenodd\\\" clip-rule=\\\"evenodd\\\" d=\\\"M839.103 440.362V458.37H828.363V407.571H848.404C852.24 407.571 855.519 408.253 858.239 409.617C860.959 410.982 863.034 412.908 864.465 415.397C865.895 417.885 866.61 420.808 866.61 424.165C866.61 427.538 865.883 430.436 864.427 432.859C862.972 435.281 860.868 437.137 858.115 438.427C857.96 438.5 857.803 438.57 857.645 438.639L868.421 458.37H856.565L846.943 440.362H839.103ZM839.103 431.73H846.395C848.445 431.73 850.149 431.449 851.505 430.887C852.86 430.325 853.874 429.481 854.543 428.357C855.213 427.232 855.548 425.835 855.548 424.165C855.548 422.478 855.213 421.056 854.543 419.899C853.874 418.741 852.856 417.861 851.492 417.257C850.128 416.653 848.412 416.352 846.345 416.352H839.103V431.73Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M874.995 458.372V407.573H909.224V416.428H885.735V428.532H907.463V437.388H885.735V449.517H909.324V458.372H874.995Z\\\" fill=\\\"#082A41\\\"/>\\n<path fill-rule=\\\"evenodd\\\" clip-rule=\\\"evenodd\\\" d=\\\"M947.296 446.789L943.527 458.372H932.018L949.555 407.574H963.395L980.907 458.372H969.398L965.637 446.789H947.296ZM962.915 438.405L956.673 419.182H956.277L950.023 438.405H962.915Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M1030.29 407.574V458.372H1021.02L998.915 426.4H998.543V458.372H987.803V407.574H997.229L1019.16 439.521H1019.6V407.574H1030.29Z\\\" fill=\\\"#082A41\\\"/>\\n<path fill-rule=\\\"evenodd\\\" clip-rule=\\\"evenodd\\\" d=\\\"M1052.46 446.789L1048.7 458.372H1037.19L1054.72 407.574H1068.56L1086.08 458.372H1074.57L1070.81 446.789H1052.46ZM1068.08 438.405L1061.84 419.182H1061.45L1055.19 438.405H1068.08Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M1092.97 458.372V407.573H1103.71V449.516H1125.49V458.372H1092.97Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M1123.93 407.574H1135.96L1147.54 429.451H1148.04L1159.62 407.574H1171.65L1153.12 440.414V458.372H1142.45V440.414L1123.93 407.574Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M1205.86 422.181C1205.66 420.18 1204.81 418.626 1203.3 417.518C1201.8 416.41 1199.75 415.856 1197.17 415.856C1195.42 415.856 1193.94 416.1 1192.73 416.588C1191.53 417.076 1190.61 417.75 1189.97 418.61C1189.33 419.469 1189.01 420.445 1189.01 421.536C1188.98 422.446 1189.18 423.24 1189.6 423.918C1190.02 424.596 1190.6 425.178 1191.35 425.666C1192.09 426.154 1192.95 426.576 1193.93 426.931C1194.9 427.287 1195.94 427.589 1197.05 427.837L1201.61 428.928C1203.83 429.424 1205.86 430.086 1207.72 430.913C1209.57 431.739 1211.17 432.756 1212.53 433.963C1213.88 435.17 1214.94 436.592 1215.69 438.23C1216.44 439.867 1216.83 441.743 1216.84 443.86C1216.83 446.969 1216.04 449.66 1214.48 451.934C1212.91 454.208 1210.66 455.969 1207.73 457.217C1204.79 458.466 1201.26 459.09 1197.13 459.09C1193.02 459.09 1189.46 458.461 1186.42 457.205C1183.39 455.948 1181.02 454.084 1179.33 451.611C1177.63 449.139 1176.74 446.076 1176.66 442.421H1187.05C1187.17 444.125 1187.66 445.543 1188.53 446.675C1189.4 447.808 1190.56 448.66 1192.03 449.23C1193.49 449.801 1195.15 450.086 1197 450.086C1198.82 450.086 1200.4 449.821 1201.75 449.292C1203.1 448.763 1204.14 448.027 1204.89 447.085C1205.63 446.142 1206 445.059 1206 443.835C1206 442.694 1205.67 441.735 1205 440.958C1204.33 440.181 1203.35 439.519 1202.07 438.974C1200.79 438.428 1199.22 437.932 1197.37 437.485L1191.84 436.096C1187.56 435.055 1184.18 433.426 1181.7 431.21C1179.22 428.994 1177.98 426.009 1178 422.256C1177.98 419.18 1178.81 416.493 1180.47 414.195C1182.13 411.896 1184.42 410.102 1187.33 408.812C1190.24 407.522 1193.54 406.877 1197.25 406.877C1201.02 406.877 1204.31 407.522 1207.13 408.812C1209.95 410.102 1212.15 411.896 1213.72 414.195C1215.29 416.493 1216.1 419.155 1216.15 422.181H1205.86Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M1235.57 407.573H1224.83V458.372H1235.57V407.573Z\\\" fill=\\\"#082A41\\\"/>\\n<path d=\\\"M1272.78 422.181C1272.58 420.18 1271.73 418.626 1270.22 417.518C1268.72 416.41 1266.67 415.856 1264.09 415.856C1262.34 415.856 1260.86 416.1 1259.65 416.588C1258.45 417.076 1257.53 417.75 1256.89 418.609C1256.25 419.469 1255.93 420.445 1255.93 421.536C1255.9 422.446 1256.09 423.24 1256.52 423.918C1256.94 424.596 1257.52 425.178 1258.27 425.666C1259.01 426.154 1259.87 426.576 1260.84 426.931C1261.82 427.287 1262.86 427.589 1263.97 427.837L1268.53 428.928C1270.75 429.424 1272.78 430.086 1274.64 430.912C1276.49 431.739 1278.09 432.756 1279.45 433.963C1280.8 435.17 1281.86 436.592 1282.61 438.229C1283.36 439.867 1283.75 441.743 1283.76 443.86C1283.75 446.969 1282.96 449.66 1281.4 451.934C1279.83 454.207 1277.58 455.969 1274.65 457.217C1271.71 458.465 1268.18 459.09 1264.04 459.09C1259.94 459.09 1256.38 458.461 1253.34 457.204C1250.31 455.948 1247.94 454.083 1246.25 451.611C1244.55 449.139 1243.66 446.076 1243.58 442.421H1253.97C1254.09 444.125 1254.58 445.543 1255.45 446.675C1256.32 447.808 1257.48 448.66 1258.95 449.23C1260.41 449.801 1262.07 450.086 1263.92 450.086C1265.74 450.086 1267.32 449.821 1268.67 449.292C1270.02 448.763 1271.06 448.027 1271.81 447.085C1272.55 446.142 1272.92 445.059 1272.92 443.835C1272.92 442.694 1272.59 441.735 1271.92 440.958C1271.25 440.181 1270.27 439.519 1268.99 438.974C1267.71 438.428 1266.14 437.932 1264.29 437.485L1258.76 436.096C1254.48 435.055 1251.1 433.426 1248.62 431.21C1246.14 428.994 1244.9 426.009 1244.92 422.256C1244.9 419.18 1245.73 416.493 1247.39 414.195C1249.05 411.896 1251.34 410.102 1254.25 408.812C1257.16 407.522 1260.46 406.877 1264.17 406.877C1267.94 406.877 1271.23 407.522 1274.05 408.812C1276.87 410.102 1279.07 411.896 1280.64 414.195C1282.21 416.493 1283.02 419.155 1283.07 422.181H1272.78Z\\\" fill=\\\"#082A41\\\"/>\\n</svg>\\n\"}",
+          "validation_pattern": null,
+          "validation_error_message": null,
+          "style": "primary",
+          "container_guid": "66627636762f89d49b9fdd6cf136c116",
+          "graph_type": 0,
+          "graph_direction": "HORIZONTAL",
+          "date_mode": "DATE",
+          "store_value_as": "=password_value",
+          "allow_table_row_selection": false,
+          "is_searchable": false,
+          "height": null,
+          "image_fit": "COVER",
+          "min_value": 0,
+          "max_value": 100,
+          "step": 1,
+          "width": "AUTO",
+          "width_type": "PIXEL_WIDTH",
+          "width_fixed_px": 750,
+          "boolean_label_true": "Yes",
+          "boolean_label_false": "No"
+        },
+        {
+          "guid": "7165b2e79195e47c908a2ee48fab783d",
+          "name": "Heading",
+          "description": "",
+          "required": false,
+          "type": "TITLE",
+          "multi_select": false,
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "ranking": 0,
+          "max_characters": null,
+          "default_value": null,
+          "content": "Define the TI Lookup Query",
+          "validation_pattern": null,
+          "validation_error_message": null,
+          "style": "primary",
+          "container_guid": "51fabd59c2a77407fd897e8073cc8e5e",
+          "graph_type": 0,
+          "graph_direction": "HORIZONTAL",
+          "date_mode": "DATE",
+          "store_value_as": "=password_value",
+          "allow_table_row_selection": false,
+          "is_searchable": false,
+          "height": null,
+          "image_fit": "CONTAIN",
+          "min_value": 0,
+          "max_value": 100,
+          "step": 1,
+          "width": "AUTO",
+          "width_type": "FLEX_WIDTH",
+          "width_fixed_px": 0,
+          "boolean_label_true": "Yes",
+          "boolean_label_false": "No"
+        },
+        {
+          "guid": "8d259c6f2e4430938b504bd0fa956f70",
+          "name": "Rich text",
+          "description": "",
+          "required": false,
+          "type": "PARAGRAPH",
+          "multi_select": false,
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "ranking": 0,
+          "max_characters": null,
+          "default_value": null,
+          "content": "This form allows you to specify a query that retrieves data from the ANY.RUN Threat Intelligence Lookup.",
+          "validation_pattern": null,
+          "validation_error_message": null,
+          "style": "primary",
+          "container_guid": "99774c6922d71b85cff6efb8efa0ef99",
+          "graph_type": 0,
+          "graph_direction": "HORIZONTAL",
+          "date_mode": "DATE",
+          "store_value_as": "=password_value",
+          "allow_table_row_selection": false,
+          "is_searchable": false,
+          "height": null,
+          "image_fit": "CONTAIN",
+          "min_value": 0,
+          "max_value": 100,
+          "step": 1,
+          "width": "AUTO",
+          "width_type": "FLEX_WIDTH",
+          "width_fixed_px": 0,
+          "boolean_label_true": "Yes",
+          "boolean_label_false": "No"
+        },
+        {
+          "guid": "dfd73119bec6c49316d1c7b77ca25d7c",
+          "name": "Rich text",
+          "description": "",
+          "required": false,
+          "type": "PARAGRAPH",
+          "multi_select": false,
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "ranking": 0,
+          "max_characters": null,
+          "default_value": null,
+          "content": "ex: domainName:\"*.tventyvd20sb.top\" AND (destinationIp:\"76.223.54.146\" OR destinationIp:\"147.185.221.22\")",
+          "validation_pattern": null,
+          "validation_error_message": null,
+          "style": "primary",
+          "container_guid": "b2e4ba2e63988e6510e41aac22b52178",
+          "graph_type": 0,
+          "graph_direction": "HORIZONTAL",
+          "date_mode": "DATE",
+          "store_value_as": "=password_value",
+          "allow_table_row_selection": false,
+          "is_searchable": false,
+          "height": null,
+          "image_fit": "CONTAIN",
+          "min_value": 0,
+          "max_value": 100,
+          "step": 1,
+          "width": "AUTO",
+          "width_type": "FLEX_WIDTH",
+          "width_fixed_px": 0,
+          "boolean_label_true": "Yes",
+          "boolean_label_false": "No"
+        },
+        {
+          "guid": "b0de6c14a93ef19bc614a2631d87a389",
+          "name": "Rich text",
+          "description": "",
+          "required": false,
+          "type": "PARAGRAPH",
+          "multi_select": false,
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "ranking": 0,
+          "max_characters": null,
+          "default_value": null,
+          "content": "Type your query below in the \"Query\" box.",
+          "validation_pattern": null,
+          "validation_error_message": null,
+          "style": "primary",
+          "container_guid": "bfac3b940077741bfa596bf5eb9043b1",
+          "graph_type": 0,
+          "graph_direction": "HORIZONTAL",
+          "date_mode": "DATE",
+          "store_value_as": "=password_value",
+          "allow_table_row_selection": false,
+          "is_searchable": false,
+          "height": null,
+          "image_fit": "CONTAIN",
+          "min_value": 0,
+          "max_value": 100,
+          "step": 1,
+          "width": "AUTO",
+          "width_type": "FLEX_WIDTH",
+          "width_fixed_px": 0,
+          "boolean_label_true": "Yes",
+          "boolean_label_false": "No"
+        },
+        {
+          "guid": "9f858b3673c709e3f1900ef2d91ca405",
+          "name": "Query",
+          "description": "",
+          "required": false,
+          "type": "LONG_TEXT",
+          "multi_select": false,
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "ranking": 0,
+          "max_characters": null,
+          "default_value": null,
+          "content": null,
+          "validation_pattern": null,
+          "validation_error_message": null,
+          "style": "primary",
+          "container_guid": "892a7b1b4b53824c58d74fafc22bc87a",
+          "graph_type": 0,
+          "graph_direction": "HORIZONTAL",
+          "date_mode": "DATE",
+          "store_value_as": "=password_value",
+          "allow_table_row_selection": false,
+          "is_searchable": false,
+          "height": null,
+          "image_fit": "CONTAIN",
+          "min_value": 0,
+          "max_value": 100,
+          "step": 1,
+          "width": "AUTO",
+          "width_type": "FLEX_WIDTH",
+          "width_fixed_px": 0,
+          "boolean_label_true": "Yes",
+          "boolean_label_false": "No"
+        },
+        {
+          "guid": "a7d37f6c425b4b062a8c34d9e6014ba8",
+          "name": "Button",
+          "description": "",
+          "required": false,
+          "type": "BUTTON",
+          "multi_select": false,
+          "options": [
+            "Option 1",
+            "Option 2"
+          ],
+          "ranking": 0,
+          "max_characters": null,
+          "default_value": null,
+          "content": "Submit",
+          "validation_pattern": null,
+          "validation_error_message": null,
+          "style": "primary",
+          "container_guid": "131984cbcf01e46a8947a5bf5dfda014",
+          "graph_type": 0,
+          "graph_direction": "HORIZONTAL",
+          "date_mode": "DATE",
+          "store_value_as": "=password_value",
+          "allow_table_row_selection": false,
+          "is_searchable": false,
+          "height": null,
+          "image_fit": "CONTAIN",
+          "min_value": 0,
+          "max_value": 100,
+          "step": 1,
+          "width": "AUTO",
+          "width_type": "FLEX_WIDTH",
+          "width_fixed_px": 0,
+          "boolean_label_true": "Yes",
+          "boolean_label_false": "No"
+        }
+      ],
+      "visibility": "tenant",
+      "agent_guid": "6dea7eacd3a326b19639e0cc285a4e5a",
+      "success_message": "Thank you for your submission",
+      "loading_message": "",
+      "logo_contents": "iVBORw0KGgoAAAANSUhEUgAAAFQAAAAYCAYAAABk8drWAAAACXBIWXMAAAsT\nAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAARCSURB\nVHgB7VhLctpAEB1k7LVyA/kEgRMEn8BQ5e8qcALjE1icAPsEkJW/VeATwA1Q\nTmDlBCE7l3/kPblbTIiMJcVOeaFXBRrN9Mz0vOnu6ZExBQoUKFCgwAdByX4Z\nDAbuw8PDwWw2a+LVk+rAcZxgZWWl02g0QpMSl5eXXRlnvLq62kLfqcmIi4uL\nZqlU+lwulztJ/aGvJ/p+39nZ6cu8R3j30c/f3t7umP8MRwtXV1df7+/vb6iM\nmZNJVJ6enppom5ydnbVNCpAIjENZF786Fn1kMgLE1PDocRz0HyTJQKe2zNOj\nMbBO3o1sZgS2Ybw29KqYd0ZEKMg8AGl980zAS3BhqV0Sv0Qmsho8/iCQi5T6\nXED/WtJmoj7W9/b2Vgk9gXUGWM+JtoF4H/VdFEdK/HvB4UIxuZ+2A2SPlykF\nayLhXkJ9z/wDsJlHaTZld3fXR4ho7O3tHWudRbyrxC+Ca+L4rxFuyXlJ7c7j\n4yOtKcuuuXd3d+0XJvMkZPwFWpm4cV64sLTBawuGB/UYus7Pz7vUB3NOYLGx\nV+EsuIHrT2ydITNCn5/sxyfaKdO0x02Qo8wNY7Yt52ChmeOKraAN2ZxlyBxL\nZb6xFCuvxWN4UE361PGYYn1egli0KSQJxIy42VIfso959rCehplFOYYUkY0M\nCJvn68C5CDUJLi2ho7msExVa3Pk0QL9veJxIuZ3W0pkZIMNYR3GodSBjA3VV\nlsUAPK1HprCOuqoQpmHGRV3FzNfcQvZQpSx06YjcFx3fMW8E7mBK0W6egwEk\n+ObZKkjqIO0hR1Ih/0vfYeGhpmAwgLpUX4OkMQv7+/shCNV0i+GtBrlYX5Kn\n2QLjNTeCMVvby6KkZ7IhsF/E6jyTDhqDfZMBJAHzUHHGP1cOuR8mJ05PTz0z\nPzs2MfZM20BgLAfCXGzmEAYTWbN4YRPy3JQxNusauo1V3hF3yopg4T1TbISS\nB3nSKLhZgL6HLDN8oLxp3ga8vPSTfnD3MTcTzw1ypeHASI6NX88+5Jy1tTWm\nF1luMRw8voHIKeeZbHBTHGCJgGseW4dU7pySrm3m6w62trZa9o/kQcdrkTNw\naw9c8fZVhcV+oqtb5FY0DDgSTw7TKgKT7+gkhH0jyQK6Tt4kG+7eMtmMIAas\nLj6ELULqtsfw8oJ1jdA+YGjgLYvvPCcoR84Yc63+UWiIxucf78HiSsuUZFvL\nTpgF73rzSAI3FMS0MnQJtUCSmD/KdwvdGFfyygnb5NZIBGI8ShzTpwnzUcpa\nWU2oh1p8ytOVmDIsxIlImOkB0w/9AGFDFhaabJhCmcNlH0zgYoGxXHKxHW45\n1LSF86vXQPdQ6sYqy7BmhYlofs7NPpImaZumR5y3jzVvsFLI0nW6ko9WRG6o\naVg0v/nA0JCwjHhx1aktw3jGA+yF8dykr2ZisRVsZLg4XpIcSGWOG+b5ilag\nQIECBZLxG5sJ41WbSDouAAAAAElFTkSuQmCC\n",
+      "logo_filename": "nites.jpeg",
+      "display_logo": false,
+      "icon": ":adhesive_bandage:",
+      "sso_groups": null,
+      "display_mode": "bordered"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Any.Run"
+    },
+    {
+      "name": "Intermediate"
+    },
+    {
+      "name": "Records"
+    },
+    {
+      "name": "Threat intelligence"
+    }
+  ],
+  "time_saved_unit": "minutes",
+  "time_saved_value": 0,
+  "origin_story_identifier": "cloud:eabc78bc0eed3904c959330c5dc766b4:44f54c3bb5f461f85b6525c4bce069e3",
+  "recipients": [
+    "f.kravtsov@any.run"
+  ],
+  "integration_product": null,
+  "integration_vendor": null,
+  "llm_product_instructions": "",
+  "send_to_stories": [],
+  "exported_at": "2025-08-08T10:22:13Z",
+  "icon": ":bar_chart:"
+}
