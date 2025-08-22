@@ -8,7 +8,7 @@ As a result, your Microsoft Sentinel incidents will include a verdict, threat sc
 
 ## Analyze URLs from Microsoft Sentinel Incidents via ANY.RUN Sandbox
 
-This playbook extracts URLs from incidents and sends them for analysis in the ANY.RUN Sandbox to enrich the incident with a verdict.
+This playbook extracts URLs from incidents and sends them for analysis in the ANY.RUN Sandbox to enrich the incident with a verdict using a single Azure Logic App.
 
 [Open connector page](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-URL)
 
