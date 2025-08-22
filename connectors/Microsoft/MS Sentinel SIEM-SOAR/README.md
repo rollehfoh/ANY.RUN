@@ -1,0 +1,7 @@
+# Microsoft Defender for Endpoint Azure Connector for VMRay Advanced Malware Sandbox
+
+Необходим тарифный план ?КАКОЙ? ANY.RUN и ваш API-ключ. 
+Мы рекомендуем сохранять ваш API-ключ во встроенном в Azure ресурсе “Key vaults”. 
+Для этого необходимо выбрать ваш Key vault или создать новый. 
+Затем перейдите в раздел Objects --> Secrets и создайте новый объект с именем ANYRUN-APIKey 
+(ВАЖНО! Имя объекта рекомендуется оставить таким же, иначе его придется менять в дальнейшем в развернутом Logic App) 
