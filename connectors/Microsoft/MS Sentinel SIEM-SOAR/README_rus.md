@@ -13,9 +13,16 @@
 
 [Open connector page](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-URL)
 
-### Analyze files from Microsoft Sentinel incidents
+## Analyze files from Microsoft Sentinel incidents
 
-Данный сценарий позволяет извлекать 
+Данный сценарий позволяет отправлять файлы, содержащиеся в инциденте, на анализ в ANY.RUN Sandbox. 
+Сценарий осуществляет отправку файла с эндпоинта в Azure Blob Storage и его дальнейшую передачу в ANY.RUN Sandbox для анализа с помощью Azure Logic App.
+
+Шаблон предусмотрен для эндпоинтов со следующими ОС:
+ - Windows
+ - UNIX (Ubuntu, Debian)
+
+[Open connector page]()
 
 - Коннектор реализован с помощью Azure Logic App и Azure Blob Storage
  1. Генерация инцидента в Microsoft Sentinel, который содержит сущность вида file или URL.
