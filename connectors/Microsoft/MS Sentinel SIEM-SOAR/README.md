@@ -40,7 +40,9 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 
 ### Key Vault
 
-- You need the Hunter pricing plan in ANY.RUN and your API key. We recommend storing your API key in Azure Key Vault. To do this, select your existing Key Vault or create a new one. Then, navigate to the **Objects** > **Secrets** section and create a new secret named `ANYRUN-APIKey` (IMPORTANT! It is recommended to keep this name unchanged, as otherwise, you will need to update it later in the deployed Logic App).
+- You need the Hunter pricing plan in ANY.RUN and your API key. We recommend storing your API key in Azure Key Vault. To do this, select your existing Key Vault or create a new one. Then, navigate to the **Objects** > **Secrets** section and create a new secret named `ANYRUN-APIKey`.
+
+  > **Note:** It is recommended to keep this name unchanged, as otherwise, you will need to update it later in the deployed Logic App.
 
 ![key_vault](images/001.png)
 
@@ -74,7 +76,7 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 
 - Next, add an API connection for **WindowsDefenderATP**. Select the corresponding API in the **APIs my organization uses** tab.
 
-**Note:** This is only required for workflows where you use Microsoft Defender for Endpoint (MDE) to extract files from the endpoint.
+  > **Note:** This is only required for workflows where you use Microsoft Defender for Endpoint (MDE) to extract files from the endpoint.
 
 ![select_defender_permission](images/008.png)
 
