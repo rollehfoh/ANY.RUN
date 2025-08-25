@@ -62,7 +62,7 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 
 ### API Permissions for new App
 
-#### Vault
+#### Key Vault API Permissions
 
 - For the created application, add the following permissions for API connections in the **Manage** > **API permissions** > **Add a permission** tab:
 
@@ -78,9 +78,11 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 |----------|-------------------|-----------------------------------------------------------------------------|
 | N/A      | user_impersonation | Allow the application full access to the Azure Key Vault service on behalf of the signed-in user |
 
-- Next, add an API connection for **WindowsDefenderATP**. Select the corresponding API in the **APIs my organization uses** tab.
+#### Microsoft Defender ATP API Permissions
 
-  > **Note:** This is only required for workflows where you use Microsoft Defender for Endpoint (MDE) to extract files from the endpoint.
+  > **Note:** This article is only required for workflows where you use Microsoft Defender for Endpoint (MDE) to extract files from the endpoint.
+
+- Add an API connection for **WindowsDefenderATP**. Select the corresponding API in the **APIs my organization uses** tab.
 
 ![select_defender_permission](images/008.png)
 
@@ -97,6 +99,37 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 | Library  | Library.Manage     | Needed to upload custom ps1 script for retrieving AV related evidences     |
 
 ### Storage Account
+
+  > **Note:** This article is only required for workflows where you use Azure Blob Storage to keeping file from the endpoint before submitting it to ANY.RUN Sandbox.
+
+- Go to Azure Storage Accounts
+
+![azure_sa](images/010.png)
+
+- Click **Create**
+
+![azure_sa_create](images/011.png)
+
+- Type the name of Storage Account and click **Review + Create**
+
+![azure_sa_review_and_create](images/012.png)
+
+- After that you should open your Storage Account and go to **Access Control (IAM)** > **Add**
+
+![sa_iam_add](images/013.png)
+
+- Select your App `ANYRUN-App`
+
+![sa_app_select](images/014.png)
+
+- Find the following roles:
+
+![sa_role_find](images/015.png)
+
+| Role                          | Description                                                                 |
+|-------------------------------|-----------------------------------------------------------------------------|
+| Storage Account Contributor   | Lets you manage storage accounts, including accessing storage account keys which provide full access to storage account data. |
+| Storage Blob Data Contributor | Allows for read, write and delete access to Azure Storage blob containers and data. |
 
 ### Deployment
 
