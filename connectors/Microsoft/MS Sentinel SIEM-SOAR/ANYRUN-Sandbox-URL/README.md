@@ -20,3 +20,7 @@ This playbook extracts URL from incidents and submit it for analysis in the ANY.
 ## Deployment
 
 ### Article 1
+
+Click below to deploy Azure Logic App
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-URL%2FANYRUN-Sandbox-URL.json)
