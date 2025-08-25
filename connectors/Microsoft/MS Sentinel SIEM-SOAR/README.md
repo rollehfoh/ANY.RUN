@@ -52,11 +52,11 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 
 ![entra_id](images/002.png)
 
-- Click **Add** > **App registration**
+- Click **Add** > **App registration**.
 
 ![app_registration](images/003.png)
 
-- Name your new application and click **Register**
+- Name your new application and click **Register**.
 
 ![register_app](images/004.png)
 
@@ -102,23 +102,23 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 
   > **Note:** This article is only required for workflows where you use Azure Blob Storage to keeping file from the endpoint before submitting it to ANY.RUN Sandbox.
 
-- Go to Azure Storage Accounts
+- Go to Azure Storage Accounts.
 
 ![azure_sa](images/010.png)
 
-- Click **Create**
+- Click **Create**.
 
 ![azure_sa_create](images/011.png)
 
-- Type the name of Storage Account and click **Review + Create**
+- Type the name of Storage Account and click **Review + Create**.
 
 ![azure_sa_review_and_create](images/012.png)
 
-- After that you should open your Storage Account and go to **Access Control (IAM)** > **Add**
+- After that you should open your Storage Account and go to **Access Control (IAM)** > **Add**.
 
 ![sa_iam_add](images/013.png)
 
-- Select your App `ANYRUN-App`
+- Select your App `ANYRUN-App`.
 
 ![sa_app_select](images/014.png)
 
@@ -130,6 +130,14 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 |-------------------------------|-----------------------------------------------------------------------------|
 | Storage Account Contributor   | Lets you manage storage accounts, including accessing storage account keys which provide full access to storage account data. |
 | Storage Blob Data Contributor | Allows for read, write and delete access to Azure Storage blob containers and data. |
+
+- Open your Storage Account. Go to **Data Storage** > **Containers**.
+
+![sa_navigation](images/016.png)
+
+- Click **Add container**, type the **Name** for it and **Create**.
+
+![sa_container_create](images/017.png)
 
 ### Deployment
 
