@@ -46,7 +46,7 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 
 ![key_vault](images/001.png)
 
-### App Registration and API Permissions
+### App Registration
 
 - If you haven't done this before, you need to create a new application for your connector. To do this, go to **Microsoft Entra ID**.
 
@@ -59,6 +59,10 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 - Name your new application and click **Register**
 
 ![register_app](images/004.png)
+
+### API Permissions for new App
+
+#### Vault
 
 - For the created application, add the following permissions for API connections in the **Manage** > **API permissions** > **Add a permission** tab:
 
@@ -91,6 +95,8 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 | Machine  | Machine.LiveResponse | Needed to gather evidences from machines                                  |
 | Machine  | Machine.Read.All   | Needed to retrieve information about machines                               |
 | Library  | Library.Manage     | Needed to upload custom ps1 script for retrieving AV related evidences     |
+
+### Storage Account
 
 ### Deployment
 
