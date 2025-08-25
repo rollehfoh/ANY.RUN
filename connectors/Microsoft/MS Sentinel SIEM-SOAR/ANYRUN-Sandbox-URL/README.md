@@ -16,3 +16,9 @@ This playbook extracts URL from incidents and submit it for analysis in the ANY.
 - ANY.RUN API-Key
 - Microsoft Sentinel
 - Azure Logic App (Flex Consumption plan) 
+
+## Deployment
+
+ - You need the Hunter pricing plan in ANY.RUN and your API key. We recommend storing your API key in Azure Key Vault. To do this, select your existing Key Vault or create a new one. Then, navigate to the **Objects** > **Secrets** section and create a new secret named `ANYRUN-APIKey` (IMPORTANT! It is recommended to keep this name unchanged, as otherwise, you will need to update it later in the deployed Logic App).
+
+![key_vault](images/001.png)
