@@ -36,6 +36,65 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 
 [Open connector page](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-Defender)
 
+## Prerequisites
+
+### Key Vault
+
+- You need the Hunter pricing plan in ANY.RUN and your API key. We recommend storing your API key in Azure Key Vault. To do this, select your existing Key Vault or create a new one. Then, navigate to the **Objects** > **Secrets** section and create a new secret named `ANYRUN-APIKey` (IMPORTANT! It is recommended to keep this name unchanged, as otherwise, you will need to update it later in the deployed Logic App).
+
+![key_vault](images/001.png)
+
+### App Registration and API Permissions
+
+- If you haven't done this before, you need to create a new application for your connector. To do this, go to **Microsoft Entra ID**.
+
+![entra_id](images/002.png)
+
+- Click **Add** > **App registration**
+
+![app_registration](images/003.png)
+
+- Name your new application and click **Register**
+
+![register_app](images/004.png)
+
+- For the created application, add the following permissions for API connections in the **Manage** > **API permissions** > **Add a permission** tab:
+
+![add_permission](images/007.png)
+
+- In the **Microsoft APIs** tab, add **Azure Key Vault**.
+
+![add_vault_permission](images/005.png)
+
+- Add the following permissions for it:
+
+| Category | Permission Name   | Description                                                                 |
+|----------|-------------------|-----------------------------------------------------------------------------|
+| N/A      | user_impersonation | Allow the application full access to the Azure Key Vault service on behalf of the signed-in user |
+
+- Next, add an API connection for **WindowsDefenderATP**. Select the corresponding API in the **APIs my organization uses** tab.
+
+**Note:** This is only required for workflows where you use Microsoft Defender for Endpoint (MDE) to extract files from the endpoint.
+
+![select_defender_permission](images/008.png)
+
+- Then, select **Application permissions**.
+
+![add_defender_permission](images/009.png)
+
+- Select the following permissions:
+
+| Category | Permission Name    | Description                                                                 |
+|----------|--------------------|-----------------------------------------------------------------------------|
+| Machine  | Machine.LiveResponse | Needed to gather evidences from machines                                  |
+| Machine  | Machine.Read.All   | Needed to retrieve information about machines                               |
+| Library  | Library.Manage     | Needed to upload custom ps1 script for retrieving AV related evidences     |
+
+- After completing the preliminary settings above, you can proceed to deploy the Azure Logic Apps necessary for integrating Microsoft Sentinel and ANY.RUN Sandbox:
+  - [ANYRUN-Sandbox-URL](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-URL)
+  - [ANYRUN-Sandbox-File](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-File)
+  - [ANYRUN-Sandbox-Defender](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-Defender)
+
 ## Request Support or Access to ANY.RUN’s Products
 
 Feel free to reach out to us for help with integration, a quote, or a demo via the [contact us form](https://app.any.run/contact-us/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=opencti_main&utm_content=linktocontactus).
