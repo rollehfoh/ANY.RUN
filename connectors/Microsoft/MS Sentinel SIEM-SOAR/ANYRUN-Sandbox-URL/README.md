@@ -31,11 +31,11 @@ This playbook extracts URL from incidents and submit it for analysis in the ANY.
 
 ![entra_id](images/002.png)
 
-  - Click **Add** > **App registration**
+- Click **Add** > **App registration**
 
 ![app_registration](images/003.png)
 
-  - Name your new application and click **Register**
+- Name your new application and click **Register**
 
 ![register_app](images/004.png)
 
@@ -43,11 +43,11 @@ This playbook extracts URL from incidents and submit it for analysis in the ANY.
 
 ![add_permission](images/007.png)
 
-  - In the **Microsoft APIs** tab, add **Azure Key Vault**.
+- In the **Microsoft APIs** tab, add **Azure Key Vault**.
 
 ![add_vault_permission](images/005.png)
 
-  - Add the following permissions for it:
+- Add the following permissions for it:
 
 | Category | Permission Name   | Description                                                                 |
 |----------|-------------------|-----------------------------------------------------------------------------|
