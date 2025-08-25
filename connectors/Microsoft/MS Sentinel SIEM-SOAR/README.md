@@ -90,6 +90,8 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 | Machine  | Machine.Read.All   | Needed to retrieve information about machines                               |
 | Library  | Library.Manage     | Needed to upload custom ps1 script for retrieving AV related evidences     |
 
+### Deployment
+
 - After completing the preliminary settings above, you can proceed to deploy the Azure Logic Apps necessary for integrating Microsoft Sentinel and ANY.RUN Sandbox:
   - [ANYRUN-Sandbox-URL](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-URL)
   - [ANYRUN-Sandbox-File](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-File)
