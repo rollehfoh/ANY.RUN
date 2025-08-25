@@ -10,7 +10,7 @@ ______________________________________________________________________
 
 ## Overview
 
-This playbook extracts URLs from incidents and sends them for analysis in the ANY.RUN Sandbox to enrich the incident with a verdict using a single Azure Logic App.
+This playbook extracts URL from incidents and submit it for analysis in the ANY.RUN Sandbox to enrich the incident with a verdict using a single Azure Logic App.
 
 ## Prerequisites:
 - ANY.RUN API-Key
