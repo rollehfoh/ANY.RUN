@@ -54,3 +54,22 @@ The main setup and customization of the Logic App is available through the graph
 - The URL analysis parameters in ANY.RUN Sandbox are defined in the **HTTP-RunNewURLAnalysis** action.
 
 ![analysis_action](images/001.png)
+
+- Analysis options are specified in the HTTP request body.
+
+![analysis_parameters](images/002.png)
+
+- Description of the default parameters:
+
+| Parameter Name              | Description                                                                 |
+|-----------------------------|-----------------------------------------------------------------------------|
+| obj_type                    | Specifies the type of the new task (the value "url" is required for this workflow). |
+| opt_timeout                 | Defines the timeout option for the analysis.                                |
+| obj_ext_browser             | Indicates the browser name to use.                                          |
+| env_os                      | Specifies the operating system.                                             |
+| env_bitness                 | Defines the bitness of the operating system.                                |
+| env_version                 | Sets the version of the operating system.                                   |
+| opt_automated_interactivity | Controls the automated interactivity (ML) option (changing this is not recommended). |
+| auto_confirm_uac            | Enables automatic confirmation of Windows UAC requests (changing this is not recommended). |
+
+> **Note:** You can add more parameters for analysis. To see the full list of available parameters and their values, visit our **[API documentation](https://any.run/api-documentation/)**.
