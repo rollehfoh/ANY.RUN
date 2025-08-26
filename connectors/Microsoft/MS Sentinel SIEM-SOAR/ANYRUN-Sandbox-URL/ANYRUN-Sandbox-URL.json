@@ -3,13 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "workflows_ANYRUN_Sandbox_URL_name": {
-            "defaultValue": "ANYRUN-Sandbox-URL",
-            "type": "String"
-        },
-        "connections_azuresentinel_1_externalid": {
-            "type": "String"
-        },
-        "connections_keyvault_1_externalid": {
+            "defaultValue": "ANYRUN-Sandbox-URL-TEST-DEPLOY",
             "type": "String"
         },
         "AzureTenantId": {
@@ -2360,19 +2354,7 @@
                 },
                 "parameters": {
                     "$connections": {
-                        "type": "Object",
-                        "value": {
-                            "azuresentinel": {
-                                "id": "/subscriptions/a754644b-f4a5-4258-aa07-9d7682198cd6/providers/Microsoft.Web/locations/australiaeast/managedApis/azuresentinel",
-                                "connectionId": "[parameters('connections_azuresentinel_1_externalid')]",
-                                "connectionName": "azuresentinel-1"
-                            },
-                            "keyvault": {
-                                "id": "/subscriptions/a754644b-f4a5-4258-aa07-9d7682198cd6/providers/Microsoft.Web/locations/australiaeast/managedApis/keyvault",
-                                "connectionId": "[parameters('connections_keyvault_1_externalid')]",
-                                "connectionName": "keyvault-1"
-                            }
-                        }
+                        "type": "Object"
                     }
                 }
             }
