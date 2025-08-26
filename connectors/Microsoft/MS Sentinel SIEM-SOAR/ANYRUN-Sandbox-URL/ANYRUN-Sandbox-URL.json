@@ -2,16 +2,26 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "workflows_ANYRUN_Sandbox_URL_EXPORT_name": {
-            "defaultValue": "ANYRUN-Sandbox-URL-EXPORT",
+        "workflows_ANYRUN_Sandbox_URL_name": {
+            "defaultValue": "ANYRUN-Sandbox-URL",
             "type": "String"
         },
         "connections_azuresentinel_1_externalid": {
-            "defaultValue": "/subscriptions/a754644b-f4a5-4258-aa07-9d7682198cd6/resourceGroups/sentinel/providers/Microsoft.Web/connections/azuresentinel-1",
             "type": "String"
         },
         "connections_keyvault_1_externalid": {
-            "defaultValue": "/subscriptions/a754644b-f4a5-4258-aa07-9d7682198cd6/resourceGroups/sentinel/providers/Microsoft.Web/connections/keyvault-1",
+            "type": "String"
+        },
+        "AzureTenantId": {
+            "type": "String"
+        },
+        "AzureClientId": {
+            "type": "String"
+        },
+        "AzureBlobStorageAccountName": {
+            "type": "String"
+        },
+        "AzureBlobStorageContainerName": {
             "type": "String"
         }
     },
@@ -20,7 +30,7 @@
         {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",
-            "name": "[parameters('workflows_ANYRUN_Sandbox_URL_EXPORT_name')]",
+            "name": "[parameters('workflows_ANYRUN_Sandbox_URL_name')]",
             "location": "eastus",
             "tags": {
                 "Resource": "Microsoft Sentinel",
@@ -38,19 +48,19 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {
                         "Azure Tenant ID": {
-                            "defaultValue": "985d4f72-83b0-4108-966a-78641473f3a5",
+                            "defaultValue": "[parameters('AzureTenantId')]",
                             "type": "String"
                         },
                         "Azure Client ID": {
-                            "defaultValue": "431453b6-96a9-402b-a943-7c0807404742",
+                            "defaultValue": "[parameters('AzureClientId')]",
                             "type": "String"
                         },
                         "Azure Blob Storage Account Name": {
-                            "defaultValue": "storageanyrun",
+                            "defaultValue": "[parameters('AzureBlobStorageAccountName')]",
                             "type": "String"
                         },
                         "Azure Blob Storage Container Name": {
-                            "defaultValue": "storageanyrunquarantine",
+                            "defaultValue": "[parameters('AzureBlobStorageContainerName')]",
                             "type": "String"
                         },
                         "$connections": {
@@ -1463,7 +1473,7 @@
                                                     "inputs": {
                                                         "host": {
                                                             "connection": {
-                                                                "name": "@parameters('$connections')['azuresentinel-1']['connectionId']"
+                                                                "name": "@parameters('$connections')['azuresentinel']['connectionId']"
                                                             }
                                                         },
                                                         "method": "put",
@@ -2361,11 +2371,6 @@
                                 "id": "/subscriptions/a754644b-f4a5-4258-aa07-9d7682198cd6/providers/Microsoft.Web/locations/australiaeast/managedApis/keyvault",
                                 "connectionId": "[parameters('connections_keyvault_1_externalid')]",
                                 "connectionName": "keyvault-1"
-                            },
-                            "azuresentinel-1": {
-                                "id": "/subscriptions/a754644b-f4a5-4258-aa07-9d7682198cd6/providers/Microsoft.Web/locations/eastus/managedApis/azuresentinel",
-                                "connectionId": "[parameters('connections_azuresentinel_1_externalid')]",
-                                "connectionName": "azuresentinel-1"
                             }
                         }
                     }
