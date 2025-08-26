@@ -28,7 +28,7 @@
         "azureClientSecret": {
             "type": "securestring",
             "metadata": {
-                "description": "Client Secret for Key Vault authentication."
+                "description": "Client Secret for authentication."
             }
         },
         "sentinelWorkspaceId": {
@@ -70,6 +70,8 @@
             "location": "[parameters('logicAppLocation')]",
             "properties": {
                 "displayName": "[variables('sentinelConnectionName')]",
+                "customParameterValues": {},
+                "parameterValueType": "Alternative",
                 "api": {
                     "id": "[variables('sentinelApiId')]"
                 },
@@ -87,6 +89,8 @@
             "location": "[parameters('logicAppLocation')]",
             "properties": {
                 "displayName": "[variables('keyVaultConnectionName')]",
+                "customParameterValues": {},
+                "parameterValueType": "Alternative",
                 "api": {
                     "id": "[variables('keyVaultApiId')]"
                 },
@@ -104,6 +108,15 @@
             "apiVersion": "2017-07-01",
             "name": "[parameters('workflows_ANYRUN_Sandbox_URL_name')]",
             "location": "[parameters('logicAppLocation')]",
+            "tags": {
+                "Resource": "Microsoft Sentinel",
+                "PlaybookTrigger": "Incident",
+                "Custom": "ANYRUN",
+                "PlaybookType": "Enrichment"
+            },
+            "identity": {
+                "type": "SystemAssigned"
+            },
             "properties": {
                 "state": "Enabled",
                 "definition": {
@@ -1536,7 +1549,7 @@
                                                     "inputs": {
                                                         "host": {
                                                             "connection": {
-                                                                "name": "@parameters('$connections')['azuresentinel']['connectionId']"
+                                                                "name": "@parameters('$connections')['azuresentinel-1']['connectionId']"
                                                             }
                                                         },
                                                         "method": "put",
