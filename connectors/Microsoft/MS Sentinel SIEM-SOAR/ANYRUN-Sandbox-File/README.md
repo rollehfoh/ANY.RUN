@@ -50,13 +50,27 @@ This Logic App is a child workflow invoked by the parent to handle file upload f
 ### Import Azure Logic App template
 
 - Click below to deploy Parent Azure Logic App with **Flex Consumption plan**
-  - ANYRUN-Sandbox-File-Windows 
+  - ANYRUN-Sandbox-File-Windows
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-URL%2FANYRUN-Sandbox-URL.json)
-  - ANYRUN-Sandbox-File-Ubuntu 
+  - ANYRUN-Sandbox-File-Ubuntu
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-URL%2FANYRUN-Sandbox-URL.json)
-  - ANYRUN-Sandbox-File-Debian 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-URL%2FANYRUN-Sandbox-URL.json)
-
+  - ANYRUN-Sandbox-File-Debian
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-URL%2FANYRUN-Sandbox-URL.json)
 
 - Enter the parameters required for deploying the Logic App.
+
+*deployment image*
+
+| Parameter Name                  | Description                                                                 |
+|---------------------------------|-----------------------------------------------------------------------------|
+| workflows_ANYRUN_Sandbox_File_name | Workflow name       |
+| logicAppLocation                | Region for Logic App (for example, eastus or australiaeast). Adapt for your tenant or leave the default value for automatic determination based on your Resource Group. |
+| AzureTenantId                   | Tenant ID for authentication in connections.                                |
+| AzureClientId                   | Client ID for authentication.                                               |
+| azureClientSecret               | Client Secret for authentication.                                           |
+| sentinelWorkspaceId             | Workspace ID for Azure Sentinel.                                            |
+| keyVaultName                    | Key Vault name.                                                             |
+| AzureBlobStorageAccountName             | Azure Blob Storage Account Name.                                           |
+| AzureBlobStorageContainerName                    | Azure Blob Storage Container Name.                                                           |
+
+*Sentinel and Key Vault API connections configuration*
