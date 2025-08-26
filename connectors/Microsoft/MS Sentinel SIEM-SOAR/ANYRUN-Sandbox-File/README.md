@@ -10,8 +10,12 @@ ______________________________________________________________________
 
 ## Overview
 
-This template makes the incident enrichment process in Microsoft Sentinel even more automated if you are also using Microsoft Defender for Endpoint (MDE). 
-In this case, the entire automation mechanism can be combined into a single Azure Logic App, leveraging MDE's capabilities to extract files from endpoints via API.
+This playbook allows you to send files from incidents for analysis in the ANY.RUN Sandbox. 
+It uploads the file from the endpoint to Azure Blob Storage and then forwards it to the ANY.RUN Sandbox using an Azure Logic App.
+
+Templates are provided for endpoints running the following operating systems:
+- Windows
+- UNIX (Ubuntu, Debian)
 
 ## Requirements:
 - ANY.RUN API-Key
