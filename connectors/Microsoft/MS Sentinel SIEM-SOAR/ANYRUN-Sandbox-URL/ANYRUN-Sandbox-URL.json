@@ -16,19 +16,19 @@
         "AzureTenantId": {
             "type": "string",
             "metadata": {
-                "description": "Tenant ID for authentication in connections."
+                "description": "Tenant ID for authentication in connections (configured manually after deployment)."
             }
         },
         "AzureClientId": {
             "type": "string",
             "metadata": {
-                "description": "Client ID for authentication"
+                "description": "Client ID for authentication (configured manually after deployment)."
             }
         },
         "AzureBlobStorageAccountName": {
             "type": "string",
             "metadata": {
-                "description": "Storage Account Name."
+                "description": "Storage Account name."
             }
         },
         "AzureBlobStorageContainerName": {
@@ -54,7 +54,9 @@
     },
     "variables": {
         "sentinelApiId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('logicAppLocation'), '/managedApis/azuresentinel')]",
-        "keyVaultApiId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('logicAppLocation'), '/managedApis/keyvault')]"
+        "keyVaultApiId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('logicAppLocation'), '/managedApis/keyvault')]",
+        "sentinelConnectionObject": "[if(empty(parameters('connections_azuresentinel_externalid')), json('{}'), json(concat('{\"azuresentinel\": {\"connectionId\": \"', parameters('connections_azuresentinel_externalid'), '\", \"connectionName\": \"azuresentinel-1\", \"id\": \"', variables('sentinelApiId'), '\"}}')))]",
+        "keyVaultConnectionObject": "[if(empty(parameters('connections_keyvault_externalid')), json('{}'), json(concat('{\"keyvault\": {\"connectionId\": \"', parameters('connections_keyvault_externalid'), '\", \"connectionName\": \"keyvault-1\", \"id\": \"', variables('keyVaultApiId'), '\"}}')))]"
     },
     "resources": [
         {
@@ -2390,18 +2392,7 @@
                 },
                 "parameters": {
                     "$connections": {
-                        "value": {
-                            "azuresentinel": {
-                                "connectionId": "[if(empty(parameters('connections_azuresentinel_externalid')), '', parameters('connections_azuresentinel_externalid'))]",
-                                "connectionName": "azuresentinel-1",
-                                "id": "[variables('sentinelApiId')]"
-                            },
-                            "keyvault": {
-                                "connectionId": "[if(empty(parameters('connections_keyvault_externalid')), '', parameters('connections_keyvault_externalid'))]",
-                                "connectionName": "keyvault-1",
-                                "id": "[variables('keyVaultApiId')]"
-                            }
-                        }
+                        "value": "[union(variables('sentinelConnectionObject'), variables('keyVaultConnectionObject'))]"
                     }
                 }
             }
