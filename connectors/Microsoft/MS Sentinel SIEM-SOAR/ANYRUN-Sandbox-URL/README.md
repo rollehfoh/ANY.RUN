@@ -73,3 +73,13 @@ The main setup and customization of the Logic App is available through the graph
 | auto_confirm_uac            | Enables automatic confirmation of Windows UAC requests (changing this is not recommended). |
 
 > **Note:** You can add more parameters for analysis. To see the full list of available parameters and their values, visit our **[API documentation](https://any.run/api-documentation/)**.
+
+### Simultaneous Analysis of Objects in ANY.RUN Sandbox
+
+ANY.RUN Sandbox allows users to perform multiple analyses simultaneously (availability and capability depend on your pricing plan). By default, if a Microsoft Sentinel incident contains multiple URLs, each analysis will run sequentially (a new URL analysis won't start until the previous one finishes, to avoid errors).
+
+- To increase the speed of incident enrichment, you can analyze objects simultaneously. To do this, open the **For each - URL** loop > **Settings** and increase the **Degree of parallelism** value. It is recommended to set a value that does not exceed the number of possible parallel analyses in ANY.RUN Sandbox for your pricing plan.
+
+![parallel_analysis](images/003.png)
+
+> **Note**: To upgrade your pricing plan capabilities, [contact us](https://app.any.run/contact-us).
