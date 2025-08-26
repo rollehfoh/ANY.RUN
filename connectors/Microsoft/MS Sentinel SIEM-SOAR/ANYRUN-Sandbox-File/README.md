@@ -53,11 +53,11 @@ This Logic App is a child workflow invoked by the parent to handle file upload f
 
 - Click below to deploy Parent Azure Logic App with **Flex Consumption plan**
   - ANYRUN-Sandbox-File-Windows
-[![Deploy to Azure]([https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Sandbox-File-Windows.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Sandbox-File-Windows.json)
   - ANYRUN-Sandbox-File-Ubuntu
-[![Deploy to Azure]([https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Sandbox-File-Ubuntu.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Sandbox-File-Ubuntu.json)
   - ANYRUN-Sandbox-File-Debian
-[![Deploy to Azure]([https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Sandbox-File-Debian.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Sandbox-File-Debian.json)
 
 - Enter the parameters required for deploying the Logic App.
 
@@ -82,7 +82,7 @@ This Logic App is a child workflow invoked by the parent to handle file upload f
 - Click below to deploy Child Azure Logic App with **Flex Consumption plan**
   - ANYRUN-Submit-File-to-Blob
  
-[![Deploy to Azure]([https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Submit-File-to-Blob.json)  
+[[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Submit-File-to-Blob.json)
 
 *deployment image*
 
