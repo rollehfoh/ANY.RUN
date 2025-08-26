@@ -80,11 +80,53 @@ This Logic App is a child workflow invoked by the parent to handle file upload f
 #### Child Logic App
 
 - Click below to deploy Child Azure Logic App with **Flex Consumption plan**
-  - ANYRUN-Submit-File-to-Blob
  
-[[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Submit-File-to-Blob.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Submit-File-to-Blob.json)
 
 *deployment image*
 
 *Sentinel and Key Vault API connections configuration*
 
+## Logic App configuration (Optional)
+
+### ANY.RUN Sandbox analysis parameters
+
+ANY.RUN is an interactive online malware analysis service for dynamic and static research of most types of threats using any environments. We offer a connector for Microsoft Sentinel, which you can independently adapt to your infrastructure and needs in just a few clicks. You can easily change the parameters used for analyzing the required File.
+
+> **Note:** You can learn more about the capabilities of ANY.RUN Sandbox by reviewing our **[API documentation](https://any.run/api-documentation/)**.
+
+The main setup and customization of the Logic App is available through the graphical editor (**Development tools** > **Logic app designer**) or the code editor (**Development tools** > **Logic app code view**).
+
+- The File analysis parameters in ANY.RUN Sandbox are defined in the **HTTP - Submit File to ANY.RUN Sandbox Windows** action.
+
+![analysis_action](images/001.png)
+
+- Analysis options are specified in the HTTP request body.
+
+ > **Note:** HTTP request body consists of multipart/form-data
+
+![analysis_parameters](images/002.png)
+
+- Description of the default parameters:
+
+| Parameter Name              | Description                                                                 |
+|-----------------------------|-----------------------------------------------------------------------------|
+| opt_timeout                 | Defines the timeout option for the analysis.                                |
+| env_os                      | Specifies the operating system.                                             |
+| env_bitness                 | Defines the bitness of the operating system.                                |
+| env_version                 | Sets the version of the operating system.                                   |
+| env_type                    | Specify the environment preset type.                                        |
+| opt_automated_interactivity | Controls the automated interactivity (ML) option (changing this is not recommended). |
+| auto_confirm_uac            | Enables automatic confirmation of Windows UAC requests (changing this is not recommended). |
+| run_as_root                 | Allow the file to run with superuser privileges on Linux.                   |
+| obj_ext_extension           | Specify whether to change the file extension to a valid one.                |
+
+### Simultaneous Analysis of Objects in ANY.RUN Sandbox
+
+ANY.RUN Sandbox allows users to perform multiple analyses simultaneously (availability and capability depend on your pricing plan). By default, if a Microsoft Sentinel incident contains multiple Files, each analysis will run sequentially (a new File analysis won't start until the previous one finishes, to avoid errors).
+
+- To increase the speed of incident enrichment, you can analyze objects simultaneously. To do this, open the **For each - detonate files to ANY.RUN Sandbox** loop > **Settings** and increase the **Degree of parallelism** value. It is recommended to set a value that does not exceed the number of possible parallel analyses in ANY.RUN Sandbox for your pricing plan.
+
+![parallel_analysis](images/003.png)
+
+> **Note**: To upgrade your pricing plan capabilities, [contact us](https://app.any.run/contact-us).
