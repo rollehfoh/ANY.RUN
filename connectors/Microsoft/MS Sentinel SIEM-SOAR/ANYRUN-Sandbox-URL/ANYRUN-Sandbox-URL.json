@@ -36,9 +36,26 @@
             "metadata": {
                 "description": "Container name in Storage Account."
             }
+        },
+        "connections_azuresentinel_externalid": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "ARM ID of the existing connection to Azure Sentinel (leave empty for manual configuration after deployment)."
+            }
+        },
+        "connections_keyvault_externalid": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "ARM ID of the existing connection to Key Vault (leave empty for manual configuration after deployment)."
+            }
         }
     },
-    "variables": {},
+    "variables": {
+        "sentinelApiId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('logicAppLocation'), '/managedApis/azuresentinel')]",
+        "keyVaultApiId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', parameters('logicAppLocation'), '/managedApis/keyvault')]"
+    },
     "resources": [
         {
             "type": "Microsoft.Logic/workflows",
@@ -2373,7 +2390,18 @@
                 },
                 "parameters": {
                     "$connections": {
-                        "value": {}
+                        "value": {
+                            "azuresentinel": {
+                                "connectionId": "[if(empty(parameters('connections_azuresentinel_externalid')), '', parameters('connections_azuresentinel_externalid'))]",
+                                "connectionName": "azuresentinel-1",
+                                "id": "[variables('sentinelApiId')]"
+                            },
+                            "keyvault": {
+                                "connectionId": "[if(empty(parameters('connections_keyvault_externalid')), '', parameters('connections_keyvault_externalid'))]",
+                                "connectionName": "keyvault-1",
+                                "id": "[variables('keyVaultApiId')]"
+                            }
+                        }
                     }
                 }
             }
