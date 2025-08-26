@@ -148,4 +148,4 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 
 ## Request Support or Access to ANY.RUN’s Products
 
-Feel free to reach out to us for help with integration, a quote, or a demo via the [contact us form](https://app.any.run/contact-us/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=opencti_main&utm_content=linktocontactus).
+Feel free to reach out to us for help with integration, a quote, or a demo via the [contact us form](https://app.any.run/contact-us).
