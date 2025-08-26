@@ -19,8 +19,24 @@ This playbook extracts URL from incidents and submit it for analysis in the ANY.
 
 ## Deployment
 
-### Article 1
+### Import Azure Logic App template
 
-Click below to deploy Azure Logic App
+- Click below to deploy Azure Logic App with **Flex Consumption plan**
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-URL%2FANYRUN-Sandbox-URL.json)
+
+- Enter the parameters required for deploying the Logic App.
+
+*deployment image*
+
+| Parameter Name                  | Description                                                                 |
+|---------------------------------|-----------------------------------------------------------------------------|
+| workflows_ANYRUN_Sandbox_URL_name | Workflow name         |
+| logicAppLocation                | Region for Logic App (for example, eastus or australiaeast). Adapt for your tenant or leave the default value for automatic determination based on your Resource Group. |
+| AzureTenantId                   | Tenant ID for authentication in connections.                                |
+| AzureClientId                   | Client ID for authentication.                                               |
+| azureClientSecret               | Client Secret for authentication.                                           |
+| sentinelWorkspaceId             | Workspace ID for Azure Sentinel.                                            |
+| keyVaultName                    | Key Vault name.                                                             |
+
+- *Sentinel and Key Vault API connections configuration*
