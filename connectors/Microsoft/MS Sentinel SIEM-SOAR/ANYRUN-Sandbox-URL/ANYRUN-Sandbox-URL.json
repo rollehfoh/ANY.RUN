@@ -2,21 +2,40 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "workflows_ANYRUN_Sandbox_URL_name": {
-            "defaultValue": "ANYRUN-Sandbox-URL-TEST-DEPLOY",
-            "type": "String"
+"workflows_ANYRUN_Sandbox_URL_name": {
+            "type": "string",
+            "defaultValue": "ANYRUN-Sandbox-URL-TEST-DEPLOY"
+        },
+        "logicAppLocation": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Region for Logic App (for example, eastus or australiaeast). Adapt for your tenant."
+            }
         },
         "AzureTenantId": {
-            "type": "String"
+            "type": "string",
+            "metadata": {
+                "description": "Tenant ID for authentication in connections."
+            }
         },
         "AzureClientId": {
-            "type": "String"
+            "type": "string",
+            "metadata": {
+                "description": "Client ID for authentication"
+            }
         },
         "AzureBlobStorageAccountName": {
-            "type": "String"
+            "type": "string",
+            "metadata": {
+                "description": "Storage Account Name."
+            }
         },
         "AzureBlobStorageContainerName": {
-            "type": "String"
+            "type": "string",
+            "metadata": {
+                "description": "Container name in Storage Account."
+            }
         }
     },
     "variables": {},
@@ -2354,7 +2373,7 @@
                 },
                 "parameters": {
                     "$connections": {
-                        "type": "Object"
+                        "value": {}
                     }
                 }
             }
