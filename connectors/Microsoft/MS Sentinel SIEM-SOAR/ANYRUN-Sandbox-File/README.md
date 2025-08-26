@@ -22,7 +22,28 @@ Templates are provided for endpoints running the following operating systems:
 - Microsoft Sentinel
 - Azure Logic App (Flex Consumption plan)
 - Azure Blob Storage
-- Microsoft Defender for Endpoint
+- Microsoft Defender for Endpoint (**Optional**)
+
+## Solution overview
+
+The connector consists of two Azure Logic Apps: 
+- Parent workflow (varies depending on the host operating system):
+  - [ANYRUN-Sandbox-File-Windows]()
+  - [ANYRUN-Sandbox-File-Ubuntu]()
+  - [ANYRUN-Sandbox-File-Debian]()
+- Child workflow (uniform for all operating systems):
+  - [ANYRUNUploadFileToBlobViaEDR]()
+
+## Logic Apps description
+
+### Parent Workflow
+This Logic App serves as the main orchestration workflow for the connector. It is triggered by a Microsoft Sentinel incident webhook and processes file entities associated with the incident. The workflow submits files for analysis in ANY.RUN Sandbox obtained from Azure Blob Storage. 
+
+### Child Workflow
+
+ > **Note:** The child playbook in this connector is designed to extract files from the endpoint and upload them to Azure Blob Storage using Microsoft Defender for Endpoint (MDE). If you use a different solution instead of MDE, you can replace this playbook with one adapted for your infrastructure.
+
+This Logic App is a child workflow invoked by the parent to handle file upload from hosts to Azure Blob Storage using Microsoft Defender for Endpoint. It is triggered by an HTTP request from the parent and parses input data. For each file, it initiates MDE live response to execute a script on the host for upload file to Azure Blob Storage.
 
 ## Deployment
 
