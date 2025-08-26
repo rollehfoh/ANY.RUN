@@ -71,13 +71,15 @@
             "properties": {
                 "displayName": "[variables('sentinelConnectionName')]",
                 "customParameterValues": {},
-                "parameterValueType": "Alternative",
                 "api": {
                     "id": "[variables('sentinelApiId')]"
                 },
                 "parameterValues": {
                     "token:tenantId": "[parameters('AzureTenantId')]",
                     "token:clientId": "[parameters('AzureClientId')]",
+                    "token:clientSecret": "[parameters('azureClientSecret')]",
+                    "token:grantType": "client_credentials",
+                    "token:resourceUri": "https://management.azure.com/",
                     "workspaceId": "[parameters('sentinelWorkspaceId')]"
                 }
             }
@@ -90,7 +92,6 @@
             "properties": {
                 "displayName": "[variables('keyVaultConnectionName')]",
                 "customParameterValues": {},
-                "parameterValueType": "Alternative",
                 "api": {
                     "id": "[variables('keyVaultApiId')]"
                 },
