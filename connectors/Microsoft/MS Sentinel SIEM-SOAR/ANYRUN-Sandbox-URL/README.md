@@ -36,7 +36,19 @@ This playbook extracts URL from incidents and submit it for analysis in the ANY.
 | AzureTenantId                   | Tenant ID for authentication in connections.                                |
 | AzureClientId                   | Client ID for authentication.                                               |
 | azureClientSecret               | Client Secret for authentication.                                           |
-| sentinelWorkspaceId             | Workspace ID for Azure Sentinel.                                            |
+| sentinelWorkspaceId             | Workspace ID for Azure Sentinel (copy from your Log Analytics workspace).                                            |
 | keyVaultName                    | Key Vault name.                                                             |
 
-- *Sentinel and Key Vault API connections configuration*
+*Sentinel and Key Vault API connections configuration*
+
+## Logic App configuration (Optional)
+
+### ANY.RUN Sandbox analysis parameters
+
+ANY.RUN is an interactive online malware analysis service for dynamic and static research of most types of threats using any environments. We offer a connector for Microsoft Sentinel, which you can independently adapt to your infrastructure and needs in just a few clicks. You can easily change the parameters used for analyzing the required URL.
+
+> **Note:** You can learn more about the capabilities of ANY.RUN Sandbox by reviewing our **[API documentation](https://any.run/api-documentation/)**.
+
+The main setup and customization of the Logic App is available through the graphical editor (**Development tools** > **Logic app designer**) or the code editor (**Development tools** > **Logic app code view**).
+
+- The URL analysis parameters in ANY.RUN Sandbox are defined in the **HTTP-RunNewURLAnalysis** action.
