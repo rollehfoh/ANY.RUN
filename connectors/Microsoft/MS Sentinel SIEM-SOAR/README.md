@@ -16,7 +16,7 @@ As a result, your Microsoft Sentinel incidents will include a verdict, threat sc
 
 ## Connector capabilities
 - Incident enrichment:
-  - Analysis Verdict and Threat score.
+  - Analysis Verdict and Threat score
   - Malware Tags
   - Table with IoC's detected during the analysis
   - Interactive Report Link
