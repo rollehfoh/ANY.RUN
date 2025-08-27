@@ -14,6 +14,14 @@ This repository contains the necessary resources for integrating Microsoft Senti
 
 As a result, your Microsoft Sentinel incidents will include a verdict, threat score, malware tags and a link to the detailed analysis in the ANY.RUN UI, allowing you to explore the object's behavior in a real infrastructure environment. Additionally, your Threat Intelligence portal in Sentinel will be enriched with Indicators of Compromise (IoCs) extracted during the sandbox analysis.
 
+## Connector capabilities
+- Incident enrichment:
+  - Analysis Verdict and Threat score.
+  - Malware Tags
+  - Table with IoC's detected during the analysis
+  - Interactive Report Link
+- Uploading IoC's detected during the analysis to Sentinel Threat Intelligence portal
+
 ## Analyze URLs from Microsoft Sentinel Incidents via ANY.RUN Sandbox
 
 This playbook extracts URL from incidents and submit it for analysis in the ANY.RUN Sandbox to enrich the incident with a verdict using a single Azure Logic App.
