@@ -13,8 +13,8 @@ ______________________________________________________________________
 ## Solution Overview
 
 ## Requirements
-- Microsoft Defender for Endpoint.
-- ANY.RUN API Key.
+- Microsoft Defender for Endpoint
+- ANY.RUN API Key
 - Microsoft Azure resources:
   - Logic App with Flex Consumption plan
   - Function App Flex Consumption plan
