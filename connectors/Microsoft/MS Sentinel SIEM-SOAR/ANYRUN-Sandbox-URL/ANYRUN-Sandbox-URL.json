@@ -79,8 +79,7 @@
                     "token:clientId": "[parameters('AzureClientId')]",
                     "token:clientSecret": "[parameters('azureClientSecret')]",
                     "token:grantType": "client_credentials",
-                    "token:resourceUri": "https://management.azure.com/",
-                    "workspaceId": "[parameters('sentinelWorkspaceId')]"
+                    "token:resourceUri": "https://management.azure.com/"
                 }
             }
         },
@@ -99,8 +98,7 @@
                     "vaultName": "[parameters('keyVaultName')]",
                     "token:tenantId": "[parameters('AzureTenantId')]",
                     "token:clientId": "[parameters('AzureClientId')]",
-                    "token:clientSecret": "[parameters('azureClientSecret')]",
-                    "authType": "servicePrincipal"
+                    "token:clientSecret": "[parameters('azureClientSecret')]"
                 }
             }
         },
