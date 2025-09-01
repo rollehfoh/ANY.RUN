@@ -65,8 +65,7 @@
                     "token:tenantId": "[parameters('AzureTenantId')]",
                     "token:clientId": "[parameters('AzureClientId')]",
                     "token:clientSecret": "[parameters('azureClientSecret')]",
-                    "token:grantType": "client_credentials",
-                    "token:resourceUri": "https://management.azure.com/"
+                    "token:grantType": "client_credentials"
                 }
             }
         },
