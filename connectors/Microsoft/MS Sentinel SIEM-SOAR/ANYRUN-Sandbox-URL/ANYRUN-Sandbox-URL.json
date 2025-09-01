@@ -2,9 +2,9 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "workflows_ANYRUN_Sandbox_URL_name": {
+        "LogicAppName": {
             "type": "string",
-            "defaultValue": "ANYRUN-Sandbox-URL-TEST-DEPLOY-FINALLY"
+            "defaultValue": "ANYRUN-Sandbox-URL"
         },
         "AzureTenantId": {
             "type": "string",
@@ -44,8 +44,8 @@
         }
     },
     "variables": {
-        "sentinelConnectionName": "azuresentinel-1",
-        "keyVaultConnectionName": "keyvault-1",
+        "sentinelConnectionName": "azuresentinel--anyrun-app",
+        "keyVaultConnectionName": "keyvault--anyrun-app",
         "sentinelApiId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/azuresentinel')]",
         "keyVaultApiId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/keyvault')]"
     },
@@ -93,7 +93,7 @@
         {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",
-            "name": "[parameters('workflows_ANYRUN_Sandbox_URL_name')]",
+            "name": "[parameters('LogicAppName')]",
             "location": "[resourceGroup().location]",
             "tags": {
                 "Resource": "Microsoft Sentinel",
@@ -289,7 +289,7 @@
                                         "method": "post",
                                         "body": {
                                             "incidentArmId": "@triggerBody()?['object']?['id']",
-                                            "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN Sandbox Analysis Started:</strong></b><br>Analysis of the URL (@{item()?['Url']}) has been initiated in ANY.RUN Sandbox.</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Link to interactive report:</strong></b> https://app.any.run/tasks/@{variables('Task ID')}</p>"
+                                            "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN Sandbox Analysis Started:</strong></b><br>Analysis of the URL (@{item()?['Url']}) has been initiated in ANY.RUN Sandbox.</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Link to analysis report:</strong></b> https://app.any.run/tasks/@{variables('Task ID')}</p>"
                                         },
                                         "path": "/Incidents/Comment"
                                     }
@@ -1528,7 +1528,7 @@
                                                     "inputs": {
                                                         "host": {
                                                             "connection": {
-                                                                "name": "@parameters('$connections')['azuresentinel-1']['connectionId']"
+                                                                "name": "@parameters('$connections')['azuresentinel']['connectionId']"
                                                             }
                                                         },
                                                         "method": "put",
@@ -2221,7 +2221,7 @@
                                                 "method": "post",
                                                 "body": {
                                                     "incidentArmId": "@triggerBody()?['object']?['id']",
-                                                    "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN URL Detonation Results:</strong></b><br><span style=\"color: rgb(208, 2, 27);\">A malicious URL has been detected during ANY.RUN Sandbox analysis</span> (@{replace(replace(item()?['Url'], '.', '[.]'), 'https://', '')}).</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Verdict:</strong></b> @{body('Parse_JSON_-_Task_Monitor_URL')?['task']?['scores']?['verdict']?['text']}<br><b><strong class=\"editor-text-bold\">Threat score:</strong></b> @{body('Parse_JSON_-_ANYRUN_Report_URL')?['data']?['analysis']?['scores']?['verdict']?['score']}/100<br><b><strong class=\"editor-text-bold\">Link to interactive report</strong></b> - https://app.any.run/tasks/@{variables('Task ID')}</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Detected IOCs:</strong></b><br>@{outputs('Compose_IOC_Table_URL')}</p>"
+                                                    "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN URL Detonation Results:</strong></b><br><span style=\"color: rgb(208, 2, 27);\">A malicious URL has been detected during ANY.RUN Sandbox analysis</span> (@{replace(replace(item()?['Url'], '.', '[.]'), 'https://', '')}).</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Verdict:</strong></b> @{body('Parse_JSON_-_Task_Monitor_URL')?['task']?['scores']?['verdict']?['text']}<br><b><strong class=\"editor-text-bold\">Threat score:</strong></b> @{body('Parse_JSON_-_ANYRUN_Report_URL')?['data']?['analysis']?['scores']?['verdict']?['score']}/100<br><b><strong class=\"editor-text-bold\">Link to analysis report</strong></b> - https://app.any.run/tasks/@{variables('Task ID')}</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Detected IOCs:</strong></b><br>@{outputs('Compose_IOC_Table_URL')}</p>"
                                                 },
                                                 "path": "/Incidents/Comment"
                                             }
@@ -2245,7 +2245,7 @@
                                                     "method": "post",
                                                     "body": {
                                                         "incidentArmId": "@{triggerBody()?['object']?['id']}",
-                                                        "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN URL Detonation Results:</strong></b><br><span style=\"color: rgb(65, 117, 5);\">URL is clean and is no malicious activity was found during ANY.RUN Sandbox analysis</span><span style=\"color: rgb(65, 117, 5);\"> (</span>@{replace(replace(replace(item()?['Url'], '.', '[.]'), 'https://', ''), 'http://', '')}).</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Link to interactive report</strong></b> - https://app.any.run/tasks/@{variables('Task ID')}</p>"
+                                                        "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN URL Detonation Results:</strong></b><br><span style=\"color: rgb(65, 117, 5);\">URL is clean and is no malicious activity was found during ANY.RUN Sandbox analysis</span><span style=\"color: rgb(65, 117, 5);\"> (</span>@{replace(replace(replace(item()?['Url'], '.', '[.]'), 'https://', ''), 'http://', '')}).</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Link to analysis report</strong></b> - https://app.any.run/tasks/@{variables('Task ID')}</p>"
                                                     },
                                                     "path": "/Incidents/Comment"
                                                 }
