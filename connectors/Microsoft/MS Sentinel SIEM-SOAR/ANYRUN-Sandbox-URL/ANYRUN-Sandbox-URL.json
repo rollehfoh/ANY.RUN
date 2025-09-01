@@ -79,7 +79,7 @@
                     "token:clientId": "[parameters('AzureClientId')]",
                     "token:clientSecret": "[parameters('azureClientSecret')]",
                     "token:grantType": "client_credentials",
-                    "token:resourceUri": "https://vault.azure.net"
+                    "token:resourceUri": "https://management.azure.com/"
                 }
             }
         },
@@ -98,7 +98,9 @@
                     "vaultName": "[parameters('keyVaultName')]",
                     "token:tenantId": "[parameters('AzureTenantId')]",
                     "token:clientId": "[parameters('AzureClientId')]",
-                    "token:clientSecret": "[parameters('azureClientSecret')]"
+                    "token:clientSecret": "[parameters('azureClientSecret')]",
+                    "token:grantType": "client_credentials",
+                    "token:resourceUri": "https://sentinel-1.vault.azure.net/"
                 }
             }
         },
