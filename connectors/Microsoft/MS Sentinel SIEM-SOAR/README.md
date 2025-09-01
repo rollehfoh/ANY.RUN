@@ -144,7 +144,7 @@ Since the connectors use various resources available in Azure, the created appli
 
 ![sentinel_role_add](images/023.png)
 
-- In the search window, type and select the roles listed below, then click **Next**.
+- In the search window, type and select the roles **Microsoft Sentinel Contributor** and **Log Analytics Contributor**, then click **Next**.
 
 ![sentinel_role_search](images/024.png)
 
