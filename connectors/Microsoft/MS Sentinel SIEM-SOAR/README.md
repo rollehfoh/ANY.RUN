@@ -26,7 +26,7 @@ As a result, your Microsoft Sentinel incidents will include a verdict, threat sc
 
 This playbook extracts URL from incidents and submit it for analysis in the ANY.RUN Sandbox to enrich the incident with a verdict using a single Azure Logic App.
 
-[Open connector page](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-URL)
+[Open connector page_URL](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-URL)
 
 ## Analyze Files from Microsoft Sentinel Incidents via ANY.RUN Sandbox
 
@@ -36,13 +36,13 @@ Templates are provided for endpoints running the following operating systems:
 - Windows
 - UNIX (Ubuntu, Debian)
 
-[Open connector page](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-File)
+[Open connector page_file](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-File)
 
 ## Analyze All Entities from Microsoft Sentinel Incidents via ANY.RUN Sandbox and Microsoft Defender for Endpoint
 
 This template makes the incident enrichment process in Microsoft Sentinel even more automated if you are also using Microsoft Defender for Endpoint (MDE). In this case, the entire automation mechanism can be combined into a single Azure Logic App, leveraging MDE's capabilities to extract files from endpoints via API.
 
-[Open connector page](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-Defender)
+[Open connector page_MDE](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-Defender)
 
 ## Prerequisites
 
@@ -56,7 +56,7 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 
 ### App Registration
 
-- If you haven't done this before, you need to create a new application for your connector. To do this, go to **Microsoft Entra ID**.
+- You need to create a new application for your connector. To do this, go to **Microsoft Entra ID**.
 
 ![entra_id](images/002.png)
 
@@ -104,7 +104,60 @@ This template makes the incident enrichment process in Microsoft Sentinel even m
 |----------|--------------------|-----------------------------------------------------------------------------|
 | Machine  | Machine.LiveResponse | Needed to gather evidences from machines                                  |
 | Machine  | Machine.Read.All   | Needed to retrieve information about machines                               |
-| Library  | Library.Manage     | Needed to upload custom ps1 script for retrieving AV related evidences     |
+| Library  | Library.Manage     | Needed to upload custom ps1 script for retrieving AV related evidences      |
+
+### Required Roles for the New App
+
+Since the connectors use various resources available in Azure, the created application `ANYRUN-App` needs to be assigned the appropriate roles.
+
+#### Key Vault
+
+- Navigate to the required Key Vault where you previously added the ANY.RUN API-Key.
+
+![kv_role_overview](images/018.png)
+
+- Open **Access control (IAM)** > **Add** > **Add role assignment**.
+
+![kv_role_add](images/019.png)
+
+- In the search window, type and select the role **Key Vault Secrets User**, then click **Next**.
+
+![kv_role_search](images/020.png)
+
+- Description of the required role:
+
+| Name                   | Description                                                                 |
+|------------------------|-----------------------------------------------------------------------------|
+| Key Vault Secrets User | Read secret contents. Only works for key vaults that use the 'Azure role-based access control' permission model. |
+
+- Then, assign this role to the created application **ANYRUN-App**.
+
+![kv_role_select](images/021.png)
+
+#### Sentinel
+
+- Open your Sentinel workspace and navigate to **Settings** > **Workspace settings**.
+
+![sentinel_settings](images/022.png)
+
+- Open **Access control (IAM)** > **Add** > **Add role assignment**.
+
+![sentinel_role_add](images/023.png)
+
+- In the search window, type and select the roles listed below, then click **Next**.
+
+![sentinel_role_search](images/024.png)
+
+- Description of the required roles:
+
+| Name                         | Description                                                                 |
+|------------------------------|-----------------------------------------------------------------------------|
+| Microsoft Sentinel Contributor | Microsoft Sentinel Contributor                                              |
+| Log Analytics Contributor    | Log Analytics Contributor can read all monitoring data and edit monitoring settings. Editing monitoring settings includes adding the VM extension to VMs; reading storage account keys to be able to configure collection of logs from Azure Storage; adding solutions; and configuring Azure diagnostics on all Azure resources. |
+
+- Then, assign these roles to the created application **ANYRUN-App**.
+
+![sentinel_role_select](images/025.png)
 
 ### Storage Account
 
