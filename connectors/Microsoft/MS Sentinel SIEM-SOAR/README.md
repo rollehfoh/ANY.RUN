@@ -19,7 +19,7 @@ As a result, your Microsoft Sentinel incidents will include a verdict, threat sc
   - Analysis Verdict and Threat score
   - Malware Tags
   - Table with IoC's detected during the analysis
-  - Interactive Report Link
+  - Analysis Report Link
 - Uploading IoC's detected during the analysis to Sentinel Threat Intelligence portal
 
 ## Analyze URLs from Microsoft Sentinel Incidents via ANY.RUN Sandbox
