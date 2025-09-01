@@ -118,14 +118,6 @@
                             "defaultValue": "[parameters('AzureClientId')]",
                             "type": "String"
                         },
-                        "Azure Blob Storage Account Name": {
-                            "defaultValue": "[parameters('AzureBlobStorageAccountName')]",
-                            "type": "String"
-                        },
-                        "Azure Blob Storage Container Name": {
-                            "defaultValue": "[parameters('AzureBlobStorageContainerName')]",
-                            "type": "String"
-                        },
                         "$connections": {
                             "defaultValue": {},
                             "type": "Object"
