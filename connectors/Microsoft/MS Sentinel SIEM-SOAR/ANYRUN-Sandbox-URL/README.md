@@ -27,19 +27,17 @@ This playbook extracts URL from incidents and submit it for analysis in the ANY.
 
 - Enter the parameters required for deploying the Logic App.
 
-*deployment image*
+![logic_app_deployment](images/004.png)
 
 | Parameter Name                  | Description                                                                 |
 |---------------------------------|-----------------------------------------------------------------------------|
-| workflows_ANYRUN_Sandbox_URL_name | Workflow name         |
-| logicAppLocation                | Region for Logic App (for example, eastus or australiaeast). Adapt for your tenant or leave the default value for automatic determination based on your Resource Group. |
+| LogicAppName                    | Workflow name                                                               |
 | AzureTenantId                   | Tenant ID for authentication in connections.                                |
-| AzureClientId                   | Client ID for authentication.                                               |
+| AzureClientId                   | Client ID for authentication (ID of the App Registration created before).   |
 | azureClientSecret               | Client Secret for authentication.                                           |
-| sentinelWorkspaceId             | Workspace ID for Azure Sentinel (copy from your Log Analytics workspace).                                            |
+| sentinelWorkspaceId             | Workspace ID for Azure Sentinel (copy from your Log Analytics workspace).   |
 | keyVaultName                    | Key Vault name.                                                             |
-
-*Sentinel and Key Vault API connections configuration*
+| keyVaultUri                     | Key Vault URI.                                                              |
 
 ## Logic App configuration (Optional)
 
