@@ -31,7 +31,7 @@ This playbook extracts URL from incidents and submit it for analysis in the ANY.
 
 | Parameter Name                  | Description                                                                 |
 |---------------------------------|-----------------------------------------------------------------------------|
-| LogicAppName                    | Workflow name                                                               |
+| LogicAppName                    | Workflow name.                                                              |
 | AzureTenantId                   | Tenant ID for authentication in connections.                                |
 | AzureClientId                   | Client ID for authentication (ID of the App Registration created before).   |
 | azureClientSecret               | Client Secret for authentication.                                           |
