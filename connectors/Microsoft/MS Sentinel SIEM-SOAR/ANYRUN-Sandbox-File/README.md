@@ -57,9 +57,18 @@ First, you need to deploy the child Logic App, as its parameters are required fo
  
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Submit-File-to-Blob.json)
 
-*deployment image*
+- Enter the parameters required for deploying the Logic App and click **Review + create**.
 
-*Sentinel and Key Vault API connections configuration*
+![logic_app_deployment](images/004.png)
+
+- Description of the required parameters:
+
+| Parameter Name                  | Description                                                                 |
+|---------------------------------|-----------------------------------------------------------------------------|
+| LogicAppName                    | Workflow name.                                                              |
+| AzureTenantId                   | Tenant ID for authentication in connections.                                |
+| AzureClientId                   | Client ID for authentication (ID of the App Registration created before).   |
+| azureClientSecret               | Client Secret for authentication.                                           |
 
 #### Parent Logic App 
 
