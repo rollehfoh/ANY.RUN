@@ -4,7 +4,7 @@
     "parameters": {
         "logicAppName": {
             "type": "string",
-            "defaultValue": "ANYRUN-Submit-File-to-Blob-EXPORT"
+            "defaultValue": "ANYRUN-Submit-File-to-Blob"
         },
         "azureTenantId": {
             "type": "string",
