@@ -372,7 +372,7 @@
                                                     "inputs": {
                                                         "host": {
                                                             "connection": {
-                                                                "name": "@parameters('$connections')['wdatp-2']['connectionId']"
+                                                                "name": "@parameters('$connections')['wdatp']['connectionId']"
                                                             }
                                                         },
                                                         "method": "post",
@@ -409,7 +409,7 @@
                                                             "inputs": {
                                                                 "host": {
                                                                     "connection": {
-                                                                        "name": "@parameters('$connections')['wdatp-2']['connectionId']"
+                                                                        "name": "@parameters('$connections')['wdatp']['connectionId']"
                                                                     }
                                                                 },
                                                                 "method": "get",
@@ -465,7 +465,7 @@
                                                     "inputs": {
                                                         "host": {
                                                             "connection": {
-                                                                "name": "@parameters('$connections')['wdatp-2']['connectionId']"
+                                                                "name": "@parameters('$connections')['wdatp']['connectionId']"
                                                             }
                                                         },
                                                         "method": "get",
@@ -544,7 +544,7 @@
                                                     "inputs": {
                                                         "host": {
                                                             "connection": {
-                                                                "name": "@parameters('$connections')['wdatp-2']['connectionId']"
+                                                                "name": "@parameters('$connections')['wdatp']['connectionId']"
                                                             }
                                                         },
                                                         "method": "get",
