@@ -37,7 +37,6 @@ This playbook extracts URL from incidents and submit it for analysis in the ANY.
 | AzureTenantId                   | Tenant ID for authentication in connections.                                |
 | AzureClientId                   | Client ID for authentication (ID of the App Registration created before).   |
 | azureClientSecret               | Client Secret for authentication.                                           |
-| sentinelWorkspaceId             | Workspace ID for Azure Sentinel (copy Workspace ID from your Log Analytics workspace). |
 | keyVaultName                    | Key Vault name.                                                             |
 | keyVaultUri                     | Key Vault URI (copy Vault URI from your Key Vault overview).                |
 
