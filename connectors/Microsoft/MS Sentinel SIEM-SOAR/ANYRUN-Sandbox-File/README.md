@@ -59,7 +59,7 @@ First, you need to deploy the child Logic App, as its parameters are required fo
 
 - Enter the parameters required for deploying the Logic App and click **Review + create**.
 
-![logic_app_deployment](images/004.png)
+![child_logic_app_deployment](images/004.png)
 
 - Description of the required parameters:
 
@@ -72,6 +72,8 @@ First, you need to deploy the child Logic App, as its parameters are required fo
 
 #### Parent Logic App 
 
+> **Note:** You can deploy all the proposed parent Logic Apps or select specific ones depending on the operating system installed on your endpoints. The parent Logic Apps operate independently of each other.
+
 - Click below to deploy Parent Azure Logic App with **Flex Consumption plan**
   - ANYRUN-Sandbox-File-Windows
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Sandbox-File-Windows.json)
@@ -80,23 +82,23 @@ First, you need to deploy the child Logic App, as its parameters are required fo
   - ANYRUN-Sandbox-File-Debian
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Sandbox-File-Debian.json)
 
-- Enter the parameters required for deploying the Logic App.
+- Enter the parameters required for deploying the Logic App and click **Review + create**.
 
-*deployment image*
+![parent_logic_app_deployment](images/005.png)
 
-| Parameter Name                  | Description                                                                 |
-|---------------------------------|-----------------------------------------------------------------------------|
-| workflows_ANYRUN_Sandbox_File_name | Workflow name       |
-| logicAppLocation                | Region for Logic App (for example, eastus or australiaeast). Adapt for your tenant or leave the default value for automatic determination based on your Resource Group. |
-| AzureTenantId                   | Tenant ID for authentication in connections.                                |
-| AzureClientId                   | Client ID for authentication.                                               |
-| azureClientSecret               | Client Secret for authentication.                                           |
-| sentinelWorkspaceId             | Workspace ID for Azure Sentinel.                                            |
-| keyVaultName                    | Key Vault name.                                                             |
-| AzureBlobStorageAccountName             | Azure Blob Storage Account Name.                                           |
-| AzureBlobStorageContainerName                    | Azure Blob Storage Container Name.                                                           |
+- Description of the required parameters:
 
-*Sentinel and Key Vault API connections configuration*
+| Parameter Name              | Description                                                                 |
+|-----------------------------|-----------------------------------------------------------------------------|
+| logicAppName                | Workflow name.                                                              |
+| azureTenantId               | Azure Tenant ID for authentication in connections.                          |
+| azureClientId               | Client ID for authentication (ID of the App Registration created before).   |
+| azureClientSecret           | Client Secret for authentication.                                           |
+| keyVaultName                | Key Vault name.                                                             |
+| keyVaultUri                 | Key Vault URI (copy Vault URI from your Key Vault overview).                |
+| azureBlobStorageAccountName | Azure Blob Storage Account Name.                                            |
+| azureBlobStorageContainerName | Azure Blob Storage Container Name.                                        |
+| childWorkflowId             | ID of the child Logic App (ex.: /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.Logic/workflows/<child_Logic_App_name>). |
 
 ## Logic App configuration (Optional)
 
