@@ -51,6 +51,12 @@ After the analysis is completed in the ANY.RUN Sandbox, its most significant res
 
 ## Microsoft Defender for Endpoint configuration and additional script
 
+> **Note:** To allow the connector to extract all files of interest from endpoints (including potentially dangerous ones), we recommend setting `Quarantine` as the default action for your MDE. **!ATTENTION!** Be careful when configuring antivirus policies, as this can be potentially dangerous. Study:
+>
+> - [Configure remediation for Microsoft Defender Antivirus detections](https://learn.microsoft.com/en-us/defender-endpoint/configure-remediation-microsoft-defender-antivirus)
+>
+> - [Settings for Microsoft Defender Antivirus policy in Microsoft Intune for Windows devices](https://learn.microsoft.com/en-us/intune/intune-service/protect/antivirus-microsoft-defender-settings-windows)
+
 ### Enable Live Response Sessions
 
 - Open your [MDE portal](https://security.microsoft.com).
