@@ -69,7 +69,7 @@ After the analysis is completed in the ANY.RUN Sandbox, its most significant res
 
 - Open the required device.
 
-- Click on `...` in the upper right corner and start a Live Response session.
+- Click on `...` in the upper right corner and **Initiate Live Response session**.
 
 ![run_live_response](images/003.png)
 
