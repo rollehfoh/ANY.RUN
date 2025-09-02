@@ -48,3 +48,35 @@ After the analysis is completed in the ANY.RUN Sandbox, its most significant res
 | keyVaultUri                 | Key Vault URI (copy Vault URI from your Key Vault overview).                |
 | azureBlobStorageAccountName | Azure Blob Storage Account Name.                                            |
 | azureBlobStorageContainerName | Azure Blob Storage Container Name.                                        |
+
+## Microsoft Defender for Endpoint configuration and additional script
+
+### Enable Live Response Sessions
+
+- Open your [MDE portal](https://security.microsoft.com).
+
+- Navigate to **System** > **Settings** > **Endpoints** > **General** > **Advanced features**.
+
+- Enable the following settings: **Live Response**, **Live Response for Servers**, and **Live Response unsigned script execution**.
+
+![enable_live_response](images/002.png)
+
+### Upload Helper Scripts to the Local Library of Your Endpoints
+
+- Open your MDE portal[](https://security.microsoft.com).
+
+- Navigate to **Assets** > **Devices**.
+
+- Open the required device.
+
+- Click on `...` in the upper right corner and start a Live Response session.
+
+![run_live_response](images/003.png)
+
+- Click **Upload file to library**.
+
+![click_upload_file](images/004.png)
+
+- Click **Upload file to library** again, select the script from your file system (after downloading it from our [library](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-Defender/scripts)), or create your own script. After selecting, click **Submit**.
+
+![select_file_to_upload](images/005.png)
