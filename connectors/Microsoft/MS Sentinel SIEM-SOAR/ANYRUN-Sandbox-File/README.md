@@ -49,6 +49,18 @@ This Logic App is a child workflow invoked by the parent to handle file upload f
 
 ### Import Azure Logic App template
 
+#### Child Logic App
+
+First, you need to deploy the child Logic App, as its parameters are required for configuring the parent one.
+
+- Click below to deploy Child Azure Logic App with **Flex Consumption plan**
+ 
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Submit-File-to-Blob.json)
+
+*deployment image*
+
+*Sentinel and Key Vault API connections configuration*
+
 #### Parent Logic App 
 
 - Click below to deploy Parent Azure Logic App with **Flex Consumption plan**
@@ -74,16 +86,6 @@ This Logic App is a child workflow invoked by the parent to handle file upload f
 | keyVaultName                    | Key Vault name.                                                             |
 | AzureBlobStorageAccountName             | Azure Blob Storage Account Name.                                           |
 | AzureBlobStorageContainerName                    | Azure Blob Storage Container Name.                                                           |
-
-*Sentinel and Key Vault API connections configuration*
-
-#### Child Logic App
-
-- Click below to deploy Child Azure Logic App with **Flex Consumption plan**
- 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-File%2FLogic%2520Apps%2FANYRUN-Submit-File-to-Blob.json)
-
-*deployment image*
 
 *Sentinel and Key Vault API connections configuration*
 
