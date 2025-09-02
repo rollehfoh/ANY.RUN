@@ -51,7 +51,7 @@
         "childWorkflowId": {
             "type": "string",
             "metadata": {
-                "description": "ID of the child Logic App (ex.: /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.Logic/workflows/<child_Logic_App_name>))."
+                "description": "ID of the child Logic App (ex.: /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.Logic/workflows/<child_Logic_App_name>)."
             }
         }
     },
