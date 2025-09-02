@@ -51,7 +51,7 @@ After the analysis is completed in the ANY.RUN Sandbox, its most significant res
 
 ## Microsoft Defender for Endpoint configuration and additional script
 
-> **Note:** To allow the connector to extract all files of interest from endpoints (including potentially dangerous ones), we recommend setting `Quarantine` as the default action for your MDE. **!ATTENTION!** Be careful when configuring antivirus policies, as this can be potentially dangerous. Study:
+> **Note:** To allow the connector to extract all files of interest from endpoints (including potentially dangerous ones), we recommend setting `Quarantine` as the default action for your MDE. **!ATTENTION!** Be careful when configuring antivirus policies, as this can be potentially dangerous. See:
 >
 > - [Configure remediation for Microsoft Defender Antivirus detections](https://learn.microsoft.com/en-us/defender-endpoint/configure-remediation-microsoft-defender-antivirus)
 >
@@ -100,3 +100,53 @@ The Logic App we propose dynamically selects the script extension (.sh or .ps1) 
 - In the expanded condition, select the actions **Set variable - Windows OS Script Name** and **Set variable - UNIX OS Script Name** and change the script name to the one you need (additionally, you may also need to change the script launch parameters in the actions **Set variable - Windows OS Script Parameters** and **Set variable - UNIX OS Script Parameters**).
 
 ![change_script_name](images/006.png)
+
+## Logic App configuration (Optional)
+
+### ANY.RUN Sandbox analysis parameters
+
+ANY.RUN is an interactive online malware analysis service for dynamic and static research of most types of threats using any environments. We offer a connector for Microsoft Sentinel, which you can independently adapt to your infrastructure and needs in just a few clicks. You can easily change the parameters used for analyzing the required File.
+
+> **Note:** You can learn more about the capabilities of ANY.RUN Sandbox by reviewing our **[API documentation](https://any.run/api-documentation/)**.
+
+The main setup and customization of the Logic App is available through the graphical editor (**Development tools** > **Logic app designer**) or the code editor (**Development tools** > **Logic app code view**).
+
+- The analysis parameters in ANY.RUN Sandbox are defined in the following actions:
+  - **HTTP-RunNewURLAnalysis**
+  - **HTTP - Submit File to ANY.RUN Sandbox Windows**
+  - **HTTP - Submit File to ANY.RUN Sandbox Ubuntu**
+  - **HTTP - Submit File to ANY.RUN Sandbox Debian**
+
+- For URL analysis:
+
+![analysis_action_url](images/007.png)
+
+- For File analysis:
+
+ > **Note:** HTTP request body consists of multipart/form-data
+
+![analysis_parameters_file](images/008.png)
+
+- Description of the default parameters:
+
+| Parameter Name              | Description                                                                 |
+|-----------------------------|-----------------------------------------------------------------------------|
+| opt_timeout                 | Defines the timeout option for the analysis.                                |
+| env_os                      | Specifies the operating system.                                             |
+| env_bitness                 | Defines the bitness of the operating system.                                |
+| env_version                 | Sets the version of the operating system.                                   |
+| env_type                    | Specify the environment preset type.                                        |
+| opt_automated_interactivity | Controls the automated interactivity (ML) option (changing this is not recommended). |
+| auto_confirm_uac            | Enables automatic confirmation of Windows UAC requests (changing this is not recommended). |
+| run_as_root                 | Allow the file to run with superuser privileges on Linux.                   |
+| obj_ext_extension           | Specify whether to change the file extension to a valid one.                |
+
+### Simultaneous Analysis of Objects in ANY.RUN Sandbox
+
+ANY.RUN Sandbox allows users to perform multiple analyses simultaneously (availability and capability depend on your pricing plan). By default, if a Microsoft Sentinel incident contains multiple URLs or Files, each analysis will run sequentially (a new File analysis won't start until the previous one finishes, to avoid errors).
+
+- To increase the speed of incident enrichment, you can analyze objects simultaneously. To do this, open the **For each - URLs** and **For each - detonate files to ANY.RUN Sandbox** loop > **Settings** and increase the **Degree of parallelism** value. It is recommended to set a value that does not exceed the number of possible parallel analyses in ANY.RUN Sandbox for your pricing plan.
+
+![parallel_analysis](images/009.png)
+
+> **Note**: To upgrade your pricing plan capabilities, [contact us](https://app.any.run/contact-us).
