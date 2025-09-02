@@ -86,3 +86,17 @@ After the analysis is completed in the ANY.RUN Sandbox, its most significant res
 - Click **Upload file to library** again, select the script from your file system (after downloading it from our [library](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-Defender/scripts)), or create your own script. After selecting, click **Submit**.
 
 ![select_file_to_upload](images/005.png)
+
+### Declaring Script Names in the Deployed Logic App (Optional)
+
+The Logic App we propose dynamically selects the script extension (.sh or .ps1) depending on the endpoint's operating system. If you need to run a script with a different name from the local library, you can change it in the Logic App.
+
+- Open the deployed **ANYRUN-Sandbox-Defender** Logic App.
+
+- Navigate to **Development Tools** > **Logic app designer**.
+
+- In the Logic app designer, expand the following action blocks: **For each - Host** > **For each - Find file path on the target host** > **Condition - Check if KQL Result is not empty (True)** > **Condition - Windows Machine**.
+
+- In the expanded condition, select the actions **Set variable - Windows OS Script Name** and **Set variable - UNIX OS Script Name** and change the script name to the one you need (additionally, you may also need to change the script launch parameters in the actions **Set variable - Windows OS Script Parameters** and **Set variable - UNIX OS Script Parameters**).
+
+![change_script_name](images/006.png)
