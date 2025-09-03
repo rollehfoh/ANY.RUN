@@ -6,7 +6,7 @@
 
 ______________________________________________________________________
 
-# Microsoft Defender for Endpoint Connector for ANY.RUN Interactive Malware Sandbox
+# Microsoft Defender for Endpoint Connector for ANY.RUN Malware Sandbox
 
 ## Overview
 
