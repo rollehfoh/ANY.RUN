@@ -8,6 +8,8 @@ ______________________________________________________________________
 
 # Microsoft Defender for Endpoint Connector for ANY.RUN Malware Sandbox
 
+ANY.RUN is 
+
 ## Connector capabilities
 
 ### Interactive Sandbox:
