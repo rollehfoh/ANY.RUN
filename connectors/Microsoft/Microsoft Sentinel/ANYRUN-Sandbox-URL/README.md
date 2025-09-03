@@ -6,7 +6,7 @@
 
 ______________________________________________________________________
 
-# Microsoft Sentinel Connector for automated URL analysis via ANY.RUN Interactive Malware Sandbox
+# Microsoft Sentinel Connector for automated URL analysis via ANY.RUN Malware Sandbox
 
 ## Overview
 
