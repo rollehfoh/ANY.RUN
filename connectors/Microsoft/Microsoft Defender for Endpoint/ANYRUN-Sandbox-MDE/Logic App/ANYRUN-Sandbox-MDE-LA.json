@@ -53,7 +53,7 @@
                     "token:tenantId": "[parameters('azureTenantId')]",
                     "token:clientId": "[parameters('azureClientId')]",
                     "token:clientSecret": "[parameters('azureClientSecret')]",
-                    "token:grantType": "client_credentials",
+                    "token:grantType": "client_credentials"
                 }
             }
         },
