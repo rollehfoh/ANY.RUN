@@ -54,7 +54,6 @@
                     "token:clientId": "[parameters('azureClientId')]",
                     "token:clientSecret": "[parameters('azureClientSecret')]",
                     "token:grantType": "client_credentials",
-                    "token:resourceUri": "https://management.azure.com/"
                 }
             }
         },
