@@ -6,7 +6,7 @@
 
 ______________________________________________________________________
 
-# Microsoft Sentinel Connector for automated File and URL analysis via ANY.RUN Interactive Malware Sandbox and Microsoft Defender for Endpoint
+# Microsoft Sentinel Connector for automated File and URL analysis via ANY.RUN Malware Sandbox and Microsoft Defender for Endpoint
 
 ## Overview
 
@@ -30,7 +30,7 @@ After the analysis is completed in the ANY.RUN Sandbox, its most significant res
 
 - Click below to deploy Azure Logic App with **Flex Consumption plan**
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMS%2520Sentinel%2520SIEM-SOAR%2FANYRUN-Sandbox-Defender%2FANYRUN-Sandbox-Defender.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMicrosoft%2520Sentinel%2FANYRUN-Sandbox-Defender%2FANYRUN-Sandbox-Defender.json)
 
 - Enter the parameters required for deploying the Logic App.
 
@@ -83,7 +83,7 @@ After the analysis is completed in the ANY.RUN Sandbox, its most significant res
 
 ![click_upload_file](images/004.png)
 
-- Click **Upload file to library** again, select the script from your file system (after downloading it from our [library](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/MS%20Sentinel%20SIEM-SOAR/ANYRUN-Sandbox-Defender/scripts)), or create your own script. After selecting, click **Submit**.
+- Click **Upload file to library** again, select the script from your file system (after downloading it from our [library](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/Microsoft%20Sentinel/ANYRUN-Sandbox-Defender/scripts)), or create your own script. After selecting, click **Submit**.
 
 ![select_file_to_upload](images/005.png)
 
