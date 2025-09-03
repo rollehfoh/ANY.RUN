@@ -30,4 +30,20 @@ This integration empowers SOC teams with deeper insights into potential threats,
 
 ## Microsoft Defender for Endpoint Configuration
 
+> **Note:** To allow the connector to extract all files of interest from endpoints (including potentially dangerous ones), we recommend setting `Quarantine` as the default action for your MDE. **!ATTENTION!** Be careful when configuring antivirus policies, as this can be potentially dangerous. See:
+>
+> - [Configure remediation for Microsoft Defender Antivirus detections](https://learn.microsoft.com/en-us/defender-endpoint/configure-remediation-microsoft-defender-antivirus)
+>
+> - [Settings for Microsoft Defender Antivirus policy in Microsoft Intune for Windows devices](https://learn.microsoft.com/en-us/intune/intune-service/protect/antivirus-microsoft-defender-settings-windows)
+
+### Enable Live Response Sessions
+
+- Open your [MDE portal](https://security.microsoft.com).
+
+- Navigate to **System** > **Settings** > **Endpoints** > **General** > **Advanced features**.
+
+- Enable the following settings: **Live Response**, **Live Response for Servers**, and **Live Response unsigned script execution**.
+
+![enable_live_response](images/002.png)
+
 ## Logic App Configuration (Optional)
