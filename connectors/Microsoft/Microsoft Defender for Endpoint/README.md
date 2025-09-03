@@ -22,4 +22,4 @@ ______________________________________________________________________
  
 ## Deployment
 
-## Azure Logic App Configuration (Optional)
+## Logic App Configuration (Optional)
