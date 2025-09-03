@@ -8,20 +8,16 @@ ______________________________________________________________________
 
 # Microsoft Defender for Endpoint Connector for ANY.RUN Malware Sandbox
 
-## Overview
+## Connector capabilities
 
-## Requirements
-- Microsoft Defender for Endpoint
-- ANY.RUN API Key
-- Microsoft Azure resources:
-  - Logic App with Flex Consumption plan
-  - Function App Flex Consumption plan
-  - Blob Storage
+### Interactive Sandbox:
 
-## Solution Overview
- 
-## Deployment
+[Open connector page](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/Microsoft%20Defender%20for%20Endpoint/ANYRUN-Sandbox-MDE)
 
-## Microsoft Defender for Endpoint Configuration
+### Threat Intelligence Feeds:
 
-## Logic App Configuration (Optional)
+[Open connector page](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/Microsoft%20Defender%20for%20Endpoint/ANYRUN-TI-Feeds-MDE)
+
+### Request support or access to ANY.RUN’s products 
+
+Feel free to reach out to us for help with integration, a quote, or demo via the [contact us form](https://app.any.run/contact-us/). 
