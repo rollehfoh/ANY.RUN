@@ -6,7 +6,7 @@
 
 ______________________________________________________________________
 
-# Microsoft Sentinel Connectors for ANY.RUN Interactive Malware Sandbox
+# Microsoft Sentinel Connectors for ANY.RUN Malware Sandbox
 
 ## Overview
 
