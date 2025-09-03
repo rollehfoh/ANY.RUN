@@ -10,8 +10,6 @@ ______________________________________________________________________
 
 ## Overview
 
-## Solution Overview
-
 ## Requirements
 - Microsoft Defender for Endpoint
 - ANY.RUN API Key
@@ -19,5 +17,9 @@ ______________________________________________________________________
   - Logic App with Flex Consumption plan
   - Function App Flex Consumption plan
   - Blob Storage
+
+## Solution Overview
  
 ## Deployment
+
+## Azure Logic App Configuration (Optional)
