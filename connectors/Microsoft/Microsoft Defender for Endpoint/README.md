@@ -22,4 +22,6 @@ ______________________________________________________________________
  
 ## Deployment
 
+## Microsoft Defender for Endpoint Configuration
+
 ## Logic App Configuration (Optional)
