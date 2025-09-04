@@ -544,7 +544,7 @@
                                                 "uri": "https://api.any.run/v1/analysis",
                                                 "method": "POST",
                                                 "headers": {
-                                                    "Authorization": "API-Key ",
+                                                    "Authorization": "API-Key @{body('Get_secret_-_ANYRUN')?['value']}",
                                                     "Accept": "application/json"
                                                 },
                                                 "body": {
