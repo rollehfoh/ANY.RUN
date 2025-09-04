@@ -89,16 +89,23 @@
             "name": "[variables('azureblobConnectionName')]",
             "location": "[resourceGroup().location]",
             "properties": {
-                "displayName": "[variables('azureblobConnectionName')]",
-                "customParameterValues": {},
                 "api": {
                     "id": "[variables('azureblobApiId')]"
                 },
-                "parameterValues": {
-                    "token:tenantId": "[parameters('azureTenantId')]",
-                    "token:clientId": "[parameters('azureClientId')]",
-                    "token:clientSecret": "[parameters('azureClientSecret')]",
-                    "token:grantType": "client_credentials"
+                "displayName": "[variables('azureblobConnectionName')]",
+                "parameterValueSet": {
+                    "name": "servicePrincipalAuth",
+                    "values": {
+                        "token:clientId": {
+                            "value": "[parameters('azureClientId')]"
+                        },
+                        "token:clientSecret": {
+                            "value": "[parameters('azureClientSecret')]"
+                        },
+                        "token:TenantId": {
+                            "value": "[parameters('azureTenantId')]"
+                        }
+                    }
                 }
             }
         },
