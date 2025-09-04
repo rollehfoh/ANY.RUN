@@ -48,10 +48,11 @@
                 "description": "Azure Blob Storage Container Name."
             }
         },
-        "childWorkflowId": {
+        "childWorkflowName": {
             "type": "string",
+            "defaultValue": "ANYRUN-Submit-File-to-Blob",
             "metadata": {
-                "description": "ID of the child Logic App (ex.: /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.Logic/workflows/<child_Logic_App_name>)."
+                "description": "Name of the child Logic App."
             }
         }
     },
@@ -157,6 +158,10 @@
                         },
                         "Azure Blob Storage Container Name": {
                             "defaultValue": "[parameters('azureBlobStorageContainerName')]",
+                            "type": "String"
+                        },
+                        "Child Logic App": {
+                            "defaultValue": "[parameters('childWorkflowName')]",
                             "type": "String"
                         },
                         "$connections": {
@@ -364,6 +369,11 @@
                                         "name": "Resource Group Name",
                                         "type": "string",
                                         "value": "@{triggerBody()?['workspaceInfo']?['ResourceGroupName']}"
+                                    },
+                                    {
+                                        "name": "Child Logic App Name",
+                                        "type": "string",
+                                        "value": "@{parameters('Child Logic App')}"
                                     }
                                 ]
                             }
@@ -401,7 +411,7 @@
                                     "inputs": {
                                         "host": {
                                             "workflow": {
-                                                "id": "[parameters('childWorkflowId')]"
+                                                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Logic/workflows/', variables('Child Logic App Name'))]"
                                             },
                                             "triggerName": "When_a_HTTP_request_is_received"
                                         }
@@ -651,7 +661,7 @@
                                                 "headers": {
                                                     "SkipDeleteIfFileNotFoundOnServer": false
                                                 },
-                                                "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('AccountNameFromSettings'))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',item()['fileName']))}"
+                                                "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent(variables('Storage Account Name')))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',item()['fileName']))}"
                                             }
                                         },
                                         "Delay_-_Wait_for_File_Analysis": {
