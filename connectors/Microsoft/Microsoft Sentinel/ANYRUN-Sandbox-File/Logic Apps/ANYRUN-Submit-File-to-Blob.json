@@ -23,6 +23,12 @@
             "metadata": {
                 "description": "Azure Client Secret for authentication."
             }
+        },
+        "logAnalyticsWorkspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Log Analytics Workspace Name."
+            }
         }
     },
     "variables": {
@@ -90,6 +96,10 @@
                     "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
                     "contentVersion": "1.0.0.0",
                     "parameters": {
+                        "Log Analytics Workspace": {
+                            "defaultValue": "[parameters('logAnalyticsWorkspaceName')]",
+                            "type": "String"
+                        },
                         "$connections": {
                             "defaultValue": {},
                             "type": "Object"
@@ -133,6 +143,10 @@
                                     },
                                     {
                                         "name": "Machine OS",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "name": "Log Analytics Workspace Name",
                                         "type": "string"
                                     }
                                 ]
@@ -614,10 +628,10 @@
                                                 "body": "DeviceEvents\n| where ActionType == \"AntivirusDetection\"\n| where DeviceId == \"@{variables('Machine ID')}\"\n| where FileName == \"@{body('Parse_JSON_-_Extract_File_Name')?['properties']?['fileName']}\" and FileName !endswith \".lnk\"\n| project FolderPath, FileName\n| distinct FolderPath, FileName",
                                                 "path": "/queryData",
                                                 "queries": {
-                                                    "subscriptions": "a754644b-f4a5-4258-aa07-9d7682198cd6",
-                                                    "resourcegroups": "sentinel",
+                                                    "subscriptions": "@{variables('Subscription ID')}",
+                                                    "resourcegroups": "@{variables('Resource Group Name')}",
                                                     "resourcetype": "Log Analytics Workspace",
-                                                    "resourcename": "sentinel",
+                                                    "resourcename": "@{parameters('Log Analytics Workspace Name')}",
                                                     "timerange": "7d"
                                                 }
                                             }
@@ -820,6 +834,11 @@
                                         "name": "Resource Group Name",
                                         "type": "string",
                                         "value": "@{body('Parse_JSON_-_Workflow_input')?['resourceGroupName']}"
+                                    },
+                                    {
+                                        "name": "Log Analytics Workspace Name",
+                                        "type": "string",
+                                        "value": "@{parameters('Log Analytics Workspace')}"
                                     }
                                 ]
                             }
