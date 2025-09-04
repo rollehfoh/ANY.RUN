@@ -488,7 +488,7 @@
                                                     }
                                                 },
                                                 "method": "get",
-                                                "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('AccountNameFromSettings'))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',item()['fileName']))}/content",
+                                                "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent(variables('Storage Account Name')))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',item()['fileName']))}/content",
                                                 "queries": {
                                                     "inferContentType": true
                                                 }
