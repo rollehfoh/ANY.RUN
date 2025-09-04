@@ -48,10 +48,11 @@
                 "description": "Azure Blob Storage Container Name."
             }
         },
-        "childWorkflowId": {
+        "childWorkflowName": {
             "type": "string",
+            "defaultValue": "ANYRUN-Submit-File-to-Blob",
             "metadata": {
-                "description": "ID of the child Logic App (ex.: /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.Logic/workflows/<child_Logic_App_name>)."
+                "description": "Name of the child Logic App."
             }
         }
     },
@@ -408,10 +409,11 @@
                                     "inputs": {
                                         "host": {
                                             "workflow": {
-                                                "id": "[parameters('childWorkflowId')]"
+                                                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Logic/workflows/', parameters('childWorkflowName'))]"
                                             },
                                             "triggerName": "When_a_HTTP_request_is_received"
-                                        }
+                                        },
+                                        "body": "@outputs('Compose_Data_for_EDR_Workflow')"
                                     }
                                 },
                                 "Parse_JSON_-_EDR_worflow_output": {
