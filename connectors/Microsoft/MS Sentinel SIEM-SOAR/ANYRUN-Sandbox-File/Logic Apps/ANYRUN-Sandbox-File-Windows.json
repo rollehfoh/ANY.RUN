@@ -2543,8 +2543,8 @@
                     "$connections": {
                         "value": {
                             "azuresentinel": {
-                                "connectionId": "[resourceId('Microsoft.Web/connections', variables('sentinelConnectionName'))]",
-                                "connectionName": "[variables('sentinelConnectionName')]",
+                                "connectionId": "[resourceId('Microsoft.Web/connections', variables('azuresentinelConnectionName'))]",
+                                "connectionName": "[variables('azuresentinelConnectionName')]",
                                 "id": "[variables('sentinelApiId')]"
                             },
                             "azureblob": {
