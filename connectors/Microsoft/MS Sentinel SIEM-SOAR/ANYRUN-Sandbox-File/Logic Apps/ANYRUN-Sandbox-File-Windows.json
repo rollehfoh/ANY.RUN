@@ -2545,7 +2545,7 @@
                             "azuresentinel": {
                                 "connectionId": "[resourceId('Microsoft.Web/connections', variables('azuresentinelConnectionName'))]",
                                 "connectionName": "[variables('azuresentinelConnectionName')]",
-                                "id": "[variables('sentinelApiId')]"
+                                "id": "[variables('azuresentinelApiId')]"
                             },
                             "azureblob": {
                                 "connectionId": "[resourceId('Microsoft.Web/connections', variables('azureblobConnectionName'))]",
