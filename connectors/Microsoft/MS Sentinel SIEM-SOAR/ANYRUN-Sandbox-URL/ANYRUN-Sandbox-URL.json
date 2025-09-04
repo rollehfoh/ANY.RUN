@@ -2239,7 +2239,7 @@
                                                     "method": "post",
                                                     "body": {
                                                         "incidentArmId": "@{triggerBody()?['object']?['id']}",
-                                                        "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN URL Detonation Results:</strong></b><br><span style=\"color: rgb(65, 117, 5);\">URL is clean and is no malicious activity was found during ANY.RUN Sandbox analysis</span><span style=\"color: rgb(65, 117, 5);\"> (</span>@{replace(replace(replace(item()?['Url'], '.', '[.]'), 'https://', ''), 'http://', '')}).</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Link to analysis report</strong></b> - https://app.any.run/tasks/@{variables('Task ID')}</p>"
+                                                        "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN URL Detonation Results:</strong></b><br><span style=\"color: rgb(65, 117, 5);\">URL is clean and is no malicious activity was found during ANY.RUN Sandbox analysis</span> (@{replace(replace(replace(item()?['Url'], '.', '[.]'), 'https://', ''), 'http://', '')}).</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Link to analysis report</strong></b> - https://app.any.run/tasks/@{variables('Task ID')}</p>"
                                                     },
                                                     "path": "/Incidents/Comment"
                                                 }
