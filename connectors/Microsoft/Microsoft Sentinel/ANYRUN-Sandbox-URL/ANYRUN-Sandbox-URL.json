@@ -1769,7 +1769,7 @@
                         },
                         "Initialize_Additional_Service_Parameters": {
                             "runAfter": {
-                                "Initialize_Sandbox_Analysis_Parameters": [
+                                "Initialize_Main_workflow_variables": [
                                     "Succeeded"
                                 ]
                             },
@@ -1780,22 +1780,6 @@
                                         "name": "Connector Version",
                                         "type": "string",
                                         "value": "1.0.0"
-                                    }
-                                ]
-                            }
-                        },
-                        "Initialize_Sandbox_Analysis_Parameters": {
-                            "runAfter": {
-                                "Initialize_Main_workflow_variables": [
-                                    "Succeeded"
-                                ]
-                            },
-                            "type": "InitializeVariable",
-                            "inputs": {
-                                "variables": [
-                                    {
-                                        "name": "obj_type",
-                                        "type": "string"
                                     }
                                 ]
                             }
