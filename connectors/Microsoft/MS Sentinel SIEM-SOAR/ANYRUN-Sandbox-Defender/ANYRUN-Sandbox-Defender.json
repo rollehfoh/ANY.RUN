@@ -4505,7 +4505,12 @@
                                     "Failed"
                                 ]
                             },
-                            "type": "Foreach"
+                            "type": "Foreach",
+                            "runtimeConfiguration": {
+                                "concurrency": {
+                                  "repetitions": 1
+                                }
+                            }                            
                         },
                         "Initialize_and_Set_default_Azure_Parameters": {
                             "runAfter": {
