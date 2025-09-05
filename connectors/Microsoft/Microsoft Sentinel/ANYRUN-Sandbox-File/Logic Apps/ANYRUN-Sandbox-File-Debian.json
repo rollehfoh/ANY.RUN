@@ -48,10 +48,11 @@
                 "description": "Azure Blob Storage Container Name."
             }
         },
-        "childWorkflowId": {
+        "childWorkflowName": {
             "type": "string",
+            "defaultValue": "ANYRUN-Submit-File-to-Blob",
             "metadata": {
-                "description": "ID of the child Logic App (ex.: /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.Logic/workflows/<child_Logic_App_name>)."
+                "description": "Name of the child Logic App."
             }
         }
     },
@@ -89,16 +90,23 @@
             "name": "[variables('azureblobConnectionName')]",
             "location": "[resourceGroup().location]",
             "properties": {
-                "displayName": "[variables('azureblobConnectionName')]",
-                "customParameterValues": {},
                 "api": {
                     "id": "[variables('azureblobApiId')]"
                 },
-                "parameterValues": {
-                    "token:tenantId": "[parameters('azureTenantId')]",
-                    "token:clientId": "[parameters('azureClientId')]",
-                    "token:clientSecret": "[parameters('azureClientSecret')]",
-                    "token:grantType": "client_credentials"
+                "displayName": "[variables('azureblobConnectionName')]",
+                "parameterValueSet": {
+                    "name": "servicePrincipalAuth",
+                    "values": {
+                        "token:clientId": {
+                            "value": "[parameters('azureClientId')]"
+                        },
+                        "token:clientSecret": {
+                            "value": "[parameters('azureClientSecret')]"
+                        },
+                        "token:TenantId": {
+                            "value": "[parameters('azureTenantId')]"
+                        }
+                    }
                 }
             }
         },
@@ -157,6 +165,10 @@
                         },
                         "Azure Blob Storage Container Name": {
                             "defaultValue": "[parameters('azureBlobStorageContainerName')]",
+                            "type": "String"
+                        },
+                        "Child Logic App": {
+                            "defaultValue": "[parameters('childWorkflowName')]",
                             "type": "String"
                         },
                         "$connections": {
@@ -364,6 +376,11 @@
                                         "name": "Resource Group Name",
                                         "type": "string",
                                         "value": "@{triggerBody()?['workspaceInfo']?['ResourceGroupName']}"
+                                    },
+                                    {
+                                        "name": "Child Logic App Name",
+                                        "type": "string",
+                                        "value": "@{parameters('Child Logic App')}"
                                     }
                                 ]
                             }
@@ -401,7 +418,7 @@
                                     "inputs": {
                                         "host": {
                                             "workflow": {
-                                                "id": "[parameters('childWorkflowId')]"
+                                                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Logic/workflows/', variables('Child Logic App Name'))]"
                                             },
                                             "triggerName": "When_a_HTTP_request_is_received"
                                         }
@@ -488,7 +505,7 @@
                                                     }
                                                 },
                                                 "method": "get",
-                                                "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('AccountNameFromSettings'))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',item()['fileName']))}/content",
+                                                "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent(variables('Storage Account Name')))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',item()['fileName']))}/content",
                                                 "queries": {
                                                     "inferContentType": true
                                                 }
@@ -496,13 +513,13 @@
                                         },
                                         "Parse_JSON_-_Get_TaskId": {
                                             "runAfter": {
-                                                "HTTP_-_Submit_File_to_ANY.RUN_Sandbox_Windows": [
+                                                "HTTP_-_Submit_File_to_ANY.RUN_Sandbox_Debian": [
                                                     "Succeeded"
                                                 ]
                                             },
                                             "type": "ParseJson",
                                             "inputs": {
-                                                "content": "@body('HTTP_-_Submit_File_to_ANY.RUN_Sandbox_Windows')",
+                                                "content": "@body('HTTP_-_Submit_File_to_ANY.RUN_Sandbox_Debian')",
                                                 "schema": {
                                                     "type": "object",
                                                     "properties": {
@@ -533,7 +550,7 @@
                                                 "value": "@body('Parse_JSON_-_Get_TaskId')?['data']?['taskid']"
                                             }
                                         },
-                                        "HTTP_-_Submit_File_to_ANY.RUN_Sandbox_Windows": {
+                                        "HTTP_-_Submit_File_to_ANY.RUN_Sandbox_Debian": {
                                             "runAfter": {
                                                 "Get_blob_content_(V2)": [
                                                     "Succeeded"
@@ -544,7 +561,7 @@
                                                 "uri": "https://api.any.run/v1/analysis",
                                                 "method": "POST",
                                                 "headers": {
-                                                    "Authorization": "API-Key ",
+                                                    "Authorization": "API-Key @{body('Get_secret_-_ANYRUN')?['value']}",
                                                     "Accept": "application/json"
                                                 },
                                                 "body": {
@@ -651,7 +668,7 @@
                                                 "headers": {
                                                     "SkipDeleteIfFileNotFoundOnServer": false
                                                 },
-                                                "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('AccountNameFromSettings'))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',item()['fileName']))}"
+                                                "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent(variables('Storage Account Name')))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',item()['fileName']))}"
                                             }
                                         },
                                         "Delay_-_Wait_for_File_Analysis": {
@@ -676,7 +693,7 @@
                                                         "uri": "https://api.any.run/v1/analysis/monitor/@{variables('UUID')}",
                                                         "method": "GET",
                                                         "headers": {
-                                                            "Authorization": "API-Key ",
+                                                            "Authorization": "API-Key @{body('Get_secret_-_ANYRUN')?['value']}",
                                                             "x-anyrun-connector": "@concat('MS_Sentinel:', variables('Connector Version'))"
                                                         }
                                                     },
@@ -764,7 +781,7 @@
                                                         "uri": "https://api.any.run/v1/analysis/@{variables('UUID')}",
                                                         "method": "GET",
                                                         "headers": {
-                                                            "Authorization": "API-Key ",
+                                                            "Authorization": "API-Key @{body('Get_secret_-_ANYRUN')?['value']}",
                                                             "x-anyrun-connector": "@concat('MS_Sentinel:', variables('Connector Version'))"
                                                         }
                                                     },
@@ -1659,7 +1676,7 @@
                                                         "uri": "https://api.any.run/report/@{variables('UUID')}/ioc/json",
                                                         "method": "GET",
                                                         "headers": {
-                                                            "Authorization": "API-Key ",
+                                                            "Authorization": "API-Key @{body('Get_secret_-_ANYRUN')?['value']}",
                                                             "x-anyrun-connector": "@concat('MS_Sentinel:', variables('Connector Version'))"
                                                         }
                                                     },
@@ -1795,7 +1812,7 @@
                                                                     "pattern_type": "stix",
                                                                     "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                     "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                    "description": "https://app.any.run/tasks/",
+                                                                    "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                     "confidence": 100
                                                                 }
                                                             }
@@ -1849,7 +1866,7 @@
                                                                     "pattern_type": "stix",
                                                                     "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                     "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                    "description": "https://app.any.run/tasks/",
+                                                                    "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                     "confidence": 100
                                                                 }
                                                             }
@@ -1885,7 +1902,7 @@
                                                                     "pattern_type": "stix",
                                                                     "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                     "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                    "description": "https://app.any.run/tasks/",
+                                                                    "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                     "confidence": 100
                                                                 }
                                                             }
@@ -1921,7 +1938,7 @@
                                                                     "pattern_type": "stix",
                                                                     "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                     "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                    "description": "https://app.any.run/tasks/",
+                                                                    "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                     "confidence": 100
                                                                 }
                                                             }
@@ -2061,7 +2078,7 @@
                                                                     "pattern_type": "stix",
                                                                     "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                     "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                    "description": "https://app.any.run/tasks/",
+                                                                    "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                     "confidence": 50
                                                                 }
                                                             }
@@ -2115,7 +2132,7 @@
                                                                     "pattern_type": "stix",
                                                                     "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                     "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                    "description": "https://app.any.run/tasks/",
+                                                                    "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                     "confidence": 50
                                                                 }
                                                             }
@@ -2151,7 +2168,7 @@
                                                                     "pattern_type": "stix",
                                                                     "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                     "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                    "description": "https://app.any.run/tasks/",
+                                                                    "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                     "confidence": 50
                                                                 }
                                                             }
@@ -2187,7 +2204,7 @@
                                                                     "pattern_type": "stix",
                                                                     "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                     "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                    "description": "https://app.any.run/tasks/",
+                                                                    "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                     "confidence": 10
                                                                 }
                                                             }
@@ -2536,9 +2553,9 @@
                     "$connections": {
                         "value": {
                             "azuresentinel": {
-                                "connectionId": "[resourceId('Microsoft.Web/connections', variables('sentinelConnectionName'))]",
-                                "connectionName": "[variables('sentinelConnectionName')]",
-                                "id": "[variables('sentinelApiId')]"
+                                "connectionId": "[resourceId('Microsoft.Web/connections', variables('azuresentinelConnectionName'))]",
+                                "connectionName": "[variables('azuresentinelConnectionName')]",
+                                "id": "[variables('azuresentinelApiId')]"
                             },
                             "azureblob": {
                                 "connectionId": "[resourceId('Microsoft.Web/connections', variables('azureblobConnectionName'))]",
