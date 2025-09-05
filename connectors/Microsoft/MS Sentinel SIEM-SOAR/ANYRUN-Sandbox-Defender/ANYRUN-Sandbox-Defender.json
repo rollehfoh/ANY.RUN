@@ -47,6 +47,12 @@
             "metadata": {
                 "description": "Azure Blob Storage Container Name."
             }
+        },
+        "logAnalyticsWorkspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Log Analytics Workspace Name."
+            }
         }
     },
     "variables": {
@@ -87,16 +93,23 @@
             "name": "[variables('azureblobConnectionName')]",
             "location": "[resourceGroup().location]",
             "properties": {
-                "displayName": "[variables('azureblobConnectionName')]",
-                "customParameterValues": {},
                 "api": {
                     "id": "[variables('azureblobApiId')]"
                 },
-                "parameterValues": {
-                    "token:tenantId": "[parameters('azureTenantId')]",
-                    "token:clientId": "[parameters('azureClientId')]",
-                    "token:clientSecret": "[parameters('azureClientSecret')]",
-                    "token:grantType": "client_credentials"
+                "displayName": "[variables('azureblobConnectionName')]",
+                "parameterValueSet": {
+                    "name": "servicePrincipalAuth",
+                    "values": {
+                        "token:clientId": {
+                            "value": "[parameters('azureClientId')]"
+                        },
+                        "token:clientSecret": {
+                            "value": "[parameters('azureClientSecret')]"
+                        },
+                        "token:TenantId": {
+                            "value": "[parameters('azureTenantId')]"
+                        }
+                    }
                 }
             }
         },
@@ -162,7 +175,7 @@
         {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",
-            "name": "[parameters('workflows_ANYRUN_Sandbox_Defender_name')]",
+            "name": "[parameters('logicAppName')]",
             "location": "[resourceGroup().location]",
             "tags": {
                 "Resource": "Microsoft Sentinel",
@@ -193,6 +206,10 @@
                         },
                         "Azure Blob Storage Container Name": {
                             "defaultValue": "[parameters('azureBlobStorageContainerName')]",
+                            "type": "String"
+                        },
+                        "Log Analytics Workspace": {
+                            "defaultValue": "[parameters('logAnalyticsWorkspaceName')]",
                             "type": "String"
                         },
                         "$connections": {
@@ -337,10 +354,10 @@
                                                 "body": "DeviceEvents\n| where ActionType ==\"AntivirusDetection\"\n| where DeviceId == \"@{body('Parse_JSON_-_Each_Host')?['additionalData']?['MdatpDeviceId']}\"\n| where FileName == \"@{items('For_each_-_Find_file_path_on_the_target_host')?['properties']?['fileName']}\" and FileName !endswith \".lnk\"\n| project FolderPath, FileName\n| distinct FolderPath, FileName",
                                                 "path": "/queryData",
                                                 "queries": {
-                                                    "subscriptions": "a754644b-f4a5-4258-aa07-9d7682198cd6",
-                                                    "resourcegroups": "sentinel",
+                                                    "subscriptions": "@{variables('Subscription ID')}",
+                                                    "resourcegroups": "@{variables('Resource Group Name')}",
                                                     "resourcetype": "Log Analytics Workspace",
-                                                    "resourcename": "sentinel",
+                                                    "resourcename": "@{parameters('Log Analytics Workspace Name')}",
                                                     "timerange": "7d"
                                                 }
                                             }
@@ -605,7 +622,7 @@
                                                                         }
                                                                     },
                                                                     "method": "get",
-                                                                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('AccountNameFromSettings'))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',variables('Suspicious File - FileName')))}/content",
+                                                                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent(variables('Storage Account Name')))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',item()['fileName']))}/content",
                                                                     "queries": {
                                                                         "inferContentType": true
                                                                     }
@@ -628,7 +645,7 @@
                                                                     "headers": {
                                                                         "SkipDeleteIfFileNotFoundOnServer": false
                                                                     },
-                                                                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('AccountNameFromSettings'))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',variables('Suspicious File - FileName')))}"
+                                                                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent(variables('Storage Account Name')))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',item()['fileName']))}"
                                                                 }
                                                             },
                                                             "Condition_-_Machine_OS_is_Windows": {
@@ -5741,6 +5758,11 @@
                                         "name": "Container Name",
                                         "type": "string",
                                         "value": "@{parameters('Azure Blob Storage Container Name')}"
+                                    },
+                                    {
+                                        "name": "Log Analytics Workspace Name",
+                                        "type": "string",
+                                        "value": "@{parameters('Log Analytics Workspace')}"
                                     }
                                 ]
                             }
