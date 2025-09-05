@@ -71,6 +71,7 @@ First, you need to deploy the child Logic App, as its parameters are required fo
 | AzureTenantId                   | Tenant ID for authentication in connections.                                |
 | AzureClientId                   | Client ID for authentication (ID of the App Registration created before).   |
 | azureClientSecret               | Client Secret for authentication.                                           |
+| logAnalyticsWorkspaceName       | Log Analytics Workspace Name.                                               |
 
 #### Parent Logic App 
 
@@ -100,7 +101,25 @@ First, you need to deploy the child Logic App, as its parameters are required fo
 | keyVaultUri                 | Key Vault URI (copy Vault URI from your Key Vault overview).                |
 | azureBlobStorageAccountName | Azure Blob Storage Account Name.                                            |
 | azureBlobStorageContainerName | Azure Blob Storage Container Name.                                        |
-| childWorkflowId             | ID of the child Logic App (ex.: /subscriptions/<subscription_id>/resourceGroups/<resource_group_name>/providers/Microsoft.Logic/workflows/<child_Logic_App_name>). |
+| childWorkflowName           | Name of the child Logic App.                                                |
+
+## Storage Account Configuration
+
+To generate an SAS token for Azure Blob Storage, you need to assign the appropriate role directly to the Logic App.
+
+- Open your Storage Account.
+
+- Navigate to **Access Control (IAM)** and click Add.
+
+![storage_child_logic_app](images/006.png)
+
+- Specify the child Logic App `ANYRUN-Submit-File-to-Blob`.
+
+- Select the following role:
+
+| Name                       | Description                                                                 |
+|----------------------------|-----------------------------------------------------------------------------|
+| Storage Account Contributor | Lets you manage storage accounts, including accessing storage account keys which provide full access to storage account data. |
 
 ## Logic App configuration (Optional)
 
