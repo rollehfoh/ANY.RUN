@@ -47,6 +47,12 @@
             "metadata": {
                 "description": "Azure Blob Storage Container Name."
             }
+        },
+        "logAnalyticsWorkspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Log Analytics Workspace Name."
+            }
         }
     },
     "variables": {
@@ -87,16 +93,23 @@
             "name": "[variables('azureblobConnectionName')]",
             "location": "[resourceGroup().location]",
             "properties": {
-                "displayName": "[variables('azureblobConnectionName')]",
-                "customParameterValues": {},
                 "api": {
                     "id": "[variables('azureblobApiId')]"
                 },
-                "parameterValues": {
-                    "token:tenantId": "[parameters('azureTenantId')]",
-                    "token:clientId": "[parameters('azureClientId')]",
-                    "token:clientSecret": "[parameters('azureClientSecret')]",
-                    "token:grantType": "client_credentials"
+                "displayName": "[variables('azureblobConnectionName')]",
+                "parameterValueSet": {
+                    "name": "servicePrincipalAuth",
+                    "values": {
+                        "token:clientId": {
+                            "value": "[parameters('azureClientId')]"
+                        },
+                        "token:clientSecret": {
+                            "value": "[parameters('azureClientSecret')]"
+                        },
+                        "token:TenantId": {
+                            "value": "[parameters('azureTenantId')]"
+                        }
+                    }
                 }
             }
         },
@@ -162,7 +175,7 @@
         {
             "type": "Microsoft.Logic/workflows",
             "apiVersion": "2017-07-01",
-            "name": "[parameters('workflows_ANYRUN_Sandbox_Defender_name')]",
+            "name": "[parameters('logicAppName')]",
             "location": "[resourceGroup().location]",
             "tags": {
                 "Resource": "Microsoft Sentinel",
@@ -193,6 +206,10 @@
                         },
                         "Azure Blob Storage Container Name": {
                             "defaultValue": "[parameters('azureBlobStorageContainerName')]",
+                            "type": "String"
+                        },
+                        "Log Analytics Workspace": {
+                            "defaultValue": "[parameters('logAnalyticsWorkspaceName')]",
                             "type": "String"
                         },
                         "$connections": {
@@ -337,10 +354,10 @@
                                                 "body": "DeviceEvents\n| where ActionType ==\"AntivirusDetection\"\n| where DeviceId == \"@{body('Parse_JSON_-_Each_Host')?['additionalData']?['MdatpDeviceId']}\"\n| where FileName == \"@{items('For_each_-_Find_file_path_on_the_target_host')?['properties']?['fileName']}\" and FileName !endswith \".lnk\"\n| project FolderPath, FileName\n| distinct FolderPath, FileName",
                                                 "path": "/queryData",
                                                 "queries": {
-                                                    "subscriptions": "a754644b-f4a5-4258-aa07-9d7682198cd6",
-                                                    "resourcegroups": "sentinel",
+                                                    "subscriptions": "@{variables('Subscription ID')}",
+                                                    "resourcegroups": "@{variables('Resource Group Name')}",
                                                     "resourcetype": "Log Analytics Workspace",
-                                                    "resourcename": "sentinel",
+                                                    "resourcename": "@{variables('Log Analytics Workspace Name')}",
                                                     "timerange": "7d"
                                                 }
                                             }
@@ -427,7 +444,7 @@
                                                             "inputs": {
                                                                 "host": {
                                                                     "connection": {
-                                                                        "name": "@parameters('$connections')['wdatp-1']['connectionId']"
+                                                                        "name": "@parameters('$connections')['wdatp']['connectionId']"
                                                                     }
                                                                 },
                                                                 "method": "get",
@@ -572,7 +589,7 @@
                                                                     "method": "post",
                                                                     "body": {
                                                                         "incidentArmId": "@triggerBody()?['object']?['id']",
-                                                                        "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN Sandbox Analysis Started:</strong></b><br>Analysis of the file (@{items('For_each_-_Find_file_path_on_the_target_host')?['properties']?['fileName']}) has been initiated in ANY.RUN Sandbox.</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Link to analysis report:</strong></b> https://app.any.run/tasks/@{variables('UUID')}</p>"
+                                                                        "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN Sandbox Analysis Started:</strong></b><br>Analysis of the file (@{items('For_each_-_Find_file_path_on_the_target_host')?['properties']?['fileName']}) has been initiated in ANY.RUN Sandbox.</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Link to interactive report:</strong></b> https://app.any.run/tasks/@{variables('UUID')}</p>"
                                                                     },
                                                                     "path": "/Incidents/Comment"
                                                                 }
@@ -605,7 +622,7 @@
                                                                         }
                                                                     },
                                                                     "method": "get",
-                                                                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('AccountNameFromSettings'))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',variables('Suspicious File - FileName')))}/content",
+                                                                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent(variables('Storage Account Name')))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',variables('Suspicious File - FileName')))}/content",
                                                                     "queries": {
                                                                         "inferContentType": true
                                                                     }
@@ -628,7 +645,7 @@
                                                                     "headers": {
                                                                         "SkipDeleteIfFileNotFoundOnServer": false
                                                                     },
-                                                                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('AccountNameFromSettings'))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',variables('Suspicious File - FileName')))}"
+                                                                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent(variables('Storage Account Name')))}/files/@{encodeURIComponent(encodeURIComponent('/',variables('Container Name'),'/',variables('Suspicious File - FileName')))}"
                                                                 }
                                                             },
                                                             "Condition_-_Machine_OS_is_Windows": {
@@ -1711,612 +1728,8 @@
                                                                                                     }
                                                                                                 }
                                                                                             },
-                                                                                            "processes": {
-                                                                                                "type": "array",
-                                                                                                "items": {
-                                                                                                    "type": "object",
-                                                                                                    "properties": {
-                                                                                                        "pid": {
-                                                                                                            "type": "integer"
-                                                                                                        },
-                                                                                                        "important": {
-                                                                                                            "type": "boolean"
-                                                                                                        },
-                                                                                                        "ppid": {
-                                                                                                            "type": "integer"
-                                                                                                        },
-                                                                                                        "uuid": {
-                                                                                                            "type": "string"
-                                                                                                        },
-                                                                                                        "image": {
-                                                                                                            "type": "string"
-                                                                                                        },
-                                                                                                        "commandLine": {
-                                                                                                            "type": "string"
-                                                                                                        },
-                                                                                                        "fileName": {
-                                                                                                            "type": "string"
-                                                                                                        },
-                                                                                                        "fileType": {
-                                                                                                            "type": "string"
-                                                                                                        },
-                                                                                                        "mainProcess": {
-                                                                                                            "type": "boolean"
-                                                                                                        },
-                                                                                                        "times": {
-                                                                                                            "type": "object",
-                                                                                                            "properties": {}
-                                                                                                        },
-                                                                                                        "versionInfo": {
-                                                                                                            "type": "object",
-                                                                                                            "properties": {
-                                                                                                                "company": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "description": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "version": {
-                                                                                                                    "type": "string"
-                                                                                                                }
-                                                                                                            }
-                                                                                                        },
-                                                                                                        "context": {
-                                                                                                            "type": "object",
-                                                                                                            "properties": {
-                                                                                                                "rebootNumber": {
-                                                                                                                    "type": "integer"
-                                                                                                                },
-                                                                                                                "integrityLevel": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "userName": {
-                                                                                                                    "type": "string"
-                                                                                                                }
-                                                                                                            }
-                                                                                                        },
-                                                                                                        "scores": {
-                                                                                                            "type": "object",
-                                                                                                            "properties": {
-                                                                                                                "verdict": {
-                                                                                                                    "type": "object",
-                                                                                                                    "properties": {
-                                                                                                                        "score": {
-                                                                                                                            "type": "integer"
-                                                                                                                        },
-                                                                                                                        "threatLevel": {
-                                                                                                                            "type": "integer"
-                                                                                                                        },
-                                                                                                                        "threatLevelText": {
-                                                                                                                            "type": "string"
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                },
-                                                                                                                "dropped": {
-                                                                                                                    "type": "boolean"
-                                                                                                                },
-                                                                                                                "injected": {
-                                                                                                                    "type": "boolean"
-                                                                                                                },
-                                                                                                                "loadsSusp": {
-                                                                                                                    "type": "boolean"
-                                                                                                                },
-                                                                                                                "specs": {
-                                                                                                                    "type": "object",
-                                                                                                                    "properties": {}
-                                                                                                                }
-                                                                                                            }
-                                                                                                        },
-                                                                                                        "status": {
-                                                                                                            "type": "string"
-                                                                                                        },
-                                                                                                        "parentUUID": {
-                                                                                                            "type": "string"
-                                                                                                        },
-                                                                                                        "hasMalwareConfig": {
-                                                                                                            "type": "boolean"
-                                                                                                        },
-                                                                                                        "modules": {
-                                                                                                            "type": "array"
-                                                                                                        },
-                                                                                                        "synchronization": {
-                                                                                                            "type": "array"
-                                                                                                        },
-                                                                                                        "cert": {
-                                                                                                            "type": "object",
-                                                                                                            "properties": {
-                                                                                                                "SN": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "status": {
-                                                                                                                    "type": "integer"
-                                                                                                                },
-                                                                                                                "contentHash": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "thumbprint": {
-                                                                                                                    "type": "string"
-                                                                                                                }
-                                                                                                            }
-                                                                                                        },
-                                                                                                        "exitCode": {
-                                                                                                            "type": "integer"
-                                                                                                        },
-                                                                                                        "resolvedCOM": {
-                                                                                                            "type": "object",
-                                                                                                            "properties": {
-                                                                                                                "title": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "module": {
-                                                                                                                    "type": "object",
-                                                                                                                    "properties": {
-                                                                                                                        "fullPath": {
-                                                                                                                            "type": "string"
-                                                                                                                        },
-                                                                                                                        "fileName": {
-                                                                                                                            "type": "string"
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                }
-                                                                                                            }
-                                                                                                        },
-                                                                                                        "threatName": {
-                                                                                                            "type": "string"
-                                                                                                        }
-                                                                                                    },
-                                                                                                    "required": [
-                                                                                                        "pid",
-                                                                                                        "important",
-                                                                                                        "ppid",
-                                                                                                        "uuid",
-                                                                                                        "image",
-                                                                                                        "commandLine",
-                                                                                                        "fileName",
-                                                                                                        "fileType",
-                                                                                                        "mainProcess",
-                                                                                                        "times",
-                                                                                                        "versionInfo",
-                                                                                                        "context",
-                                                                                                        "scores",
-                                                                                                        "status",
-                                                                                                        "hasMalwareConfig",
-                                                                                                        "modules",
-                                                                                                        "synchronization"
-                                                                                                    ]
-                                                                                                }
-                                                                                            },
                                                                                             "malconf": {
                                                                                                 "type": "array"
-                                                                                            },
-                                                                                            "network": {
-                                                                                                "type": "object",
-                                                                                                "properties": {
-                                                                                                    "dnsRequests": {
-                                                                                                        "type": "array",
-                                                                                                        "items": {
-                                                                                                            "type": "object",
-                                                                                                            "properties": {
-                                                                                                                "time": {
-                                                                                                                    "type": "integer"
-                                                                                                                },
-                                                                                                                "domain": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "ips": {
-                                                                                                                    "type": "array",
-                                                                                                                    "items": {
-                                                                                                                        "type": "string"
-                                                                                                                    }
-                                                                                                                },
-                                                                                                                "reputation": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "reputationNumber": {
-                                                                                                                    "type": "integer"
-                                                                                                                }
-                                                                                                            },
-                                                                                                            "required": [
-                                                                                                                "time",
-                                                                                                                "domain",
-                                                                                                                "ips",
-                                                                                                                "reputation"
-                                                                                                            ]
-                                                                                                        }
-                                                                                                    },
-                                                                                                    "httpRequests": {
-                                                                                                        "type": "array",
-                                                                                                        "items": {
-                                                                                                            "type": "object",
-                                                                                                            "properties": {
-                                                                                                                "time": {
-                                                                                                                    "type": "integer"
-                                                                                                                },
-                                                                                                                "method": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "host": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "url": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "ip": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "port": {
-                                                                                                                    "type": "integer"
-                                                                                                                },
-                                                                                                                "proxyDetected": {
-                                                                                                                    "type": "boolean"
-                                                                                                                },
-                                                                                                                "user-agent": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "status": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "httpCode": {
-                                                                                                                    "type": "integer"
-                                                                                                                },
-                                                                                                                "process": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "reputation": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "country": {
-                                                                                                                    "type": "string"
-                                                                                                                }
-                                                                                                            },
-                                                                                                            "required": [
-                                                                                                                "time",
-                                                                                                                "method",
-                                                                                                                "host",
-                                                                                                                "url",
-                                                                                                                "ip",
-                                                                                                                "port",
-                                                                                                                "proxyDetected",
-                                                                                                                "user-agent",
-                                                                                                                "status",
-                                                                                                                "country"
-                                                                                                            ]
-                                                                                                        }
-                                                                                                    },
-                                                                                                    "connections": {
-                                                                                                        "type": "array",
-                                                                                                        "items": {
-                                                                                                            "type": "object",
-                                                                                                            "properties": {
-                                                                                                                "ip": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "port": {
-                                                                                                                    "type": "integer"
-                                                                                                                },
-                                                                                                                "protocol": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "country": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "asn": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "time": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "process": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "reputation": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "tlsFingerprint": {
-                                                                                                                    "type": "object",
-                                                                                                                    "properties": {
-                                                                                                                        "ja3": {
-                                                                                                                            "type": "string"
-                                                                                                                        },
-                                                                                                                        "ja3Fullstring": {
-                                                                                                                            "type": "string"
-                                                                                                                        },
-                                                                                                                        "ja3S": {
-                                                                                                                            "type": "string"
-                                                                                                                        },
-                                                                                                                        "ja3SFullstring": {
-                                                                                                                            "type": "string"
-                                                                                                                        },
-                                                                                                                        "jarm": {
-                                                                                                                            "type": "string"
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                }
-                                                                                                            },
-                                                                                                            "required": [
-                                                                                                                "ip",
-                                                                                                                "port",
-                                                                                                                "protocol",
-                                                                                                                "country",
-                                                                                                                "asn",
-                                                                                                                "time",
-                                                                                                                "process",
-                                                                                                                "reputation"
-                                                                                                            ]
-                                                                                                        }
-                                                                                                    },
-                                                                                                    "threats": {
-                                                                                                        "type": "array",
-                                                                                                        "items": {
-                                                                                                            "type": "object",
-                                                                                                            "properties": {
-                                                                                                                "sid": {
-                                                                                                                    "type": "integer"
-                                                                                                                },
-                                                                                                                "time": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "dstip": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "srcip": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "dstport": {
-                                                                                                                    "type": "integer"
-                                                                                                                },
-                                                                                                                "srcport": {
-                                                                                                                    "type": "integer"
-                                                                                                                },
-                                                                                                                "class": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "msg": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "pro": {
-                                                                                                                    "type": "integer"
-                                                                                                                },
-                                                                                                                "priority": {
-                                                                                                                    "type": "integer"
-                                                                                                                }
-                                                                                                            },
-                                                                                                            "required": [
-                                                                                                                "sid",
-                                                                                                                "time",
-                                                                                                                "dstip",
-                                                                                                                "srcip",
-                                                                                                                "dstport",
-                                                                                                                "srcport",
-                                                                                                                "class",
-                                                                                                                "msg",
-                                                                                                                "pro",
-                                                                                                                "priority"
-                                                                                                            ]
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            },
-                                                                                            "modified": {
-                                                                                                "type": "object",
-                                                                                                "properties": {
-                                                                                                    "files": {
-                                                                                                        "type": "array",
-                                                                                                        "items": {
-                                                                                                            "type": "object",
-                                                                                                            "properties": {
-                                                                                                                "time": {
-                                                                                                                    "type": "integer"
-                                                                                                                },
-                                                                                                                "filename": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "size": {
-                                                                                                                    "type": "integer"
-                                                                                                                },
-                                                                                                                "process": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "type": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "threatLevel": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "hashes": {
-                                                                                                                    "type": "object",
-                                                                                                                    "properties": {
-                                                                                                                        "md5": {
-                                                                                                                            "type": "string"
-                                                                                                                        },
-                                                                                                                        "sha1": {
-                                                                                                                            "type": "string"
-                                                                                                                        },
-                                                                                                                        "sha256": {
-                                                                                                                            "type": "string"
-                                                                                                                        },
-                                                                                                                        "ssdeep": {
-                                                                                                                            "type": "string"
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                },
-                                                                                                                "permanentUrl": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "info": {
-                                                                                                                    "type": "object",
-                                                                                                                    "properties": {
-                                                                                                                        "file": {
-                                                                                                                            "type": "string"
-                                                                                                                        },
-                                                                                                                        "mime": {
-                                                                                                                            "type": "string"
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                }
-                                                                                                            },
-                                                                                                            "required": [
-                                                                                                                "time",
-                                                                                                                "filename",
-                                                                                                                "size",
-                                                                                                                "process"
-                                                                                                            ]
-                                                                                                        }
-                                                                                                    },
-                                                                                                    "registry": {
-                                                                                                        "type": "array",
-                                                                                                        "items": {
-                                                                                                            "type": "object",
-                                                                                                            "properties": {
-                                                                                                                "key": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "name": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "value": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "operation": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "process": {
-                                                                                                                    "type": "string"
-                                                                                                                },
-                                                                                                                "time": {
-                                                                                                                    "type": "integer"
-                                                                                                                }
-                                                                                                            },
-                                                                                                            "required": [
-                                                                                                                "key",
-                                                                                                                "name",
-                                                                                                                "value",
-                                                                                                                "operation",
-                                                                                                                "process",
-                                                                                                                "time"
-                                                                                                            ]
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            },
-                                                                                            "incidents": {
-                                                                                                "type": "array",
-                                                                                                "items": {
-                                                                                                    "type": "object",
-                                                                                                    "properties": {
-                                                                                                        "threatLevel": {
-                                                                                                            "type": "integer"
-                                                                                                        },
-                                                                                                        "title": {
-                                                                                                            "type": "string"
-                                                                                                        },
-                                                                                                        "desc": {
-                                                                                                            "type": "string"
-                                                                                                        },
-                                                                                                        "source": {
-                                                                                                            "type": "string"
-                                                                                                        },
-                                                                                                        "firstSeen": {
-                                                                                                            "type": "integer"
-                                                                                                        },
-                                                                                                        "count": {
-                                                                                                            "type": "integer"
-                                                                                                        },
-                                                                                                        "mitre": {
-                                                                                                            "type": "array",
-                                                                                                            "items": {
-                                                                                                                "type": "object",
-                                                                                                                "properties": {
-                                                                                                                    "tid": {
-                                                                                                                        "type": "integer"
-                                                                                                                    },
-                                                                                                                    "sid": {},
-                                                                                                                    "v": {
-                                                                                                                        "type": "integer"
-                                                                                                                    }
-                                                                                                                },
-                                                                                                                "required": [
-                                                                                                                    "tid",
-                                                                                                                    "sid",
-                                                                                                                    "v"
-                                                                                                                ]
-                                                                                                            }
-                                                                                                        },
-                                                                                                        "events": {
-                                                                                                            "type": "array",
-                                                                                                            "items": {
-                                                                                                                "type": "object",
-                                                                                                                "properties": {
-                                                                                                                    "_id": {
-                                                                                                                        "type": "string"
-                                                                                                                    },
-                                                                                                                    "time": {
-                                                                                                                        "type": "integer"
-                                                                                                                    },
-                                                                                                                    "operation": {
-                                                                                                                        "type": "string"
-                                                                                                                    },
-                                                                                                                    "name": {
-                                                                                                                        "type": "string"
-                                                                                                                    },
-                                                                                                                    "value": {
-                                                                                                                        "type": "string"
-                                                                                                                    },
-                                                                                                                    "key": {
-                                                                                                                        "type": "string"
-                                                                                                                    },
-                                                                                                                    "typeValue": {
-                                                                                                                        "type": "string"
-                                                                                                                    }
-                                                                                                                },
-                                                                                                                "required": [
-                                                                                                                    "_id",
-                                                                                                                    "time",
-                                                                                                                    "operation",
-                                                                                                                    "name",
-                                                                                                                    "value",
-                                                                                                                    "key",
-                                                                                                                    "typeValue"
-                                                                                                                ]
-                                                                                                            }
-                                                                                                        },
-                                                                                                        "process": {
-                                                                                                            "type": "string"
-                                                                                                        }
-                                                                                                    },
-                                                                                                    "required": [
-                                                                                                        "threatLevel",
-                                                                                                        "title",
-                                                                                                        "desc",
-                                                                                                        "source",
-                                                                                                        "firstSeen",
-                                                                                                        "count",
-                                                                                                        "events",
-                                                                                                        "process"
-                                                                                                    ]
-                                                                                                }
-                                                                                            },
-                                                                                            "debugStrings": {
-                                                                                                "type": "array",
-                                                                                                "items": {
-                                                                                                    "type": "object",
-                                                                                                    "properties": {
-                                                                                                        "time": {
-                                                                                                            "type": "integer"
-                                                                                                        },
-                                                                                                        "message": {
-                                                                                                            "type": "string"
-                                                                                                        },
-                                                                                                        "process": {
-                                                                                                            "type": "string"
-                                                                                                        }
-                                                                                                    },
-                                                                                                    "required": [
-                                                                                                        "time",
-                                                                                                        "message",
-                                                                                                        "process"
-                                                                                                    ]
-                                                                                                }
                                                                                             },
                                                                                             "mitre": {
                                                                                                 "type": "array"
@@ -3050,7 +2463,7 @@
                                                                             "method": "post",
                                                                             "body": {
                                                                                 "incidentArmId": "@triggerBody()?['object']?['id']",
-                                                                                "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN File Detonation Results:</strong></b><br><span style=\"color: rgb(208, 2, 27);\">A potencial malicious File has been detected </span><span style=\"color: rgb(208, 2, 27);\">during analysis in ANY.RUN Sandbox </span>(@{items('For_each_-_Find_file_path_on_the_target_host')?['properties']?['fileName']}).</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Verdict:</strong></b> @{body('Parse_JSON_-_Task_Monitor')?['task']?['scores']?['verdict']?['text']}<br><b><strong class=\"editor-text-bold\">Threat score:</strong></b> @{body('Parse_JSON_-_ANYRUN_Report')?['data']?['analysis']?['scores']?['verdict']?['score']}/100<br><b><strong class=\"editor-text-bold\">Link to analysis report:</strong></b> https://app.any.run/tasks/@{variables('UUID')}</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Detected IOCs:</strong></b><br>@{outputs('Compose_IOC_Table')}</p>"
+                                                                                "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN File Detonation Results:</strong></b><br><span style=\"color: rgb(208, 2, 27);\">A potencial malicious File has been detected </span><span style=\"color: rgb(208, 2, 27);\">during analysis in ANY.RUN Sandbox </span>(@{items('For_each_-_Find_file_path_on_the_target_host')?['properties']?['fileName']}).</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Verdict:</strong></b> @{body('Parse_JSON_-_Task_Monitor')?['task']?['scores']?['verdict']?['text']}<br><b><strong class=\"editor-text-bold\">Threat score:</strong></b> @{body('Parse_JSON_-_ANYRUN_Report')?['data']?['analysis']?['scores']?['verdict']?['score']}/100<br><b><strong class=\"editor-text-bold\">Link to interactive report:</strong></b> https://app.any.run/tasks/@{variables('UUID')}</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Detected IOCs:</strong></b><br>@{outputs('Compose_IOC_Table')}</p>"
                                                                             },
                                                                             "path": "/Incidents/Comment"
                                                                         }
@@ -3074,7 +2487,7 @@
                                                                                 "method": "post",
                                                                                 "body": {
                                                                                     "incidentArmId": "@triggerBody()?['object']?['id']",
-                                                                                    "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN File Detonation Results:</strong></b><br><span style=\"color: rgb(65, 117, 5);\">File is clean and no malicious activity was found during analysis in ANY.RUN Sandbox</span> (@{variables('Suspicious File - FileName')}).</p><p class=\"editor-paragraph\"><br><b><strong class=\"editor-text-bold\">Link to analysis report:</strong></b> https://app.any.run/tasks/@{variables('UUID')}</p>"
+                                                                                    "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN File Detonation Results:</strong></b><br><span style=\"color: rgb(65, 117, 5);\">File is clean and no malicious activity was found during analysis in ANY.RUN Sandbox</span> (@{variables('Suspicious File - FileName')}).</p><p class=\"editor-paragraph\"><br><b><strong class=\"editor-text-bold\">Link to interactive report:</strong></b> https://app.any.run/tasks/@{variables('UUID')}</p>"
                                                                                 },
                                                                                 "path": "/Incidents/Comment"
                                                                             }
@@ -3084,18 +2497,16 @@
                                                                 "expression": {
                                                                     "or": [
                                                                         {
-                                                                            "greater": [
-                                                                                "@body('Parse_JSON_-_Task_Monitor')?['task']?['scores']?['verdict']?['threat_level']",
-                                                                                0
+                                                                            "equals": [
+                                                                                "@body('Parse_JSON_-_Task_Monitor')?['task']?['scores']?['verdict']?['text']",
+                                                                                "Suspicious activity"
                                                                             ]
                                                                         },
                                                                         {
-                                                                            "not": {
-                                                                                "equals": [
-                                                                                    "@body('Parse_JSON_-_Task_Monitor')?['task']?['scores']?['verdict']?['text']",
-                                                                                    "No threats detected"
-                                                                                ]
-                                                                            }
+                                                                            "equals": [
+                                                                                "@body('Parse_JSON_-_Task_Monitor')?['task']?['scores']?['verdict']?['text']",
+                                                                                "Malicious activity"
+                                                                            ]
                                                                         }
                                                                     ]
                                                                 },
@@ -3225,7 +2636,7 @@
                                                     "inputs": {
                                                         "host": {
                                                             "connection": {
-                                                                "name": "@parameters('$connections')['wdatp-1']['connectionId']"
+                                                                "name": "@parameters('$connections')['wdatp']['connectionId']"
                                                             }
                                                         },
                                                         "method": "post",
@@ -3260,7 +2671,7 @@
                                                     "inputs": {
                                                         "host": {
                                                             "connection": {
-                                                                "name": "@parameters('$connections')['wdatp-1']['connectionId']"
+                                                                "name": "@parameters('$connections')['wdatp']['connectionId']"
                                                             }
                                                         },
                                                         "method": "get",
@@ -3277,7 +2688,7 @@
                                                     "inputs": {
                                                         "host": {
                                                             "connection": {
-                                                                "name": "@parameters('$connections')['wdatp-1']['connectionId']"
+                                                                "name": "@parameters('$connections')['wdatp']['connectionId']"
                                                             }
                                                         },
                                                         "method": "get",
@@ -3402,7 +2813,7 @@
                                     "inputs": {
                                         "host": {
                                             "connection": {
-                                                "name": "@parameters('$connections')['wdatp-1']['connectionId']"
+                                                "name": "@parameters('$connections')['wdatp']['connectionId']"
                                             }
                                         },
                                         "method": "post",
@@ -3617,7 +3028,7 @@
                                         "method": "post",
                                         "body": {
                                             "incidentArmId": "@triggerBody()?['object']?['id']",
-                                            "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN Sandbox Analysis Started:</strong></b><br>Analysis of the URL (@{item()?['Url']}) has been initiated in ANY.RUN Sandbox.</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Link to analysis report:</strong></b> https://app.any.run/tasks/@{variables('UUID')}</p>"
+                                            "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN Sandbox Analysis Started:</strong></b><br>Analysis of the URL (@{item()?['Url']}) has been initiated in ANY.RUN Sandbox.</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Link to interactive report:</strong></b> https://app.any.run/tasks/@{variables('UUID')}</p>"
                                         },
                                         "path": "/Incidents/Comment"
                                     }
@@ -4297,612 +3708,8 @@
                                                                         }
                                                                     }
                                                                 },
-                                                                "processes": {
-                                                                    "type": "array",
-                                                                    "items": {
-                                                                        "type": "object",
-                                                                        "properties": {
-                                                                            "pid": {
-                                                                                "type": "integer"
-                                                                            },
-                                                                            "important": {
-                                                                                "type": "boolean"
-                                                                            },
-                                                                            "ppid": {
-                                                                                "type": "integer"
-                                                                            },
-                                                                            "uuid": {
-                                                                                "type": "string"
-                                                                            },
-                                                                            "image": {
-                                                                                "type": "string"
-                                                                            },
-                                                                            "commandLine": {
-                                                                                "type": "string"
-                                                                            },
-                                                                            "fileName": {
-                                                                                "type": "string"
-                                                                            },
-                                                                            "fileType": {
-                                                                                "type": "string"
-                                                                            },
-                                                                            "mainProcess": {
-                                                                                "type": "boolean"
-                                                                            },
-                                                                            "times": {
-                                                                                "type": "object",
-                                                                                "properties": {}
-                                                                            },
-                                                                            "versionInfo": {
-                                                                                "type": "object",
-                                                                                "properties": {
-                                                                                    "company": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "description": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "version": {
-                                                                                        "type": "string"
-                                                                                    }
-                                                                                }
-                                                                            },
-                                                                            "context": {
-                                                                                "type": "object",
-                                                                                "properties": {
-                                                                                    "rebootNumber": {
-                                                                                        "type": "integer"
-                                                                                    },
-                                                                                    "integrityLevel": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "userName": {
-                                                                                        "type": "string"
-                                                                                    }
-                                                                                }
-                                                                            },
-                                                                            "scores": {
-                                                                                "type": "object",
-                                                                                "properties": {
-                                                                                    "verdict": {
-                                                                                        "type": "object",
-                                                                                        "properties": {
-                                                                                            "score": {
-                                                                                                "type": "integer"
-                                                                                            },
-                                                                                            "threatLevel": {
-                                                                                                "type": "integer"
-                                                                                            },
-                                                                                            "threatLevelText": {
-                                                                                                "type": "string"
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    "dropped": {
-                                                                                        "type": "boolean"
-                                                                                    },
-                                                                                    "injected": {
-                                                                                        "type": "boolean"
-                                                                                    },
-                                                                                    "loadsSusp": {
-                                                                                        "type": "boolean"
-                                                                                    },
-                                                                                    "specs": {
-                                                                                        "type": "object",
-                                                                                        "properties": {}
-                                                                                    }
-                                                                                }
-                                                                            },
-                                                                            "status": {
-                                                                                "type": "string"
-                                                                            },
-                                                                            "parentUUID": {
-                                                                                "type": "string"
-                                                                            },
-                                                                            "hasMalwareConfig": {
-                                                                                "type": "boolean"
-                                                                            },
-                                                                            "modules": {
-                                                                                "type": "array"
-                                                                            },
-                                                                            "synchronization": {
-                                                                                "type": "array"
-                                                                            },
-                                                                            "cert": {
-                                                                                "type": "object",
-                                                                                "properties": {
-                                                                                    "SN": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "status": {
-                                                                                        "type": "integer"
-                                                                                    },
-                                                                                    "contentHash": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "thumbprint": {
-                                                                                        "type": "string"
-                                                                                    }
-                                                                                }
-                                                                            },
-                                                                            "exitCode": {
-                                                                                "type": "integer"
-                                                                            },
-                                                                            "resolvedCOM": {
-                                                                                "type": "object",
-                                                                                "properties": {
-                                                                                    "title": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "module": {
-                                                                                        "type": "object",
-                                                                                        "properties": {
-                                                                                            "fullPath": {
-                                                                                                "type": "string"
-                                                                                            },
-                                                                                            "fileName": {
-                                                                                                "type": "string"
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            },
-                                                                            "threatName": {
-                                                                                "type": "string"
-                                                                            }
-                                                                        },
-                                                                        "required": [
-                                                                            "pid",
-                                                                            "important",
-                                                                            "ppid",
-                                                                            "uuid",
-                                                                            "image",
-                                                                            "commandLine",
-                                                                            "fileName",
-                                                                            "fileType",
-                                                                            "mainProcess",
-                                                                            "times",
-                                                                            "versionInfo",
-                                                                            "context",
-                                                                            "scores",
-                                                                            "status",
-                                                                            "hasMalwareConfig",
-                                                                            "modules",
-                                                                            "synchronization"
-                                                                        ]
-                                                                    }
-                                                                },
                                                                 "malconf": {
                                                                     "type": "array"
-                                                                },
-                                                                "network": {
-                                                                    "type": "object",
-                                                                    "properties": {
-                                                                        "dnsRequests": {
-                                                                            "type": "array",
-                                                                            "items": {
-                                                                                "type": "object",
-                                                                                "properties": {
-                                                                                    "time": {
-                                                                                        "type": "integer"
-                                                                                    },
-                                                                                    "domain": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "ips": {
-                                                                                        "type": "array",
-                                                                                        "items": {
-                                                                                            "type": "string"
-                                                                                        }
-                                                                                    },
-                                                                                    "reputation": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "reputationNumber": {
-                                                                                        "type": "integer"
-                                                                                    }
-                                                                                },
-                                                                                "required": [
-                                                                                    "time",
-                                                                                    "domain",
-                                                                                    "ips",
-                                                                                    "reputation"
-                                                                                ]
-                                                                            }
-                                                                        },
-                                                                        "httpRequests": {
-                                                                            "type": "array",
-                                                                            "items": {
-                                                                                "type": "object",
-                                                                                "properties": {
-                                                                                    "time": {
-                                                                                        "type": "integer"
-                                                                                    },
-                                                                                    "method": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "host": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "url": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "ip": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "port": {
-                                                                                        "type": "integer"
-                                                                                    },
-                                                                                    "proxyDetected": {
-                                                                                        "type": "boolean"
-                                                                                    },
-                                                                                    "user-agent": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "status": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "httpCode": {
-                                                                                        "type": "integer"
-                                                                                    },
-                                                                                    "process": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "reputation": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "country": {
-                                                                                        "type": "string"
-                                                                                    }
-                                                                                },
-                                                                                "required": [
-                                                                                    "time",
-                                                                                    "method",
-                                                                                    "host",
-                                                                                    "url",
-                                                                                    "ip",
-                                                                                    "port",
-                                                                                    "proxyDetected",
-                                                                                    "user-agent",
-                                                                                    "status",
-                                                                                    "country"
-                                                                                ]
-                                                                            }
-                                                                        },
-                                                                        "connections": {
-                                                                            "type": "array",
-                                                                            "items": {
-                                                                                "type": "object",
-                                                                                "properties": {
-                                                                                    "ip": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "port": {
-                                                                                        "type": "integer"
-                                                                                    },
-                                                                                    "protocol": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "country": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "asn": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "time": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "process": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "reputation": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "tlsFingerprint": {
-                                                                                        "type": "object",
-                                                                                        "properties": {
-                                                                                            "ja3": {
-                                                                                                "type": "string"
-                                                                                            },
-                                                                                            "ja3Fullstring": {
-                                                                                                "type": "string"
-                                                                                            },
-                                                                                            "ja3S": {
-                                                                                                "type": "string"
-                                                                                            },
-                                                                                            "ja3SFullstring": {
-                                                                                                "type": "string"
-                                                                                            },
-                                                                                            "jarm": {
-                                                                                                "type": "string"
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                },
-                                                                                "required": [
-                                                                                    "ip",
-                                                                                    "port",
-                                                                                    "protocol",
-                                                                                    "country",
-                                                                                    "asn",
-                                                                                    "time",
-                                                                                    "process",
-                                                                                    "reputation"
-                                                                                ]
-                                                                            }
-                                                                        },
-                                                                        "threats": {
-                                                                            "type": "array",
-                                                                            "items": {
-                                                                                "type": "object",
-                                                                                "properties": {
-                                                                                    "sid": {
-                                                                                        "type": "integer"
-                                                                                    },
-                                                                                    "time": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "dstip": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "srcip": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "dstport": {
-                                                                                        "type": "integer"
-                                                                                    },
-                                                                                    "srcport": {
-                                                                                        "type": "integer"
-                                                                                    },
-                                                                                    "class": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "msg": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "pro": {
-                                                                                        "type": "integer"
-                                                                                    },
-                                                                                    "priority": {
-                                                                                        "type": "integer"
-                                                                                    }
-                                                                                },
-                                                                                "required": [
-                                                                                    "sid",
-                                                                                    "time",
-                                                                                    "dstip",
-                                                                                    "srcip",
-                                                                                    "dstport",
-                                                                                    "srcport",
-                                                                                    "class",
-                                                                                    "msg",
-                                                                                    "pro",
-                                                                                    "priority"
-                                                                                ]
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                },
-                                                                "modified": {
-                                                                    "type": "object",
-                                                                    "properties": {
-                                                                        "files": {
-                                                                            "type": "array",
-                                                                            "items": {
-                                                                                "type": "object",
-                                                                                "properties": {
-                                                                                    "time": {
-                                                                                        "type": "integer"
-                                                                                    },
-                                                                                    "filename": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "size": {
-                                                                                        "type": "integer"
-                                                                                    },
-                                                                                    "process": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "type": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "threatLevel": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "hashes": {
-                                                                                        "type": "object",
-                                                                                        "properties": {
-                                                                                            "md5": {
-                                                                                                "type": "string"
-                                                                                            },
-                                                                                            "sha1": {
-                                                                                                "type": "string"
-                                                                                            },
-                                                                                            "sha256": {
-                                                                                                "type": "string"
-                                                                                            },
-                                                                                            "ssdeep": {
-                                                                                                "type": "string"
-                                                                                            }
-                                                                                        }
-                                                                                    },
-                                                                                    "permanentUrl": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "info": {
-                                                                                        "type": "object",
-                                                                                        "properties": {
-                                                                                            "file": {
-                                                                                                "type": "string"
-                                                                                            },
-                                                                                            "mime": {
-                                                                                                "type": "string"
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                },
-                                                                                "required": [
-                                                                                    "time",
-                                                                                    "filename",
-                                                                                    "size",
-                                                                                    "process"
-                                                                                ]
-                                                                            }
-                                                                        },
-                                                                        "registry": {
-                                                                            "type": "array",
-                                                                            "items": {
-                                                                                "type": "object",
-                                                                                "properties": {
-                                                                                    "key": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "name": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "value": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "operation": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "process": {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    "time": {
-                                                                                        "type": "integer"
-                                                                                    }
-                                                                                },
-                                                                                "required": [
-                                                                                    "key",
-                                                                                    "name",
-                                                                                    "value",
-                                                                                    "operation",
-                                                                                    "process",
-                                                                                    "time"
-                                                                                ]
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                },
-                                                                "incidents": {
-                                                                    "type": "array",
-                                                                    "items": {
-                                                                        "type": "object",
-                                                                        "properties": {
-                                                                            "threatLevel": {
-                                                                                "type": "integer"
-                                                                            },
-                                                                            "title": {
-                                                                                "type": "string"
-                                                                            },
-                                                                            "desc": {
-                                                                                "type": "string"
-                                                                            },
-                                                                            "source": {
-                                                                                "type": "string"
-                                                                            },
-                                                                            "firstSeen": {
-                                                                                "type": "integer"
-                                                                            },
-                                                                            "count": {
-                                                                                "type": "integer"
-                                                                            },
-                                                                            "mitre": {
-                                                                                "type": "array",
-                                                                                "items": {
-                                                                                    "type": "object",
-                                                                                    "properties": {
-                                                                                        "tid": {
-                                                                                            "type": "integer"
-                                                                                        },
-                                                                                        "sid": {},
-                                                                                        "v": {
-                                                                                            "type": "integer"
-                                                                                        }
-                                                                                    },
-                                                                                    "required": [
-                                                                                        "tid",
-                                                                                        "sid",
-                                                                                        "v"
-                                                                                    ]
-                                                                                }
-                                                                            },
-                                                                            "events": {
-                                                                                "type": "array",
-                                                                                "items": {
-                                                                                    "type": "object",
-                                                                                    "properties": {
-                                                                                        "_id": {
-                                                                                            "type": "string"
-                                                                                        },
-                                                                                        "time": {
-                                                                                            "type": "integer"
-                                                                                        },
-                                                                                        "operation": {
-                                                                                            "type": "string"
-                                                                                        },
-                                                                                        "name": {
-                                                                                            "type": "string"
-                                                                                        },
-                                                                                        "value": {
-                                                                                            "type": "string"
-                                                                                        },
-                                                                                        "key": {
-                                                                                            "type": "string"
-                                                                                        },
-                                                                                        "typeValue": {
-                                                                                            "type": "string"
-                                                                                        }
-                                                                                    },
-                                                                                    "required": [
-                                                                                        "_id",
-                                                                                        "time",
-                                                                                        "operation",
-                                                                                        "name",
-                                                                                        "value",
-                                                                                        "key",
-                                                                                        "typeValue"
-                                                                                    ]
-                                                                                }
-                                                                            },
-                                                                            "process": {
-                                                                                "type": "string"
-                                                                            }
-                                                                        },
-                                                                        "required": [
-                                                                            "threatLevel",
-                                                                            "title",
-                                                                            "desc",
-                                                                            "source",
-                                                                            "firstSeen",
-                                                                            "count",
-                                                                            "events",
-                                                                            "process"
-                                                                        ]
-                                                                    }
-                                                                },
-                                                                "debugStrings": {
-                                                                    "type": "array",
-                                                                    "items": {
-                                                                        "type": "object",
-                                                                        "properties": {
-                                                                            "time": {
-                                                                                "type": "integer"
-                                                                            },
-                                                                            "message": {
-                                                                                "type": "string"
-                                                                            },
-                                                                            "process": {
-                                                                                "type": "string"
-                                                                            }
-                                                                        },
-                                                                        "required": [
-                                                                            "time",
-                                                                            "message",
-                                                                            "process"
-                                                                        ]
-                                                                    }
                                                                 },
                                                                 "mitre": {
                                                                     "type": "array"
@@ -5636,7 +4443,7 @@
                                                 "method": "post",
                                                 "body": {
                                                     "incidentArmId": "@triggerBody()?['object']?['id']",
-                                                    "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN URL Detonation Results:</strong></b><br><span style=\"color: rgb(208, 2, 27);\">A malicious URL has been detected during ANY.RUN Sandbox analysis</span> (@{replace(replace(item()?['Url'], '.', '[.]'), 'https://', '')}).</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Verdict:</strong></b> @{body('Parse_JSON_-_Task_Monitor_URL')?['task']?['scores']?['verdict']?['text']}<br><b><strong class=\"editor-text-bold\">Threat score:</strong></b> @{body('Parse_JSON_-_ANYRUN_Report_URL')?['data']?['analysis']?['scores']?['verdict']?['score']}/100<br><b><strong class=\"editor-text-bold\">Link to analysis report</strong></b> - https://app.any.run/tasks/</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Detected IOCs:</strong></b><br>@{outputs('Compose_IOC_Table_URL')}</p>"
+                                                    "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN URL Detonation Results:</strong></b><br><span style=\"color: rgb(208, 2, 27);\">A malicious URL has been detected during ANY.RUN Sandbox analysis</span> (@{replace(replace(item()?['Url'], '.', '[.]'), 'https://', '')}).</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Verdict:</strong></b> @{body('Parse_JSON_-_Task_Monitor_URL')?['task']?['scores']?['verdict']?['text']}<br><b><strong class=\"editor-text-bold\">Threat score:</strong></b> @{body('Parse_JSON_-_ANYRUN_Report_URL')?['data']?['analysis']?['scores']?['verdict']?['score']}/100<br><b><strong class=\"editor-text-bold\">Link to interactive report</strong></b> - https://app.any.run/tasks/@{variables('UUID')}</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Detected IOCs:</strong></b><br>@{outputs('Compose_IOC_Table_URL')}</p>"
                                                 },
                                                 "path": "/Incidents/Comment"
                                             }
@@ -5660,7 +4467,7 @@
                                                     "method": "post",
                                                     "body": {
                                                         "incidentArmId": "@{triggerBody()?['object']?['id']}",
-                                                        "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN URL Detonation Results:</strong></b><br><span style=\"color: rgb(65, 117, 5);\">URL is clean and is no malicious activity was found during detonation via ANY.RUN Sandbox </span>(@{replace(replace(replace(item()?['Url'], '.', '[.]'), 'https://', ''), 'http://', '')}).</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Link to analysis report</strong></b> - https://app.any.run/tasks/@{variables('UUID')}</p>"
+                                                        "message": "<p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">ANY.RUN URL Detonation Results:</strong></b><br><span style=\"color: rgb(65, 117, 5);\">URL is clean and is no malicious activity was found during detonation via ANY.RUN Sandbox </span>(@{replace(replace(replace(item()?['Url'], '.', '[.]'), 'https://', ''), 'http://', '')}).</p><br><p class=\"editor-paragraph\"><b><strong class=\"editor-text-bold\">Link to interactive report</strong></b> - https://app.any.run/tasks/@{variables('UUID')}</p>"
                                                     },
                                                     "path": "/Incidents/Comment"
                                                 }
@@ -5670,18 +4477,16 @@
                                     "expression": {
                                         "or": [
                                             {
-                                                "greater": [
-                                                    "@body('Parse_JSON_-_Task_Monitor_URL')?['task']?['scores']?['verdict']?['threat_level']",
-                                                    0
+                                                "equals": [
+                                                    "@body('Parse_JSON_-_Task_Monitor_URL')?['task']?['scores']?['verdict']?['text']",
+                                                    "Suspicious activity"
                                                 ]
                                             },
                                             {
-                                                "not": {
-                                                    "equals": [
-                                                        "@body('Parse_JSON_-_Task_Monitor_URL')?['task']?['scores']?['verdict']?['threat_level']",
-                                                        "No threats detected"
-                                                    ]
-                                                }
+                                                "equals": [
+                                                    "@body('Parse_JSON_-_Task_Monitor_URL')?['task']?['scores']?['verdict']?['text']",
+                                                    "Malicious activity"
+                                                ]
                                             }
                                         ]
                                     },
@@ -5741,6 +4546,11 @@
                                         "name": "Container Name",
                                         "type": "string",
                                         "value": "@{parameters('Azure Blob Storage Container Name')}"
+                                    },
+                                    {
+                                        "name": "Log Analytics Workspace Name",
+                                        "type": "string",
+                                        "value": "@{parameters('Log Analytics Workspace')}"
                                     }
                                 ]
                             }
