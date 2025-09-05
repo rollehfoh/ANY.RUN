@@ -1794,7 +1794,7 @@
                             "inputs": {
                                 "variables": [
                                     {
-                                        "name": "1",
+                                        "name": "obj_type",
                                         "type": "string"
                                     }
                                 ]
