@@ -1964,7 +1964,7 @@
                                                                                         "pattern_type": "stix",
                                                                                         "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                                         "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                                        "description": "https://app.any.run/tasks/",
+                                                                                        "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                                         "confidence": 100
                                                                                     }
                                                                                 }
@@ -2018,7 +2018,7 @@
                                                                                         "pattern_type": "stix",
                                                                                         "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                                         "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                                        "description": "https://app.any.run/tasks/",
+                                                                                        "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                                         "confidence": 100
                                                                                     }
                                                                                 }
@@ -2054,7 +2054,7 @@
                                                                                         "pattern_type": "stix",
                                                                                         "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                                         "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                                        "description": "https://app.any.run/tasks/",
+                                                                                        "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                                         "confidence": 100
                                                                                     }
                                                                                 }
@@ -2090,7 +2090,7 @@
                                                                                         "pattern_type": "stix",
                                                                                         "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                                         "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                                        "description": "https://app.any.run/tasks/",
+                                                                                        "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                                         "confidence": 100
                                                                                     }
                                                                                 }
@@ -2218,7 +2218,7 @@
                                                                                         "pattern_type": "stix",
                                                                                         "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                                         "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                                        "description": "https://app.any.run/tasks/",
+                                                                                        "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                                         "confidence": 50
                                                                                     }
                                                                                 }
@@ -2272,7 +2272,7 @@
                                                                                         "pattern_type": "stix",
                                                                                         "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                                         "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                                        "description": "https://app.any.run/tasks/",
+                                                                                        "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                                         "confidence": 50
                                                                                     }
                                                                                 }
@@ -2308,7 +2308,7 @@
                                                                                         "pattern_type": "stix",
                                                                                         "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                                         "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                                        "description": "https://app.any.run/tasks/",
+                                                                                        "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                                         "confidence": 50
                                                                                     }
                                                                                 }
@@ -2344,7 +2344,7 @@
                                                                                         "pattern_type": "stix",
                                                                                         "valid_from": "@utcNow('yyyy-MM-ddTHH:mm:ssZ')",
                                                                                         "valid_until": "@addDays(utcNow(), 365, 'yyyy-MM-ddTHH:mm:ssZ')",
-                                                                                        "description": "https://app.any.run/tasks/",
+                                                                                        "description": "https://app.any.run/tasks/@{variables('UUID')}",
                                                                                         "confidence": 10
                                                                                     }
                                                                                 }
