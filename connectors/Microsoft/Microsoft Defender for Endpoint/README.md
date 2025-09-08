@@ -12,11 +12,11 @@ ANY.RUN is
 
 ## Connector capabilities
 
-### Interactive Sandbox:
+### Malware Sandbox
 
 [Open connector page](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/Microsoft%20Defender%20for%20Endpoint/ANYRUN-Sandbox-MDE)
 
-### Threat Intelligence Feeds:
+### Threat Intelligence Feeds
 
 [Open connector page](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/Microsoft%20Defender%20for%20Endpoint/ANYRUN-TI-Feeds-MDE)
 
