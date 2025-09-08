@@ -42,6 +42,20 @@ This integration empowers SOC teams with deeper insights into potential threats,
 
 ![register_app](images/005.png)
 
+### Secret Value of created App
+
+- To generate the Client Secret, go to your application's page and click **Generate Secret** in the **Certificates & secrets** tab.
+
+![cert_and_secrets_tab](images/042.png)
+
+- Specify the key name and its expiration date (optional).
+
+![generate_secret](images/043.png)
+
+- Copy and **save the Secret Value**. This value is required for deploying the connector later.
+
+![save_secret](images/044.png)
+
 ### Microsoft Defender ATP API Permissions for new App
 
 - For the created application, add the following permissions for API connections in the **Manage** > **API permissions** > **Add a permission** tab:
