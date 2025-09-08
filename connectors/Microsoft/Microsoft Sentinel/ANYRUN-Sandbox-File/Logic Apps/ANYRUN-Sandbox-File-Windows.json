@@ -378,9 +378,9 @@
                                         "value": "@{triggerBody()?['workspaceInfo']?['ResourceGroupName']}"
                                     },
                                     {
-                                        "name": " Name",
+                                        "name": "Child Logic App Name",
                                         "type": "string",
-                                        "value": "@{parameters('')}"
+                                        "value": "@{parameters('Child Logic App')}"
                                     }
                                 ]
                             }
