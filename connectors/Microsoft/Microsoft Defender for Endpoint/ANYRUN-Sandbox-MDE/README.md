@@ -157,3 +157,27 @@ This integration empowers SOC teams with deeper insights into potential threats,
 ![enable_live_response](images/002.png)
 
 ## Logic App Configuration (Optional)
+
+### Customization of Analysis Parameters in ANY.RUN Sandbox
+
+- The parameters for launching URL or file analysis in the ANY.RUN Sandbox are defined in the deployed Logic App.
+
+- Open your Logic App `ANYRUN-Sandbox-MDE-LA` and navigate to **Development Tools** > **Logic app Designer**.
+
+- The following three actions are responsible for declaring the parameters:
+
+  - `ANY.RUN general analysis options`
+
+  - `ANY.RUN Windows analysis options`
+
+  - `ANY.RUN Linux analysis options`
+
+![parametrs_actions](images/020.png)
+
+- In the `ANY.RUN general analysis options` action, you can modify parameters that define general, OS-independent options such as analysis duration, virtual machine network settings, privacy, and more. For example, if you need to **increase the initial analysis time** for a more detailed examination of the object, select the **opt_timeout** variable and set the desired value in seconds, for example `360`.
+
+![general_parametrs_actions](images/021.png)
+
+- In the `ANY.RUN Windows analysis options` and `ANY.RUN Linux analysis options` actions, you can modify parameters that affect OS-specific virtual machine settings, such as the OS version and configuration, initial object location and launch parameters, and more. For example, if you need to run the analysis on a virtual machine with Windows 11 instead of Windows 10, click on the `ANY.RUN Windows analysis options` action, select the **windows_env_version** variable, and set the value to `11`.
+
+![os_parametrs_actions](images/022.png)
