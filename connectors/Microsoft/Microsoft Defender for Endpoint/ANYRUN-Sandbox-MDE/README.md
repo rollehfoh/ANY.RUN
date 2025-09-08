@@ -40,6 +40,19 @@ This integration empowers SOC teams with deeper insights into potential threats,
  
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMicrosoft%2520Defender%2520for%2520Endpoint%2FANYRUN-Sandbox-MDE%2FLogic%2520App%2FANYRUN-Sandbox-MDE-LA.json)
 
+![logic_app_deployment](images/001.png)
+
+- Description of the required parameters:
+
+| Parameter Name                  | Description                                                                 |
+|---------------------------------|-----------------------------------------------------------------------------|
+| logicAppName                    | Workflow name.                                                              |
+| azureTenantId                   | Tenant ID for authentication in connections.                                |
+| azureClientId                   | Client ID for authentication (ID of the App Registration created before).   |
+| azureClientSecret               | Client Secret for authentication.                                           |
+| functionAppName                 | Name of the Function App deplyed before.                                    |
+
+
 ## Microsoft Defender for Endpoint Configuration
 
 > **Note:** To allow the connector to extract all files of interest from endpoints (including potentially dangerous ones), we recommend setting `Quarantine` as the default action for your MDE. **!ATTENTION!** Be careful when configuring antivirus policies, as this can be potentially dangerous. See:
