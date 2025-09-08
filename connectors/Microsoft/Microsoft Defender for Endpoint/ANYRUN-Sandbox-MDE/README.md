@@ -41,6 +41,33 @@ This integration empowers SOC teams with deeper insights into potential threats,
 - Name your new application and click **Register**.
 
 ![register_app](images/005.png)
+
+### Microsoft Defender ATP API Permissions for new App
+
+- For the created application, add the following permissions for API connections in the **Manage** > **API permissions** > **Add a permission** tab:
+
+![add_permission](images/030.png)
+
+- Add an API connection for **WindowsDefenderATP**. Select the corresponding API in the **APIs my organization uses** tab.
+
+![select_defender_permission](images/031.png)
+
+- Then, select **Application permissions**.
+
+![add_defender_permission](images/032.png)
+
+- Select the following permissions:
+
+|       Category       |   Permission Name   | Description                                                            |
+|----------------------|---------------------|------------------------------------------------------------------------|
+| Alert                | Alert.Read.All      | Needed to retrieve alerts and related evidence                         |
+| Alert                | Alert.ReadWrite.All | Needed to enrich alerts with sample information                        |
+| Machine              | Machine.LiveResponse | Needed to gather evidences from machines                               |
+| Machine              | Machine.Read.All    | Needed to retrieve information about machines                          |
+| Ti                   | Ti.Read.All         | Needed to retrieve indicators                                          |
+| Ti                   | Ti.ReadWrite        | Needed to retrieve and submit indicators (application specific)        |
+| Ti                   | Ti.ReadWrite.All    | Needed to retrieve and submit indicators (general)                     |
+| Library              | Library.Manage      | Needed to upload custom ps1 script for retrieving AV related evidences |
  
 ## Deployment
 
