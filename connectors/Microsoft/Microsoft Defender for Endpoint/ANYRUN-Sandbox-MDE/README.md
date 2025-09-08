@@ -82,6 +82,32 @@ This integration empowers SOC teams with deeper insights into potential threats,
 | Ti                   | Ti.ReadWrite        | Needed to retrieve and submit indicators (application specific)        |
 | Ti                   | Ti.ReadWrite.All    | Needed to retrieve and submit indicators (general)                     |
 | Library              | Library.Manage      | Needed to upload custom ps1 script for retrieving AV related evidences |
+
+### Storage Account
+
+- Go to Azure Storage Accounts.
+
+![azure_sa](images/010.png)
+
+- Click **Create**.
+
+![azure_sa_create](images/011.png)
+
+- Type the name of Storage Account and click **Review + Create**.
+
+![azure_sa_review_and_create](images/012.png)
+
+- Open your Storage Account. Go to **Data Storage** > **Containers**.
+
+![sa_navigation](images/016.png)
+
+- Click **Add container**, type the **Name** for it and **Create**.
+
+![sa_container_create](images/017.png)
+
+- Go to **Security + networking** > **Access keys**, copy and save **Key** and **Connection string**. This values are required for deploying the connector later.
+
+![sa_key](images/013.png)
  
 ## Deployment
 
