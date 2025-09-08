@@ -40,6 +40,8 @@ This integration empowers SOC teams with deeper insights into potential threats,
  
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMicrosoft%2520Defender%2520for%2520Endpoint%2FANYRUN-Sandbox-MDE%2FLogic%2520App%2FANYRUN-Sandbox-MDE-LA.json)
 
+- Enter the parameters required for deploying the Logic App and click **Review + create**.
+
 ![logic_app_deployment](images/001.png)
 
 - Description of the required parameters:
