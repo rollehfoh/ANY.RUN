@@ -25,6 +25,22 @@ This integration empowers SOC teams with deeper insights into potential threats,
   - Blob Storage
 
 ## Solution Overview
+
+## Prerequisites
+
+### App Registration
+
+- You need to create a new application for your connector. To do this, go to **Microsoft Entra ID**.
+
+![entra_id](images/003.png)
+
+- Click **Add** > **App registration**.
+
+![app_registration](images/004.png)
+
+- Name your new application and click **Register**.
+
+![register_app](images/005.png)
  
 ## Deployment
 
