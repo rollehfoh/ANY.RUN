@@ -183,3 +183,63 @@ This integration empowers SOC teams with deeper insights into potential threats,
 ![os_parametrs_actions](images/022.png)
 
 > **Note:** To see the full list of available parameters and their values, visit our **[API documentation](https://any.run/api-documentation/)**.
+
+### Filtering Alerts and Objects for Analysis
+
+Since the trigger in the Logic App for initiating the connector's work is the appearance of a new alert in Microsoft Defender, it is recommended to declare conditions by which the Logic App will filter alerts for subsequent enrichment in the ANY.RUN Sandbox. By default, the condition is specific modules of Microsoft Defender from which the alert came - `WindowsDefenderAtp` and `WindowsDefenderAv`. That is, the connector will process all alerts that come only from these two modules.
+
+- If you need to add one or more additional conditions by which alerts will be filtered, open your Logic App `ANYRUN-Sandbox-MDE-LA` and navigate to **Development Tools** > **Logic app Designer**.
+
+- Find the action `Check if the alert is from EDR or Antivirus` and after the `True` condition, click `+` and select `Add an action` to add a new action.
+
+- In the window that appears on the right, in the search bar, find and select `Condition`.
+
+- Then, after the action is added, you need to configure it - change its name (optional) and set the condition itself.
+
+- To filter alerts by their attributes, you can check the `Outputs` of the `Alerts - Get single alert` action.
+
+- After you have added the condition, after `False` add a `Terminate` action that will interrupt the further workflow for this alert.
+
+- Drag the actions following the added condition (by default this is `Is machine has Windows OS`) to the `True` section.
+
+- Save the changes.
+
+#### Examples of Alert Filtering Conditions
+
+1. Alert Criticality
+
+   - You can enrich with the ANY.RUN Sandbox only alerts with the criticality you need, for example **Medium** or **High**.
+
+   - In the created condition, in the Choose a value field, type `/` and select **Insert dynamic content**.
+
+   - As the parameter to check, select `Alert Alert Severity` from the `Alerts - Get single alert` action.
+
+   - Replace the logical operator `AND` with `OR`, click `+ New item` and select `Add row`.
+
+   - In the new row, also add `Alert Alert Severity`.
+
+   - Set the values `High` and `Medium` for the added parameters.
+
+   - Save the changes.
+
+2. Alert Category
+
+   - You can enrich with the ANY.RUN Sandbox only alerts of the category you need, for example **Malware**.
+
+   - In the created condition, in the Choose a value field, type `/` and select **Insert dynamic content**.
+
+   - As the parameter to check, select `Alert Category` from the `Alerts - Get single alert` action.
+
+   - Set the value `Malware` for the added parameter.
+
+   - Save the changes.
+
+3. Machine Characteristics
+
+   - You can filter alerts depending on the Machine from which it came. For example, you can filter by **Machine tags** or by **RBAC groups** in which the Machine is included.
+
+   - As the parameter to check, select `Machine Machine tags` or `Machine RBAC group name` or any other suitable parameter from the `Machines - Get single machine` action.
+
+   - Set the value corresponding to your devices for the added parameter.
+
+   - Save the changes.
