@@ -30,7 +30,7 @@ Integrate TI Feeds with MDE for an easy access to all the benefits it brings:
 
 ## Requirements
 - Microsoft Defender for Endpoint
-- ANY.RUN API Key
+- [ANY.RUN TI Feeds subscription](https://intelligence.any.run/plans/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=opencti_feeds&utm_content=linktotiplans ) and Basic Authentication token (To obtain it, please contact your ANY.RUN account manager directly or [fill out the request form](https://app.any.run/contact-us/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=opencti_feeds&utm_content=linktocontactus))
 - Microsoft Azure resources:
   - Logic App with Flex Consumption plan
   - Function App Flex Consumption plan
