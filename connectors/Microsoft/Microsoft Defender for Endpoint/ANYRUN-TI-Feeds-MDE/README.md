@@ -36,7 +36,57 @@ Integrate TI Feeds with MDE for an easy access to all the benefits it brings:
   - Function App Flex Consumption plan
 
 ## Prerequisites
- 
+
+### App Registration
+
+- You need to create a new application for your connector. To do this, go to **Microsoft Entra ID**.
+
+![entra_id](images/003.png)
+
+- Click **Add** > **App registration**.
+
+![app_registration](images/004.png)
+
+- Name your new application and click **Register**.
+
+![register_app](images/001.png)
+
+### Secret Value of created App
+
+- To generate the Client Secret, go to your application's page and click **Generate Secret** in the **Certificates & secrets** tab.
+
+![cert_and_secrets_tab](images/005.png)
+
+- Specify the key name and its expiration date (optional).
+
+![generate_secret](images/006.png)
+
+- Copy and **save the Secret Value**. This value is required for deploying the connector later.
+
+![save_secret](images/007.png)
+
+### Microsoft Defender ATP API Permissions for new App
+
+- For the created application, add the following permissions for API connections in the **Manage** > **API permissions** > **Add a permission** tab:
+
+![add_permission](images/008.png)
+
+- Add an API connection for **WindowsDefenderATP**. Select the corresponding API in the **APIs my organization uses** tab.
+
+![select_defender_permission](images/009.png)
+
+- Then, select **Application permissions**.
+
+![add_defender_permission](images/010.png)
+
+- Select the following permissions:
+
+|       Category       |   Permission Name   | Description                                                            |
+|----------------------|---------------------|------------------------------------------------------------------------|
+| Ti                   | Ti.Read.All         | Needed to retrieve indicators                                          |
+| Ti                   | Ti.ReadWrite        | Needed to retrieve and submit indicators (application specific)        |
+| Ti                   | Ti.ReadWrite.All    | Needed to retrieve and submit indicators (general)                     |
+
 ## Deployment
 
 ## Microsoft Defender for Endpoint Configuration
