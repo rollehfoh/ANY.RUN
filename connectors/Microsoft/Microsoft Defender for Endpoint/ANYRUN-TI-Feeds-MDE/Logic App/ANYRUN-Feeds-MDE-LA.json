@@ -10,14 +10,14 @@
             "defaultValue": 2,
             "type": "Integer",
             "metadata": {
-                "description": "Interval of recurrence for the logic app"
+                "description": "Interval of recurrence for the Logic App (in hours)"
             }
         },
         "feedFetchDepth": {
             "defaultValue": 30,
             "type": "Integer",
             "metadata": {
-                "description": "Depth of the feed to fetch"
+                "description": "Depth of the feed to fetch (in days)"
             }
         },
         "functionAppName": {
