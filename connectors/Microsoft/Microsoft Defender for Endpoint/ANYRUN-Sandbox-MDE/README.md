@@ -256,10 +256,16 @@ Since the trigger in the Logic App for initiating the connector's work is the ap
 
    - As the parameter to check, select `Alert Category` from the `Alerts - Get single alert` action.
 
+   ![insert_alert_category](images/057.png)
+   
    - Set the value `Malware` for the added parameter.
 
+   ![insert_categoty_malware](images/058.png)
+   
    - Save the changes.
 
+   ![save_changes_2](images/059.png)
+   
 3. Machine Properties
 
    - You can filter alerts depending on the Machine from which it came. For example, you can filter by **Machine tags** or by **RBAC groups** in which the Machine is included.
@@ -270,6 +276,14 @@ Since the trigger in the Logic App for initiating the connector's work is the ap
 
    - As the parameter to check, select `Machine Machine tags` or `Machine RBAC group name` or any other suitable parameter from the `Machines - Get single machine` action.
 
-   - Set the value corresponding to your devices for the added parameter.
+   ![insert_single_machine](images/060.png)
+   
+   - Set the value corresponding to **your devices** for the added parameter.
+
+   > **Note:** You can find information about your devices at MDE Portal in Assets > Devices tab.
+
+   ![insert_tag_value](images/061.png)
 
    - Save the changes.
+
+   ![save_changes_3](images/062.png)
