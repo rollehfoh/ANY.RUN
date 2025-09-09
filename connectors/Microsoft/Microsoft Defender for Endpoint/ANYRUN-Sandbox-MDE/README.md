@@ -225,22 +225,34 @@ Since the trigger in the Logic App for initiating the connector's work is the ap
    - You can enrich with the ANY.RUN Sandbox only alerts with the criticality you need, for example **Medium** or **High**.
 
    - In the created condition, in the Choose a value field, type `/` and select **Insert dynamic content**.
+  
+   ![insert_dynamic_content](images/052.png)
 
    - As the parameter to check, select `Alert Alert Severity` from the `Alerts - Get single alert` action.
+  
+   ![alert_alert_severity](images/053.png)
 
    - Replace the logical operator `AND` with `OR`, click `+ New item` and select `Add row`.
+  
+   ![add_new_row](images/054.png)
 
    - In the new row, also add `Alert Alert Severity`.
 
    - Set the values `High` and `Medium` for the added parameters.
 
+   ![set_values](images/055.png)
+
    - Save the changes.
+  
+   ![save_changes_1](images/056.png)
 
 2. Alert Category
 
    - You can enrich with the ANY.RUN Sandbox only alerts of the category you need, for example **Malware**.
 
    - In the created condition, in the Choose a value field, type `/` and select **Insert dynamic content**.
+  
+   ![insert_dynamic_content](images/052.png)
 
    - As the parameter to check, select `Alert Category` from the `Alerts - Get single alert` action.
 
@@ -251,6 +263,10 @@ Since the trigger in the Logic App for initiating the connector's work is the ap
 3. Machine Properties
 
    - You can filter alerts depending on the Machine from which it came. For example, you can filter by **Machine tags** or by **RBAC groups** in which the Machine is included.
+  
+   - In the created condition, in the Choose a value field, type `/` and select **Insert dynamic content**.
+  
+   ![insert_dynamic_content](images/052.png)
 
    - As the parameter to check, select `Machine Machine tags` or `Machine RBAC group name` or any other suitable parameter from the `Machines - Get single machine` action.
 
