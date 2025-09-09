@@ -89,6 +89,31 @@ Integrate TI Feeds with MDE for an easy access to all the benefits it brings:
 
 ## Deployment
 
+### Deploy Azure Function App
+
+- Click below to deploy Azure Function App with **Flex Consumption plan**
+ 
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)]()
+
+### Deploy Azure Logic App
+
+- Click below to deploy Azure Logic App with **Flex Consumption plan**
+ 
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMicrosoft%2520Defender%2520for%2520Endpoint%2FANYRUN-TI-Feeds-MDE%2FLogic%2520App%2FANYRUN-TI-Feeds-MDE-LA.json)
+
+- Enter the parameters required for deploying the Logic App and click **Review + create**.
+
+![logic_app_deployment](images/011.png)
+
+- Description of the required parameters:
+
+| Parameter Name                  | Description                                                                 |
+|---------------------------------|-----------------------------------------------------------------------------|
+| logicAppName                    | Workflow name.                                                              |
+| intervalRecurrence              | Interval of recurrence for the logic app (in hours).                        |
+| feedFetchDepth                  | Depth of the feed to fetch (in days).                                       |
+| functionAppName                 | Name of the Function App deplyed before.                                    |
+
 ## Microsoft Defender for Endpoint Configuration
 
 ## Logic App Configuration (Optional)
