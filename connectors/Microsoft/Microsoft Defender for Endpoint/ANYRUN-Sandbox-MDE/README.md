@@ -234,7 +234,7 @@ Since the trigger in the Logic App for initiating the connector's work is the ap
 
    - Save the changes.
 
-3. Machine Characteristics
+3. Machine Properties
 
    - You can filter alerts depending on the Machine from which it came. For example, you can filter by **Machine tags** or by **RBAC groups** in which the Machine is included.
 
