@@ -192,17 +192,31 @@ Since the trigger in the Logic App for initiating the connector's work is the ap
 
 - Find the action `Check if the alert is from EDR or Antivirus` and after the `True` condition, click `+` and select `Add an action` to add a new action.
 
+![add_new_action](images/045.png)
+
 - In the window that appears on the right, in the search bar, find and select `Condition`.
+
+![search_condition_action](images/046.png)
 
 - Then, after the action is added, you need to configure it - change its name (optional) and set the condition itself.
 
+![condition_rename](images/047.png)
+
 - To filter alerts by their attributes, you can check the `Outputs` of the `Alerts - Get single alert` action.
+
+![alert_output](images/048.png)
 
 - After you have added the condition, after `False` add a `Terminate` action that will interrupt the further workflow for this alert.
 
+![terminate_action](images/049.png)
+
 - Drag the actions following the added condition (by default this is `Is machine has Windows OS`) to the `True` section.
 
+![drag_action](images/050.png)
+
 - Save the changes.
+
+![save_changes](images/051.png)
 
 #### Examples of Alert Filtering Conditions
 
