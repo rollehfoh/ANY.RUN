@@ -2,8 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "ANYRUN_API_KEY": {
-          "type": "string",
+        "AnyrunApiKey": {
+          "type": "securestring",
           "metadata": {
             "description": ""
           }
@@ -21,7 +21,7 @@
           }
         },
         "AzureClientSecret": {
-          "type": "string",
+          "type": "securestring",
           "metadata": {
             "description": ""
           }
@@ -33,7 +33,7 @@
           }
         },
         "AzureStorageAccountKey": {
-          "type": "string",
+          "type": "securestring",
           "metadata": {
             "description": ""
           }
@@ -45,7 +45,7 @@
           }
         },
         "AzureStorageConnectionString": {
-          "type": "string",
+          "type": "securestring",
           "metadata": {
             "description": ""
           }
