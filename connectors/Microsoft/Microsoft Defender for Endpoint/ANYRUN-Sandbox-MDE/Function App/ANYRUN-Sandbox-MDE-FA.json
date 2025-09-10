@@ -3,63 +3,63 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "functionAppName": {
-          "type": "string"
-          }
+            "type": "string"
+            }
         },
         "AzureTenantID": {
-          "type": "string",
-          "metadata": {
-            "description": "Azure Tenant ID for authentication."
-          }
+            "type": "string",
+            "metadata": {
+                "description": "Azure Tenant ID for authentication."
+            }
         },
         "AzureClientID": {
-          "type": "string",
-          "metadata": {
-            "description": "Azure Client ID for authentication."
-          }
+            "type": "string",
+            "metadata": {
+                "description": "Azure Client ID for authentication."
+            }
         },
         "AzureClientSecret": {
-          "type": "securestring",
-          "metadata": {
-            "description": "Azure Client Secret for authentication."
-          }
+            "type": "securestring",
+            "metadata": {
+                "description": "Azure Client Secret for authentication."
+            }
         },
         "AzureStorageAccountName": {
-          "type": "string",
-          "metadata": {
-            "description": "Azure Blob Storage Account Name."
-          }
+            "type": "string",
+            "metadata": {
+                "description": "Azure Blob Storage Account Name."
+            }
         },
         "AzureStorageAccountKey": {
-          "type": "securestring",
-          "metadata": {
-            "description": "Azure Blob Storage Account Key."
-          }
+            "type": "securestring",
+            "metadata": {
+                "description": "Azure Blob Storage Account Key."
+            }
         },
         "AzureStorageConnectionString": {
-          "type": "securestring",
-          "metadata": {
-            "description": "Azure Blob Storage Account Connection string."
-          }
+            "type": "securestring",
+            "metadata": {
+                "description": "Azure Blob Storage Account Connection string."
+            }
         },
         "AzureBlobContainerName": {
-          "type": "string",
-          "metadata": {
-            "description": "Azure Blob Storage Container Name."
-          }
+            "type": "string",
+            "metadata": {
+                "description": "Azure Blob Storage Container Name."
+            }
         },
         "ANYRUN_API_KEY": {
-          "type": "securestring",
-          "metadata": {
-            "description": "API Key of your ANY.RUN Account."
-          }
+            "type": "securestring",
+            "metadata": {
+                "description": "API Key of your ANY.RUN Account."
+            }
         },
         "AzureManagementApiVersion": {
-          "type": "string",
-          "defaultvalue": "2025-05-01",
-          "metadata": {
-            "description": "Management REST API version."
-          }
+            "type": "string",
+            "defaultvalue": "2025-05-01",
+            "metadata": {
+                "description": "Management REST API version."
+            }
         }
     },
     "variables": {},
