@@ -117,6 +117,25 @@ This integration empowers SOC teams with deeper insights into potential threats,
  
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMicrosoft%2520Defender%2520for%2520Endpoint%2FANYRUN-Sandbox-MDE%2FFunction%2520App%2FANYRUN-Sandbox-MDE-FA.json)
 
+- Enter the parameters required for deploying the Function App and click **Review + create**.
+
+![function_app_deployment](images/006.png)
+
+- Description of the required parameters:
+
+| Parameter Name               | Description                                                                 |
+|------------------------------|-----------------------------------------------------------------------------|
+| functionAppName              | Workflow name.                                                              |
+| AzureTenantID                | Azure Tenant ID for authentication.                                         |
+| AzureClientID                | Azure Client ID for authentication.                                         |
+| AzureClientSecret            | Azure Client Secret for authentication.                                     |
+| AzureStorageAccountName      | Azure Blob Storage Account Name.                                            |
+| AzureStorageAccountKey       | Azure Blob Storage Account Key.                                             |
+| AzureStorageConnectionString | Azure Blob Storage Account Connection string.                               |
+| AzureBlobContainerName       | Azure Blob Storage Container Name.                                          |
+| ANYRUN_API_KEY               | API Key of your ANY.RUN Account.                                            |
+| AzureManagementApiVersion    | Management REST API version.                                                |
+
 ### Deploy Azure Logic App
 
 - Click below to deploy Azure Logic App with **Flex Consumption plan**
