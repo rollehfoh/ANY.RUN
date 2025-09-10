@@ -56,7 +56,7 @@
         },
         "AzureManagementApiVersion": {
             "type": "string",
-            "defaultvalue": "2025-05-01",
+            "defaultValue": "2025-05-01",
             "metadata": {
                 "description": "Management REST API version."
             }
