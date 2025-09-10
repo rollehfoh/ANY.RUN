@@ -7,28 +7,28 @@
             "defaultValue": "ANYRUN-Feeds-MDE-FA"
         },
         "azureTenantID": {
-          "type": "string",
-          "metadata": {
-            "description": "Tenant ID for authentication in connections."
-          }
+            "type": "string",
+            "metadata": {
+                "description": "Tenant ID for authentication in connections."
+            }
         },
         "azureClientID": {
-          "type": "string",
-          "metadata": {
-            "description": "Client ID for authentication."
-          }
+            "type": "string",
+            "metadata": {
+                "description": "Client ID for authentication."
+            }
         },
         "azureClientSecret": {
-          "type": "string",
-          "metadata": {
-            "description": "Client Secret for authentication."
-          }
+            "type": "string",
+            "metadata": {
+                "description": "Client Secret for authentication."
+            }
         },
         "anyrunBasicAuthToken": {
-          "type": "securestring",
-          "metadata": {
-            "description": "Your ANY.RUN token to access TI Feeds data."
-          }
+            "type": "securestring",
+            "metadata": {
+                "description": "Your ANY.RUN token to access TI Feeds data."
+            }
         }
     },
     "variables": {},
