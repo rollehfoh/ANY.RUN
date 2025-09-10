@@ -114,6 +114,24 @@ Integrate TI Feeds with MDE for an easy access to all the benefits it brings:
 | feedFetchDepth                  | Depth of the feed to fetch (in days).                                       |
 | functionAppName                 | Name of the Function App deplyed before.                                    |
 
-## Microsoft Defender for Endpoint Configuration
-
 ## Logic App Configuration (Optional)
+
+### Recurrence Interval
+
+You can change the recurrence interval at which the Logic App will run and update the TI Feeds data.
+
+- Open your Logic App ANYRUN-Feeds-MDE-LA, navigate to **Development tools** > **Logic app designer**.
+
+- Select the `Recurrence` action and specify the required value in the `Interval` field.
+
+![reccurence_interval](images/012.png)
+
+### Indicator Fetch Depth
+
+You can change the fetch depth of indicators in ANY.RUN TI Feeds. This parameter determines the period for which to extract data from ANY.RUN TI Feeds.
+
+- Open your Logic App ANYRUN-Feeds-MDE-LA, navigate to **Development tools** > **Logic app designer**.
+
+- Select the `Initialize variables` action and specify the required value in days in the `feed_fetch_depth` variable.
+
+![feed_fetch_depth](images/013.png)
