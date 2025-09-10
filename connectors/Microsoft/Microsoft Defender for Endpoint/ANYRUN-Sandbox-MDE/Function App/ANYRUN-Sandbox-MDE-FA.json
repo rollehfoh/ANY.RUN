@@ -2,13 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "AnyrunApiKey": {
-          "type": "securestring",
-          "metadata": {
-            "description": ""
-          }
-        },
-        "AzureBlobContainerName": {
+        "AzureTenantID": {
           "type": "string",
           "metadata": {
             "description": ""
@@ -26,7 +20,7 @@
             "description": ""
           }
         },
-        "AzureManagementApiVersion": {
+        "AzureStorageAccountName": {
           "type": "string",
           "metadata": {
             "description": ""
@@ -38,19 +32,25 @@
             "description": ""
           }
         },
-        "AzureStorageAccountName": {
-          "type": "string",
-          "metadata": {
-            "description": ""
-          }
-        },
         "AzureStorageConnectionString": {
           "type": "securestring",
           "metadata": {
             "description": ""
           }
         },
-        "AzureTenantID": {
+        "AzureBlobContainerName": {
+          "type": "string",
+          "metadata": {
+            "description": ""
+          }
+        },
+        "ANYRUN_API_KEY": {
+          "type": "securestring",
+          "metadata": {
+            "description": ""
+          }
+        },
+        "AzureManagementApiVersion": {
           "type": "string",
           "metadata": {
             "description": ""
