@@ -3,8 +3,8 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "functionAppName": {
-            "type": "string"
-            }
+            "type": "string",
+            "defaultValue": "ANYRUN-Sandbox-MDE-LA"
         },
         "AzureTenantID": {
             "type": "string",
@@ -67,13 +67,8 @@
         {
             "type": "Microsoft.Web/sites",
             "apiVersion": "2024-11-01",
-            "name": "[parameters('sites_anyrundefender_name')]",
+            "name": "[parameters('functionAppName')]",
             "location": "East US",
-            "tags": {
-                "Resource": "Microsoft Defender XDR",
-                "Custom": "ANYRUN",
-                "hidden-link: /app-insights-resource-id": "/subscriptions/a754644b-f4a5-4258-aa07-9d7682198cd6/resourceGroups/sentinel/providers/microsoft.insights/components/anyrundefender"
-            },
             "kind": "functionapp,linux",
             "identity": {
                 "type": "SystemAssigned"
@@ -82,12 +77,12 @@
                 "enabled": true,
                 "hostNameSslStates": [
                     {
-                        "name": "[concat(parameters('sites_anyrundefender_name'), '-bgcccacpg0cqgwhp.eastus-01.azurewebsites.net')]",
+                        "name": "[concat(parameters('functionAppName'), '-bgcccacpg0cqgwhp.eastus-01.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Standard"
                     },
                     {
-                        "name": "[concat(parameters('sites_anyrundefender_name'), '-bgcccacpg0cqgwhp.scm.eastus-01.azurewebsites.net')]",
+                        "name": "[concat(parameters('functionAppName'), '-bgcccacpg0cqgwhp.scm.eastus-01.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "hostType": "Repository"
                     }
@@ -116,7 +111,7 @@
                     "deployment": {
                         "storage": {
                             "type": "blobcontainer",
-                            "value": "[concat('https://storageanyrun.blob.core.windows.net/app-package-', parameters('sites_anyrundefender_name'), '-2d12f83')]",
+                            "value": "[concat('https://storageanyrun.blob.core.windows.net/app-package-', parameters('functionAppName'), '-2d12f83')]",
                             "authentication": {
                                 "type": "systemassignedidentity"
                             }
@@ -153,16 +148,11 @@
         {
             "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
             "apiVersion": "2024-11-01",
-            "name": "[concat(parameters('sites_anyrundefender_name'), '/ftp')]",
+            "name": "[concat(parameters('functionAppName'), '/ftp')]",
             "location": "East US",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_anyrundefender_name'))]"
+                "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
             ],
-            "tags": {
-                "Resource": "Microsoft Defender XDR",
-                "Custom": "ANYRUN",
-                "hidden-link: /app-insights-resource-id": "/subscriptions/a754644b-f4a5-4258-aa07-9d7682198cd6/resourceGroups/sentinel/providers/microsoft.insights/components/anyrundefender"
-            },
             "properties": {
                 "allow": false
             }
@@ -170,16 +160,11 @@
         {
             "type": "Microsoft.Web/sites/basicPublishingCredentialsPolicies",
             "apiVersion": "2024-11-01",
-            "name": "[concat(parameters('sites_anyrundefender_name'), '/scm')]",
+            "name": "[concat(parameters('functionAppName'), '/scm')]",
             "location": "East US",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_anyrundefender_name'))]"
+                "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
             ],
-            "tags": {
-                "Resource": "Microsoft Defender XDR",
-                "Custom": "ANYRUN",
-                "hidden-link: /app-insights-resource-id": "/subscriptions/a754644b-f4a5-4258-aa07-9d7682198cd6/resourceGroups/sentinel/providers/microsoft.insights/components/anyrundefender"
-            },
             "properties": {
                 "allow": false
             }
@@ -187,16 +172,11 @@
         {
             "type": "Microsoft.Web/sites/config",
             "apiVersion": "2024-11-01",
-            "name": "[concat(parameters('sites_anyrundefender_name'), '/web')]",
+            "name": "[concat(parameters('functionAppName'), '/web')]",
             "location": "East US",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_anyrundefender_name'))]"
+                "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
             ],
-            "tags": {
-                "Resource": "Microsoft Defender XDR",
-                "Custom": "ANYRUN",
-                "hidden-link: /app-insights-resource-id": "/subscriptions/a754644b-f4a5-4258-aa07-9d7682198cd6/resourceGroups/sentinel/providers/microsoft.insights/components/anyrundefender"
-            },
             "properties": {
                 "numberOfWorkers": 1,
                 "defaultDocuments": [
@@ -279,10 +259,10 @@
         {
             "type": "Microsoft.Web/sites/deployments",
             "apiVersion": "2024-11-01",
-            "name": "[concat(parameters('sites_anyrundefender_name'), '/82bc7dc0-0de2-4d15-8708-854e70cfc7fa')]",
+            "name": "[concat(parameters('functionAppName'), '/82bc7dc0-0de2-4d15-8708-854e70cfc7fa')]",
             "location": "East US",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_anyrundefender_name'))]"
+                "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
             ],
             "properties": {
                 "status": 4,
@@ -295,10 +275,10 @@
         {
             "type": "Microsoft.Web/sites/deployments",
             "apiVersion": "2024-11-01",
-            "name": "[concat(parameters('sites_anyrundefender_name'), '/a197dd1d-e282-46d5-a40d-c5e113ea41db')]",
+            "name": "[concat(parameters('functionAppName'), '/a197dd1d-e282-46d5-a40d-c5e113ea41db')]",
             "location": "East US",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_anyrundefender_name'))]"
+                "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
             ],
             "properties": {
                 "status": 0,
@@ -310,10 +290,10 @@
         {
             "type": "Microsoft.Web/sites/deployments",
             "apiVersion": "2024-11-01",
-            "name": "[concat(parameters('sites_anyrundefender_name'), '/aeee37da-a3da-4c1a-9bd9-4bb2dfb8d474')]",
+            "name": "[concat(parameters('functionAppName'), '/aeee37da-a3da-4c1a-9bd9-4bb2dfb8d474')]",
             "location": "East US",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_anyrundefender_name'))]"
+                "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
             ],
             "properties": {
                 "status": 4,
@@ -326,10 +306,10 @@
         {
             "type": "Microsoft.Web/sites/deployments",
             "apiVersion": "2024-11-01",
-            "name": "[concat(parameters('sites_anyrundefender_name'), '/b726eaac-1640-48ee-84f7-9b7c566fb811')]",
+            "name": "[concat(parameters('functionAppName'), '/b726eaac-1640-48ee-84f7-9b7c566fb811')]",
             "location": "East US",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_anyrundefender_name'))]"
+                "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
             ],
             "properties": {
                 "status": 4,
@@ -342,10 +322,10 @@
         {
             "type": "Microsoft.Web/sites/functions",
             "apiVersion": "2024-11-01",
-            "name": "[concat(parameters('sites_anyrundefender_name'), '/', parameters('sites_anyrundefender_name'))]",
+            "name": "[concat(parameters('functionAppName'), '/', parameters('functionAppName'))]",
             "location": "East US",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_anyrundefender_name'))]"
+                "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
             ],
             "properties": {
                 "script_root_path_href": "https://anyrundefender-bgcccacpg0cqgwhp.eastus-01.azurewebsites.net/admin/vfs/home/site/wwwroot/AnyRunDefender/",
@@ -382,10 +362,10 @@
         {
             "type": "Microsoft.Web/sites/hostNameBindings",
             "apiVersion": "2024-11-01",
-            "name": "[concat(parameters('sites_anyrundefender_name'), '/', parameters('sites_anyrundefender_name'), '-bgcccacpg0cqgwhp.eastus-01.azurewebsites.net')]",
+            "name": "[concat(parameters('functionAppName'), '/', parameters('functionAppName'), '-bgcccacpg0cqgwhp.eastus-01.azurewebsites.net')]",
             "location": "East US",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_anyrundefender_name'))]"
+                "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
             ],
             "properties": {
                 "siteName": "anyrundefender",
