@@ -127,7 +127,7 @@ This integration empowers SOC teams with deeper insights into potential threats,
 |------------------------------|-----------------------------------------------------------------------------|
 | functionAppName              | Workflow name.                                                              |
 | AzureTenantID                | Azure Tenant ID for authentication.                                         |
-| AzureClientID                | Azure Client ID for authentication.                                         |
+| AzureClientID                | Azure Client ID for authentication (ID of the App Registration created before). |
 | AzureClientSecret            | Azure Client Secret for authentication.                                     |
 | AzureStorageAccountName      | Azure Blob Storage Account Name.                                            |
 | AzureStorageAccountKey       | Azure Blob Storage Account Key.                                             |
@@ -151,9 +151,9 @@ This integration empowers SOC teams with deeper insights into potential threats,
 | Parameter Name                  | Description                                                                 |
 |---------------------------------|-----------------------------------------------------------------------------|
 | logicAppName                    | Workflow name.                                                              |
-| azureTenantId                   | Tenant ID for authentication in connections.                                |
-| azureClientId                   | Client ID for authentication (ID of the App Registration created before).   |
-| azureClientSecret               | Client Secret for authentication.                                           |
+| azureTenantId                   | Azure Tenant ID for authentication in connections.                          |
+| azureClientId                   | Azure Client ID for authentication (ID of the App Registration created before). |
+| azureClientSecret               | Azure Client Secret for authentication.                                     |
 | functionAppName                 | Name of the Function App deplyed before.                                    |
 
 
