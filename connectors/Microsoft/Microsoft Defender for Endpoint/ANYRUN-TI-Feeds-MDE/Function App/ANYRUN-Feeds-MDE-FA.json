@@ -4,8 +4,7 @@
     "parameters": {
         "functionAppName": {
             "type": "string",
-            "defaultValue": "ANYRUN-Feeds-MDE-FA",
-          }
+            "defaultValue": "ANYRUN-Feeds-MDE-FA"
         },
         "azureTenantID": {
           "type": "string",
