@@ -93,7 +93,18 @@ Integrate TI Feeds with MDE for an easy access to all the benefits it brings:
 
 - Click below to deploy Azure Function App with **Flex Consumption plan**
  
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)]()
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Frollehfoh%2FANY.RUN%2Fmain%2Fconnectors%2FMicrosoft%2FMicrosoft%2520Defender%2520for%2520Endpoint%2FANYRUN-TI-Feeds-MDE%2FFunction%2520App%2FANYRUN-Feeds-MDE-FA.json)
+
+- Description of the required parameters:
+
+| Parameter Name                  | Description                                                                 |
+|---------------------------------|-----------------------------------------------------------------------------|
+| functionAppName                 | Function name.                                                              |
+| azureTenantId                   | Tenant ID for authentication in connections.                                |
+| azureClientId                   | Client ID for authentication (ID of the App Registration created before).   |
+| azureClientSecret               | Client Secret for authentication.                                           |
+| anyrunBasicAuthToken            | Your ANY.RUN token to access TI Feeds data.                                 |
+
 
 ### Deploy Azure Logic App
 
