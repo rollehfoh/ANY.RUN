@@ -116,170 +116,9 @@
                                 "path": "/api/alerts/@{encodeURIComponent(triggerBody()?['id'])}"
                             }
                         },
-                        "Check_if_the_alert_is_from_EDR_or_Antivirus": {
-                            "actions": {
-                                "Is_machine_has_Windows_OS": {
-                                    "actions": {
-                                        "Execute_AnyRunDefender_using_Windows_VM": {
-                                            "type": "Function",
-                                            "inputs": {
-                                                "body": {
-                                                    "alert_source": "@body('Alerts_-_Get_single_alert')?['detectionSource']",
-                                                    "alert_id": "@body('Alerts_-_Get_single_alert')?['id']",
-                                                    "machine_os_platform": "windows",
-                                                    "analysis_options": {
-                                                        "opt_network_connect": "@variables('opt_network_connect')",
-                                                        "opt_network_fakenet": "@variables('opt_network_fakenet')",
-                                                        "opt_network_tor": "@variables('opt_network_tor')",
-                                                        "opt_network_geo": "@variables('opt_network_geo')",
-                                                        "opt_network_mitm": "@variables('opt_network_mitm')",
-                                                        "opt_network_residential_proxy": "@variables('opt_network_residential_proxy')",
-                                                        "opt_network_residential_proxy_geo": "@variables('opt_network_residential_proxy_geo')",
-                                                        "opt_privacy_type": "@variables('opt_privacy_type')",
-                                                        "opt_timeout": "@variables('opt_timeout')",
-                                                        "env_version": "@variables('windows_env_version')",
-                                                        "env_bitness": "@variables('windows_env_bitness')",
-                                                        "env_type": "@variables('windows_env_type')",
-                                                        "env_locale": "@variables('env_locale')",
-                                                        "user_tags": "@variables('user_tags')",
-                                                        "obj_ext_extension": "@variables('obj_ext_extension')",
-                                                        "obj_ext_startfolder": "@variables('windows_obj_ext_startfolder')",
-                                                        "obj_ext_cmd": "@variables('windows_obj_ext_cmd')",
-                                                        "obj_force_elevation": "@variables('windows_obj_force_elevation')",
-                                                        "obj_ext_browser": "@variables('windows_obj_ext_browser')"
-                                                    }
-                                                },
-                                                "function": {
-                                                    "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/sites/', variables('connectFunctionAppName'), '/functions/AnyRunDefender')]"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "else": {
-                                        "actions": {
-                                            "Is_machine_has_Linux_OS": {
-                                                "actions": {
-                                                    "Execute_AnyRunDefender_using_Linux_VM": {
-                                                        "type": "Function",
-                                                        "inputs": {
-                                                            "body": {
-                                                                "alert_source": "@body('Alerts_-_Get_single_alert')?['detectionSource']",
-                                                                "alert_id": "@body('Alerts_-_Get_single_alert')?['id']",
-                                                                "machine_os_platform": "linux",
-                                                                "analysis_options": {
-                                                                    "opt_network_connect": "@variables('opt_network_connect')",
-                                                                    "opt_network_fakenet": "@variables('opt_network_fakenet')",
-                                                                    "opt_network_tor": "@variables('opt_network_tor')",
-                                                                    "opt_network_geo": "@variables('opt_network_geo')",
-                                                                    "opt_network_mitm": "@variables('opt_network_mitm')",
-                                                                    "opt_network_residential_proxy": "@variables('opt_network_residential_proxy')",
-                                                                    "opt_network_residential_proxy_geo": "@variables('opt_network_residential_proxy_geo')",
-                                                                    "opt_privacy_type": "@variables('opt_privacy_type')",
-                                                                    "opt_timeout": "@variables('opt_timeout')",
-                                                                    "env_os": "@variables('linux_env_os')",
-                                                                    "env_locale": "@variables('env_locale')",
-                                                                    "user_tags": "@variables('user_tags')",
-                                                                    "obj_ext_startfolder": "@variables('linux_obj_ext_startfolder')",
-                                                                    "obj_ext_cmd": "@variables('linux_obj_ext_cmd')",
-                                                                    "obj_ext_extension": "@variables('obj_ext_extension')",
-                                                                    "run_as_root": "@variables('linux_run_as_root')",
-                                                                    "obj_ext_browser": "@variables('linux_obj_ext_browser')"
-                                                                }
-                                                            },
-                                                            "function": {
-                                                                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/sites/', variables('connectFunctionAppName'), '/functions/AnyRunDefender')]"
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                "else": {
-                                                    "actions": {
-                                                        "Requested_os_platform_is_not_supported_in_AnyRunDefender": {
-                                                            "type": "Terminate",
-                                                            "inputs": {
-                                                                "runStatus": "Failed",
-                                                                "runError": {
-                                                                    "code": "404",
-                                                                    "message": "Requested os platform is not supported in AnyRunDefender"
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                "expression": {
-                                                    "or": [
-                                                        {
-                                                            "contains": [
-                                                                "@variables('machine_os_platform')",
-                                                                "Ubuntu"
-                                                            ]
-                                                        },
-                                                        {
-                                                            "contains": [
-                                                                "@variables('machine_os_platform')",
-                                                                "Debian"
-                                                            ]
-                                                        }
-                                                    ]
-                                                },
-                                                "type": "If"
-                                            }
-                                        }
-                                    },
-                                    "expression": {
-                                        "and": [
-                                            {
-                                                "contains": [
-                                                    "@variables('machine_os_platform')",
-                                                    "Windows"
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    "type": "If"
-                                }
-                            },
-                            "runAfter": {
-                                "ANY.RUN_Linux_analysis_options": [
-                                    "Succeeded"
-                                ]
-                            },
-                            "else": {
-                                "actions": {
-                                    "Requested_alert_type_is_not_supported_in_AnyRunDefender": {
-                                        "type": "Terminate",
-                                        "inputs": {
-                                            "runStatus": "Failed",
-                                            "runError": {
-                                                "code": "404",
-                                                "message": "Requested alert type is not supported in AnyRunDefender"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "expression": {
-                                "or": [
-                                    {
-                                        "equals": [
-                                            "@body('Alerts_-_Get_single_alert')?['detectionSource']",
-                                            "WindowsDefenderAtp"
-                                        ]
-                                    },
-                                    {
-                                        "equals": [
-                                            "@body('Alerts_-_Get_single_alert')?['detectionSource']",
-                                            "WindowsDefenderAv"
-                                        ]
-                                    }
-                                ]
-                            },
-                            "type": "If",
-                            "description": ""
-                        },
                         "Machines_-_Get_single_machine": {
                             "runAfter": {
-                                "Alerts_-_Get_single_alert": [
+                                "Select_Entity_Types": [
                                     "Succeeded"
                                 ]
                             },
@@ -424,7 +263,7 @@
                                     {
                                         "name": "user_tags",
                                         "type": "string",
-                                        "value": "ms_defender_xdr,antivirus_alert"
+                                        "value": "mde-alert"
                                     }
                                 ]
                             }
@@ -463,6 +302,196 @@
                                         "value": "Google Chrome"
                                     }
                                 ]
+                            }
+                        },
+                        "Check_if_the_alert_has_File_or_URL_entities": {
+                            "actions": {
+                                "Check_if_the_alert_is_from_EDR_or_Antivirus": {
+                                    "actions": {
+                                        "Is_machine_has_Windows_OS": {
+                                            "actions": {
+                                                "Execute_AnyRunDefender_using_Windows_VM": {
+                                                    "type": "Function",
+                                                    "inputs": {
+                                                        "body": {
+                                                            "alert_source": "@body('Alerts_-_Get_single_alert')?['detectionSource']",
+                                                            "alert_id": "@body('Alerts_-_Get_single_alert')?['id']",
+                                                            "machine_os_platform": "windows",
+                                                            "analysis_options": {
+                                                                "opt_network_connect": "@variables('opt_network_connect')",
+                                                                "opt_network_fakenet": "@variables('opt_network_fakenet')",
+                                                                "opt_network_tor": "@variables('opt_network_tor')",
+                                                                "opt_network_geo": "@variables('opt_network_geo')",
+                                                                "opt_network_mitm": "@variables('opt_network_mitm')",
+                                                                "opt_network_residential_proxy": "@variables('opt_network_residential_proxy')",
+                                                                "opt_network_residential_proxy_geo": "@variables('opt_network_residential_proxy_geo')",
+                                                                "opt_privacy_type": "@variables('opt_privacy_type')",
+                                                                "opt_timeout": "@variables('opt_timeout')",
+                                                                "env_version": "@variables('windows_env_version')",
+                                                                "env_bitness": "@variables('windows_env_bitness')",
+                                                                "env_type": "@variables('windows_env_type')",
+                                                                "env_locale": "@variables('env_locale')",
+                                                                "user_tags": "@variables('user_tags')",
+                                                                "obj_ext_extension": "@variables('obj_ext_extension')",
+                                                                "obj_ext_startfolder": "@variables('windows_obj_ext_startfolder')",
+                                                                "obj_ext_cmd": "@variables('windows_obj_ext_cmd')",
+                                                                "obj_force_elevation": "@variables('windows_obj_force_elevation')",
+                                                                "obj_ext_browser": "@variables('windows_obj_ext_browser')"
+                                                            }
+                                                        },
+                                                        "function": {
+                                                            "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/sites/', variables('connectFunctionAppName'), '/functions/AnyRunDefender')]"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "else": {
+                                                "actions": {
+                                                    "Is_machine_has_Linux_OS": {
+                                                        "actions": {
+                                                            "Execute_AnyRunDefender_using_Linux_VM": {
+                                                                "type": "Function",
+                                                                "inputs": {
+                                                                    "body": {
+                                                                        "alert_source": "@body('Alerts_-_Get_single_alert')?['detectionSource']",
+                                                                        "alert_id": "@body('Alerts_-_Get_single_alert')?['id']",
+                                                                        "machine_os_platform": "linux",
+                                                                        "analysis_options": {
+                                                                            "opt_network_connect": "@variables('opt_network_connect')",
+                                                                            "opt_network_fakenet": "@variables('opt_network_fakenet')",
+                                                                            "opt_network_tor": "@variables('opt_network_tor')",
+                                                                            "opt_network_geo": "@variables('opt_network_geo')",
+                                                                            "opt_network_mitm": "@variables('opt_network_mitm')",
+                                                                            "opt_network_residential_proxy": "@variables('opt_network_residential_proxy')",
+                                                                            "opt_network_residential_proxy_geo": "@variables('opt_network_residential_proxy_geo')",
+                                                                            "opt_privacy_type": "@variables('opt_privacy_type')",
+                                                                            "opt_timeout": "@variables('opt_timeout')",
+                                                                            "env_os": "@variables('linux_env_os')",
+                                                                            "env_locale": "@variables('env_locale')",
+                                                                            "user_tags": "@variables('user_tags')",
+                                                                            "obj_ext_startfolder": "@variables('linux_obj_ext_startfolder')",
+                                                                            "obj_ext_cmd": "@variables('linux_obj_ext_cmd')",
+                                                                            "obj_ext_extension": "@variables('obj_ext_extension')",
+                                                                            "run_as_root": "@variables('linux_run_as_root')",
+                                                                            "obj_ext_browser": "@variables('linux_obj_ext_browser')"
+                                                                        }
+                                                                    },
+                                                                    "function": {
+                                                                        "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/sites/', variables('connectFunctionAppName'), '/functions/AnyRunDefender')]"
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "else": {
+                                                            "actions": {
+                                                                "Requested_os_platform_is_not_supported_in_AnyRunDefender": {
+                                                                    "type": "Terminate",
+                                                                    "inputs": {
+                                                                        "runStatus": "Cancelled"
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "expression": {
+                                                            "or": [
+                                                                {
+                                                                    "contains": [
+                                                                        "@variables('machine_os_platform')",
+                                                                        "Ubuntu"
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "contains": [
+                                                                        "@variables('machine_os_platform')",
+                                                                        "Debian"
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        "type": "If"
+                                                    }
+                                                }
+                                            },
+                                            "expression": {
+                                                "and": [
+                                                    {
+                                                        "contains": [
+                                                            "@variables('machine_os_platform')",
+                                                            "Windows"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "type": "If"
+                                        }
+                                    },
+                                    "else": {
+                                        "actions": {
+                                            "Requested_alert_type_is_not_supported_in_AnyRunDefender": {
+                                                "type": "Terminate",
+                                                "inputs": {
+                                                    "runStatus": "Cancelled"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "expression": {
+                                        "or": [
+                                            {
+                                                "equals": [
+                                                    "@body('Alerts_-_Get_single_alert')?['detectionSource']",
+                                                    "WindowsDefenderAtp"
+                                                ]
+                                            },
+                                            {
+                                                "equals": [
+                                                    "@body('Alerts_-_Get_single_alert')?['detectionSource']",
+                                                    "WindowsDefenderAv"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "type": "If",
+                                    "description": ""
+                                }
+                            },
+                            "runAfter": {
+                                "ANY.RUN_Linux_analysis_options": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "else": {
+                                "actions": {
+                                    "Failed_to_find_File_or_Url_entities": {
+                                        "type": "Terminate",
+                                        "inputs": {
+                                            "runStatus": "Cancelled"
+                                        }
+                                    }
+                                }
+                            },
+                            "expression": {
+                                "and": [
+                                    {
+                                        "equals": [
+                                            "@or(contains(body('Select_Entity_Types'), 'File'), contains(body('Select_Entity_Types'), 'Url'))",
+                                            true
+                                        ]
+                                    }
+                                ]
+                            },
+                            "type": "If"
+                        },
+                        "Select_Entity_Types": {
+                            "runAfter": {
+                                "Alerts_-_Get_single_alert": [
+                                    "Succeeded"
+                                ]
+                            },
+                            "type": "Select",
+                            "inputs": {
+                                "from": "@body('Alerts_-_Get_single_alert')?['evidence']",
+                                "select": "@item()?['entityType']"
                             }
                         }
                     },
