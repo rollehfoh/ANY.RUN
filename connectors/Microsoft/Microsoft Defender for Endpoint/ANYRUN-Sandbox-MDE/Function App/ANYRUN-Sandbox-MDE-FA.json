@@ -243,6 +243,35 @@
         "[resourceId('Microsoft.Storage/storageAccounts', parameters('AzureStorageAccountName'))]",
         "[resourceId('Microsoft.Insights/components', parameters('functionAppName'))]"
       ]
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/fileServices",
+      "apiVersion": "2019-06-01",
+      "name": "[concat(parameters('AzureStorageAccountName'), '/default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', tolower(parameters('AzureStorageAccountName')))]"
+      ],
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "properties": {
+        "cors": {
+          "corsRules": []
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/fileServices/shares",
+      "apiVersion": "2019-06-01",
+      "name": "[concat(parameters('AzureStorageAccountName'), '/default/', tolower(parameters('AzureStorageAccountName')))]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/fileServices', parameters('AzureStorageAccountName'), 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('AzureStorageAccountName'))]"
+      ],
+      "properties": {
+        "shareQuota": 5120
+      }
     }
   ]
 }
