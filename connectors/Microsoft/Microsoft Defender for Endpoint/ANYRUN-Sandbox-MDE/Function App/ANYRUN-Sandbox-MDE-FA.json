@@ -121,7 +121,7 @@
         {
             "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
             "apiVersion": "2023-01-01",
-            "name": "[format('{0}/{1}/{2}', parameters('AzureStorageAccountName'), 'default', parameters('AzureBlobContainerName')]",
+            "name": "[format('{0}/{1}/{2}', parameters('AzureStorageAccountName'), 'default', parameters('AzureBlobContainerName'))]",
             "properties": {
                 "publicAccess": "None"
             },
