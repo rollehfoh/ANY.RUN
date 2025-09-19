@@ -140,7 +140,7 @@
         "WaitSection"
       ],
       "properties": {
-        "packageUri": "change",
+        "packageUri": "https://github.com/rollehfoh/ANY.RUN/raw/refs/heads/main/connectors/Microsoft/Microsoft Defender for Endpoint/ANYRUN-Sandbox-MDE/Function App/ANYRUN-Sandbox-MDE-FA.zip",
         "remoteBuild": true
       }
     },
