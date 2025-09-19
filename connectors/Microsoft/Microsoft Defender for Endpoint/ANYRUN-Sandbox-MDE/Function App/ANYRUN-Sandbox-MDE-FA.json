@@ -69,7 +69,8 @@
     }
   },
   "variables": {
-    "deploymentStorageContainerName": "anyrundeploymentcontainer"
+    "deploymentStorageContainerName": "anyrundeploymentcontainer",
+    "storageRoleDefinitionId": "b7e6dc6d-f1e8-4753-8033-0f276bb0955b"
   },
   "resources": [
     {
@@ -144,34 +145,6 @@
       }
     },
     {
-      "type": "Microsoft.Resources/deploymentScripts",
-      "apiVersion": "2020-10-01",
-      "name": "WaitSection",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
-      ],
-      "kind": "AzurePowerShell",
-      "properties": {
-        "azPowerShellVersion": "7.0",
-        "scriptContent": "start-sleep -Seconds 30",
-        "cleanupPreference": "Always",
-        "retentionInterval": "PT1H"
-      }
-    },
-    {
-      "type": "Microsoft.Web/sites/extensions",
-      "apiVersion": "2022-09-01",
-      "name": "[format('{0}/{1}', parameters('functionAppName'), 'onedeploy')]",
-      "dependsOn": [
-        "WaitSection"
-      ],
-      "properties": {
-        "packageUri": "https://github.com/rollehfoh/ANY.RUN/blob/main/connectors/Microsoft/Microsoft%20Defender%20for%20Endpoint/ANYRUN-Sandbox-MDE/Function%20App/ANYRUN-Sandbox-MDE-FA.zip",
-        "remoteBuild": true
-      }
-    },
-    {
       "type": "Microsoft.Web/sites",
       "apiVersion": "2024-11-01",
       "name": "[parameters('functionAppName')]",
@@ -243,6 +216,48 @@
         "[resourceId('Microsoft.Storage/storageAccounts', parameters('AzureStorageAccountName'))]",
         "[resourceId('Microsoft.Insights/components', parameters('functionAppName'))]"
       ]
+    },
+    {
+      "type": "Microsoft.Authorization/roleAssignments",
+      "apiVersion": "2020-04-01-preview",
+      "name": "[guid(resourceId('Microsoft.Storage/storageAccounts', parameters('AzureStorageAccountName')), variables('storageRoleDefinitionId'))]",
+      "scope": "[concat('Microsoft.Storage/storageAccounts', '/', parameters('AzureStorageAccountName'))]",
+      "properties": {
+        "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('storageRoleDefinitionId'))]",
+        "principalId": "[reference(resourceId('Microsoft.Web/sites', parameters('functionAppName')), '2023-12-01', 'Full').identity.principalId]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', parameters('AzureStorageAccountName'))]",
+        "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deploymentScripts",
+      "apiVersion": "2020-10-01",
+      "name": "WaitSection",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
+      ],
+      "kind": "AzurePowerShell",
+      "properties": {
+        "azPowerShellVersion": "7.0",
+        "scriptContent": "start-sleep -Seconds 30",
+        "cleanupPreference": "Always",
+        "retentionInterval": "PT1H"
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/extensions",
+      "apiVersion": "2022-09-01",
+      "name": "[format('{0}/{1}', parameters('functionAppName'), 'onedeploy')]",
+      "dependsOn": [
+        "WaitSection"
+      ],
+      "properties": {
+        "packageUri": "https://github.com/rollehfoh/ANY.RUN/blob/main/connectors/Microsoft/Microsoft%20Defender%20for%20Endpoint/ANYRUN-Sandbox-MDE/Function%20App/ANYRUN-Sandbox-MDE-FA.zip",
+        "remoteBuild": true
+      }
     },
     {
       "type": "Microsoft.Storage/storageAccounts/fileServices",
