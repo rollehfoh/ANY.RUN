@@ -69,7 +69,7 @@
     }
   },
   "variables": {
-    "deploymentStorageContainerName": "[parameters('AzureBlobContainerName')]"
+    "deploymentStorageContainerName": "anyrundeploymentcontainer"
   },
   "resources": [
     {
@@ -105,6 +105,17 @@
       "name": "[format('{0}/{1}', parameters('AzureStorageAccountName'), 'default')]",
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', parameters('AzureStorageAccountName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2023-01-01",
+      "name": "[format('{0}/{1}/{2}', parameters('AzureStorageAccountName'), 'default', variables('deploymentStorageContainerName'))]",
+      "properties": {
+        "publicAccess": "None"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices',  parameters('AzureStorageAccountName'), 'default')]"
       ]
     },
     {
