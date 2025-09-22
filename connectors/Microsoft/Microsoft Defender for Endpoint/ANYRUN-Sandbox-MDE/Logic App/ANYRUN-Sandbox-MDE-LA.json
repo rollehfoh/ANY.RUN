@@ -340,7 +340,7 @@
                                                             }
                                                         },
                                                         "function": {
-                                                            "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/sites/', variables('connectFunctionAppName'), '/functions/AnyRunDefender')]"
+                                                            "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/sites/', variables('connectFunctionAppName'), '/functions/ANYRUN-Sandbox-MDE-FA')]"
                                                         }
                                                     }
                                                 }
@@ -377,7 +377,7 @@
                                                                         }
                                                                     },
                                                                     "function": {
-                                                                        "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/sites/', variables('connectFunctionAppName'), '/functions/AnyRunDefender')]"
+                                                                        "id": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Web/sites/', variables('connectFunctionAppName'), '/functions/ANYRUN-Sandbox-MDE-FA')]"
                                                                     }
                                                                 }
                                                             }
