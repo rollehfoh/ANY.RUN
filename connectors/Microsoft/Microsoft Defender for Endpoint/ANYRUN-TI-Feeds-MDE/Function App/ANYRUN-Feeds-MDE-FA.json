@@ -34,7 +34,8 @@
       "type": "string",
       "metadata": {
         "description": "Azure Blob Storage Account Name."
-      },
+      }
+    },
     "LogAnalyticsWorkspaceName": {
       "type": "string",
       "metadata": {
