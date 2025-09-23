@@ -138,6 +138,14 @@
         "siteConfig": {
           "appSettings": [
             {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference(resourceId('Microsoft.insights/components', parameters('functionAppName')), '2020-02-02').InstrumentationKey]"
+            },
+            {
+              "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+              "value": "[reference(resourceId('Microsoft.Insights/components', parameters('functionAppName')), '2020-02-02').ConnectionString]"
+            },
+            {
               "name": "ANYRUN_API_KEY",
               "value": "[parameters('ANYRUN_API_KEY')]"
             },
