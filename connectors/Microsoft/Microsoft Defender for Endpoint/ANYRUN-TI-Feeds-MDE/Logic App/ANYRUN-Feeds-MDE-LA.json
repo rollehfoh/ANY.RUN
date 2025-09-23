@@ -8,14 +8,14 @@
         },
         "intervalRecurrence": {
             "defaultValue": 2,
-            "type": "Integer",
+            "type": "int",
             "metadata": {
                 "description": "Interval of recurrence for the Logic App (in hours)"
             }
         },
         "feedFetchDepth": {
             "defaultValue": 30,
-            "type": "Integer",
+            "type": "int",
             "metadata": {
                 "description": "Depth of the feed to fetch (in days)"
             }
