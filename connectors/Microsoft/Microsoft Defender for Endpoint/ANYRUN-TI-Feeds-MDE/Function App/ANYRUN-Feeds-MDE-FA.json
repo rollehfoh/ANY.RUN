@@ -36,6 +36,12 @@
         "description": "Azure Blob Storage Account Name."
       }
     },
+    "AzureStorageConnectionString": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Azure Blob Storage Account Connection string."
+      }
+    },
     "LogAnalyticsWorkspaceName": {
       "type": "string",
       "metadata": {
@@ -147,6 +153,10 @@
             {
               "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
               "value": "[reference(resourceId('Microsoft.Insights/components', parameters('functionAppName')), '2020-02-02').ConnectionString]"
+            },
+            {
+              "name": "AzureWebJobsStorage",
+              "value": "[parameters('AzureStorageConnectionString')]"
             },
             {
               "name": "ANYRUN_Basic_auth_token",
