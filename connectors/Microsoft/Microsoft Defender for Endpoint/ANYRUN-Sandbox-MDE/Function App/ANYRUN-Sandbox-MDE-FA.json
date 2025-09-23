@@ -59,13 +59,6 @@
       "metadata": {
         "description": "Log Analytics Workspace Name."
       }
-    },
-    "AzureManagementApiVersion": {
-      "type": "string",
-      "defaultValue": "2025-05-01",
-      "metadata": {
-        "description": "Management REST API version."
-      }
     }
   },
   "variables": {
