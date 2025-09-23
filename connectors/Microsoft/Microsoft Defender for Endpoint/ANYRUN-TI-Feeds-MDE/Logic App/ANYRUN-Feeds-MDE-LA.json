@@ -54,7 +54,7 @@
                     "parameters": {
                         "Feed Fetch Depth": {
                             "defaultValue": "[parameters('feedFetchDepth')]",
-                            "type": "String"
+                            "type": "int"
                         },
                         "$connections": {
                             "defaultValue": {},
