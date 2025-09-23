@@ -6,7 +6,7 @@
       "type": "string",
       "defaultValue": "ANYRUN-Feeds-MDE-FA"
     },
-    "ANYRUN_API_KEY": {
+    "anyrunBasicToken": {
       "type": "securestring",
       "metadata": {
         "description": "ANY.RUN Basic Token for authentication."
@@ -148,8 +148,8 @@
               "value": "[reference(resourceId('Microsoft.Insights/components', parameters('functionAppName')), '2020-02-02').ConnectionString]"
             },
             {
-              "name": "ANYRUN_API_KEY",
-              "value": "[parameters('ANYRUN_API_KEY')]"
+              "name": "ANYRUN_Basic_auth_token",
+              "value": "[parameters('anyrunBasicToken')]"
             },
             {
               "name": "AzureClientID",
