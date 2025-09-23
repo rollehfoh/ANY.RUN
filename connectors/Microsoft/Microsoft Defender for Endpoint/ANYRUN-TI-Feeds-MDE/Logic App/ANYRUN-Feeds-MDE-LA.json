@@ -87,7 +87,7 @@
                                     {
                                         "name": "feed_fetch_depth",
                                         "type": "integer",
-                                        "value": "[parameters('Feed Fetch Depth')]"
+                                        "value": "@{parameters('Feed Fetch Depth')}"
                                     }
                                 ]
                             }
