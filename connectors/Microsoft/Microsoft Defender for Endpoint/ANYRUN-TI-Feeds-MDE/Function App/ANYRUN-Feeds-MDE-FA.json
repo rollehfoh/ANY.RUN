@@ -211,7 +211,7 @@
         "WaitSection"
       ],
       "properties": {
-        "packageUri": "https://github.com/rollehfoh/ANY.RUN/raw/refs/heads/main/connectors/Microsoft/Microsoft%20Defender%20for%20Endpoint/ANYRUN-TI-Feeds-MDE/Function%20App/ANYRUN-Feeds-MDE-FA.zip",
+        "packageUri": "https://github.com/rollehfoh/ANY.RUN/raw/refs/heads/main/connectors/Microsoft/Microsoft%20Defender%20for%20Endpoint/ANYRUN-TI-Feeds-MDE/Function%20App/ANYRUN-TI-Feeds-MDE.zip",
         "remoteBuild": true
       }
     },
