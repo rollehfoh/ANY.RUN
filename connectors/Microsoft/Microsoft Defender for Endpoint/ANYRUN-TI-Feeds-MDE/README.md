@@ -109,6 +109,7 @@ Integrate TI Feeds with MDE for an easy access to all the benefits it brings:
 | azureClientSecret               | Client Secret for authentication.                                           |
 | anyrunBasicAuthToken            | Your ANY.RUN token to access TI Feeds data.                                 |
 | azureStorageAccountName         | Name of your Storage Account.                                               |
+| logAnalyticsWorkspaceName       | Log Analytics Workspace Name.                                               |
 
 
 ### Deploy Azure Logic App
