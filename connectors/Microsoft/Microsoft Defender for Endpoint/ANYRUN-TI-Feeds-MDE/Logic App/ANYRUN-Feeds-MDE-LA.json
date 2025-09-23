@@ -29,7 +29,7 @@
         }
     },
     "variables": {
-        "connectFunctionAppName": "[toLower(parameters('functionAppName'))"
+        "connectFunctionAppName": "[toLower(parameters('functionAppName'))]"
     },
     "resources": [
         {
