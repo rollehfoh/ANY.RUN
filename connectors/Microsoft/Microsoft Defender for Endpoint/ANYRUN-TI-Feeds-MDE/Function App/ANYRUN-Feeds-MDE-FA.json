@@ -4,15 +4,12 @@
   "parameters": {
     "functionAppName": {
       "type": "string",
-      "defaultValue": "ANYRUN-Feeds-MDE-FA",
-      "metadata": {
-        "description": ""
-      }
+      "defaultValue": "ANYRUN-Feeds-MDE-FA"
     },
     "ANYRUN_API_KEY": {
-      "type": "string",
+      "type": "securestring",
       "metadata": {
-        "description": ""
+        "description": "ANY.RUN Basic Token for authentication."
       }
     },
     "AzureClientID": {
@@ -41,7 +38,7 @@
     }
   },
   "variables": {
-    "deploymentStorageContainerName": "anyrundeploymentcontainer",
+    "deploymentStorageContainerName": "anyrunfeedsdeploymentcontainer",
     "storageRoleDefinitionId": "b7e6dc6d-f1e8-4753-8033-0f276bb0955b"
   },
   "resources": [
