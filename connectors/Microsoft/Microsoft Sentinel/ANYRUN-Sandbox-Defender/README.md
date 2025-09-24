@@ -114,11 +114,7 @@ ANY.RUN is an interactive online malware analysis service for dynamic and static
 
 The main setup and customization of the Logic App is available through the graphical editor (**Development tools** > **Logic app designer**) or the code editor (**Development tools** > **Logic app code view**).
 
-- The analysis parameters in ANY.RUN Sandbox are defined in the actions of the deployed Logic App:
-  - **HTTP-RunNewURLAnalysis**
-  - **HTTP - Submit File to ANY.RUN Sandbox Windows**
-  - **HTTP - Submit File to ANY.RUN Sandbox Ubuntu**
-  - **HTTP - Submit File to ANY.RUN Sandbox Debian**
+- The analysis parameters in ANY.RUN Sandbox are defined in the actions of the deployed Logic App.
 
 - For URL analysis - `HTTP-RunNewURLAnalysis`
 
