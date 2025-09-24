@@ -200,7 +200,11 @@ Since the connectors use various resources available in Azure, the created appli
 
 ![sa_container_create](images/017.png)
 
-### Deployment
+## Deployment
+
+### Deploy Azure Function App
+
+  > **Note:** This section is only required for workflows with file analysis (e.g. ANYRUN-Sandbox-File, ANYRUN-Sandbox-Defender).
 
 - Click below to deploy Azure Function App with **Flex Consumption plan**
  
