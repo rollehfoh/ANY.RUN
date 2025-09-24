@@ -104,10 +104,10 @@ Connect TI Feeds with MDE for an easy access to all the benefits it brings:
 | Parameter Name                  | Description                                                                 |
 |---------------------------------|-----------------------------------------------------------------------------|
 | functionAppName                 | Function name.                                                              |
-| azureTenantId                   | Tenant ID for authentication in connections.                                |
+| anyrunBasicToken                | Your ANY.RUN token to access TI Feeds data.                                 |
 | azureClientId                   | Client ID for authentication (ID of the App Registration created before).   |
 | azureClientSecret               | Client Secret for authentication.                                           |
-| anyrunBasicAuthToken            | Your ANY.RUN token to access TI Feeds data.                                 |
+| azureTenantId                   | Tenant ID for authentication in connections.                                |
 | azureStorageAccountName         | Azure Blob Storage Account Name.                                            |
 | azureStorageConnectionString    | Azure Blob Storage Account Connection string.                               |
 | logAnalyticsWorkspaceName       | Log Analytics Workspace Name.                                               |
