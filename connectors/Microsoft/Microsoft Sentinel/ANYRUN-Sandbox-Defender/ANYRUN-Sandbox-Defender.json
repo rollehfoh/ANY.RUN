@@ -5847,7 +5847,7 @@
                                     {
                                         "name": "opt_timeout",
                                         "type": "integer",
-                                        "value": 60
+                                        "value": 240
                                     },
                                     {
                                         "name": "opt_network_connect",
