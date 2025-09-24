@@ -34,20 +34,23 @@ After the analysis is completed in the ANY.RUN Sandbox, its most significant res
 
 - Enter the parameters required for deploying the Logic App.
 
-![logic_app_deployment](images/001.png)
+![logic_app_deployment](images/010.png)
 
 - Description of the required parameters:
 
-| Parameter Name              | Description                                                                 |
-|-----------------------------|-----------------------------------------------------------------------------|
-| logicAppName                | Workflow name.                                                              |
-| azureTenantId               | Azure Tenant ID for authentication in connections.                          |
-| azureClientId               | Client ID for authentication (ID of the App Registration created before).   |
-| azureClientSecret           | Client Secret for authentication.                                           |
-| keyVaultName                | Key Vault name.                                                             |
-| keyVaultUri                 | Key Vault URI (copy Vault URI from your Key Vault overview).                |
-| azureBlobStorageAccountName | Azure Blob Storage Account Name.                                            |
-| azureBlobStorageContainerName | Azure Blob Storage Container Name.                                        |
+| Parameter Name                   | Description                                                                 |
+|----------------------------------|-----------------------------------------------------------------------------|
+| logicAppName                     | Workflow Name.                                                              |
+| azureTenantId                    | Azure Tenant ID for authentication.                                         |
+| azureClientId                    | Azure Client ID for authentication.                                         |
+| azureClientSecret                | Azure Client Secret for authentication.                                     |
+| keyVaultName                     | Key Vault name.                                                             |
+| keyVaultUri                      | Key Vault URI.                                                              |
+| azureBlobStorageAccountName      | Azure Blob Storage Account Name.                                            |
+| azureBlobStorageConnectionString | Azure Blob Storage Connection String.                                       |
+| azureBlobStorageContainerName    | Azure Blob Storage Container Name.                                          |
+| logAnalyticsWorkspaceName        | Log Analytics Workspace Name.                                               |
+| functionAppName                  | Name of the Function App to call (deployed before).                         |
 
 ## Microsoft Defender for Endpoint configuration and additional script
 
