@@ -97,7 +97,7 @@ Connect TI Feeds with MDE for an easy access to all the benefits it brings:
 
 - Enter the parameters required for deploying the Logic App and click **Review + create**.
 
-![function_app_deployment](images/014.png)
+![function_app_deployment](images/015.png)
 
 - Description of the required parameters:
 
