@@ -134,7 +134,7 @@ This connector empowers SOC teams with deeper insights into potential threats, a
 | AzureStorageConnectionString | Azure Blob Storage Account Connection string.                               |
 | AzureBlobContainerName       | Azure Blob Storage Container Name.                                          |
 | ANYRUN_API_KEY               | API Key of your ANY.RUN Account.                                            |
-| AzureManagementApiVersion    | Management REST API version.                                                |
+| LogAnalyticsWorkspaceName    | Log Analytics Workspace Name.                                               |
 
 ### Deploy Azure Logic App
 
