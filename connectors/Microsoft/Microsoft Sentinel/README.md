@@ -222,6 +222,8 @@ Since the connectors use various resources available in Azure, the created appli
 | AzureStorageAccountName      | Azure Blob Storage Account Name.                                            |
 | AzureStorageConnectionString | Azure Blob Storage Account Connection string.                               |
 
+### Deploy Azure Logic Apps App
+
 - After completing the preliminary settings above, you can proceed to deploy the Azure Logic Apps necessary for integrating Microsoft Sentinel and ANY.RUN Sandbox:
   - [ANYRUN-Sandbox-URL](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/Microsoft%20Sentinel/ANYRUN-Sandbox-URL)
   - [ANYRUN-Sandbox-File](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/Microsoft%20Sentinel/ANYRUN-Sandbox-File)
