@@ -10,15 +10,15 @@ ______________________________________________________________________
 
 ## Overview
 
-This connector integrates Microsoft Defender for Endpoint (MDE) with the ANY.RUN Sandbox to enrich MDE alerts through automated malware analysis. It triggers automatically upon the registration of a new alert in MDE, extracting and analyzing entities such as URLs or files associated with the alert.
+This connector integrates Microsoft Defender for Endpoint (MDE) with the[ANY.RUN Sandbox](https://any.run/features/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=ms_defender_tifeeds&utm_content=linktosandboxlanding) to enrich MDE alerts through automated malware analysis. It triggers automatically upon the registration of a new alert in MDE, extracting and analyzing entities such as URLs or files associated with the alert.
 
-The enrichment process adds valuable context directly to the alert: comments include the ANY.RUN verdict, threat score, a link to the detailed analysis report, and any Indicators of Compromise (IoCs) discovered during the sandbox detonation. Extracted IoCs are also imported into MDE's local Threat Intelligence lists for enhanced detection and response.
+The enrichment process adds valuable context directly to the alert: comments include the ANY.RUN verdict, threat score, a link to the detailed analysis report, and any Indicators of Compromise (IOCs) discovered during the sandbox detonation. Extracted IoCs are also imported into MDE's local Threat Intelligence lists for enhanced detection and response.
 
-This integration empowers SOC teams with deeper insights into potential threats, accelerating triage, reducing false positives, and enabling proactive hunting — all while leveraging ANY.RUN's interactive sandbox capabilities for real-time behavioral analysis.
+This connector empowers SOC teams with deeper insights into potential threats, accelerating triage, reducing false positives, and enabling proactive hunting — all while leveraging ANY.RUN's interactive sandbox capabilities for real-time behavioral analysis.
 
 ## Requirements
 - Microsoft Defender for Endpoint
-- ANY.RUN API Key
+- ANY.RUN API Key. To obtain it, please contact your [ANY.RUN account manager](https://app.any.run/contact-us/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=ms_defender_sandbox&utm_content=linktocontactus) directly or fill out [the request form](https://any.run/demo/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=ms_defender_sandbox&utm_content=linktodemo).
 - Microsoft Azure resources:
   - Logic App with Flex Consumption plan
   - Function App Flex Consumption plan
@@ -105,7 +105,7 @@ This integration empowers SOC teams with deeper insights into potential threats,
 
 ![sa_container_create](images/017.png)
 
-- Go to **Security + networking** > **Access keys**, copy and save **Key** and **Connection string**. This values are required for deploying the connector later.
+- Go to **Security + networking** > **Access keys**, copy and save **Key** and **Connection string**. These values are required for deploying the connector later.
 
 ![sa_key](images/013.png)
  
@@ -177,7 +177,7 @@ This integration empowers SOC teams with deeper insights into potential threats,
 
 ## Logic App Configuration (Optional)
 
-### Customization of Analysis Parameters in ANY.RUN Sandbox
+### Customization of Analysis Parameters in the ANY.RUN Sandbox
 
 - The parameters for launching URL or file analysis in the ANY.RUN Sandbox are defined in the deployed Logic App.
 
@@ -267,7 +267,7 @@ Since the trigger in the Logic App for initiating the connector's work is the ap
 
 2. Alert Category
 
-   - You can enrich with the ANY.RUN Sandbox only alerts of the category you need, for example **Malware**.
+   - With the ANY.RUN Sandbox, you can enrich only alerts of the category you need, for example **Malware**.
 
    - In the created condition, in the Choose a value field, type `/` and select **Insert dynamic content**.
   
