@@ -6,7 +6,7 @@
 
 ______________________________________________________________________
 
-# Microsoft Defender for Endpoint Connector for ANY.RUN Threat Inteligence Feeds
+# Microsoft Defender for Endpoint Connector for ANY.RUN’s Threat Intelligence Feeds 
 
 ## Overview
 
@@ -16,21 +16,21 @@ The IOCs are extracted from real-time analyses done by experts from 15,000 compa
 
 ### Connector’s functionality 
 
-The connector for Threat Intelligence Feeds provides Microsoft Defenderfor Endpoint (MDE) users with simple, automated access to uniquely sourced and accurate indicators of compromise. 
+The connector for Threat Intelligence Feeds provides Microsoft Defender for Endpoint (MDE) users with simple, automated access to uniquely sourced and accurate indicators of compromise. 
 
 - Get access to pre-processed IOCs with minimum false positives
 - Detect threats early and prevent attacks using high-quality indicators 
 
 ### Key SOC benefits 
 
-Integrate TI Feeds with MDE for an easy access to all the benefits it brings:  
+Connect TI Feeds with MDE for an easy access to all the benefits it brings:  
 
 - Expanded Coverage: ANY.RUN’s exclusive IOCs come from Memory Dumps, Suricata IDS, in-browser data, and internal threat categorization systems, increasing the chance of detection of the most evasive threats.
 - Reduced Workload: The indicators are pre-processed to avoid false positives and ready to be used for malware analysis or incident investigation.
 
 ## Requirements
 - Microsoft Defender for Endpoint
-- [ANY.RUN TI Feeds subscription](https://intelligence.any.run/plans) and Basic Authentication token (To obtain it, please contact your ANY.RUN account manager directly or [fill out the request form](https://app.any.run/contact-us))
+- [ANY.RUN TI Feeds subscription](https://intelligence.any.run/plans/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=ms_defender_tifeeds&utm_content=linktotiplans) and Basic Authentication token. To obtain it, please contact your ANY.RUN account manager directly or [fill out the request form](https://any.run/threat-intelligence-feeds/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=ms_defender_tifeeds&utm_content=linktotifeedslanding#contact-sales). 
 - Microsoft Azure resources:
   - Logic App with Flex Consumption plan
   - Function App Flex Consumption plan
@@ -130,7 +130,7 @@ Integrate TI Feeds with MDE for an easy access to all the benefits it brings:
 | logicAppName                    | Workflow name.                                                              |
 | intervalRecurrence              | Interval of recurrence for the logic app (in hours).                        |
 | feedFetchDepth                  | Depth of the feed to fetch (in days).                                       |
-| functionAppName                 | Name of the Function App deplyed before.                                    |
+| functionAppName                 | Name of the Function App deployed before.                                   |
 
 ## Logic App Configuration (Optional)
 
