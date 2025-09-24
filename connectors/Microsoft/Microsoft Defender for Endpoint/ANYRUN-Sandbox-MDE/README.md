@@ -119,7 +119,7 @@ This connector empowers SOC teams with deeper insights into potential threats, a
 
 - Enter the parameters required for deploying the Function App and click **Review + create**.
 
-![function_app_deployment](images/006.png)
+![function_app_deployment](images/070.png)
 
 - Description of the required parameters:
 
