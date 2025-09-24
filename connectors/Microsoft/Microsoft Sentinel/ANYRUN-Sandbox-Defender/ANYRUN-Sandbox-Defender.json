@@ -5907,7 +5907,7 @@
                                     {
                                         "name": "user_tags",
                                         "type": "string",
-                                        "value": "mde-alert"
+                                        "value": "sentinel-inc"
                                     }
                                 ]
                             }
