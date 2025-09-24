@@ -6,29 +6,27 @@
 
 ______________________________________________________________________
 
-# Microsoft Defender for Endpoint Connector for ANY.RUN Malware Sandbox
+# ANY.RUN Connectors for Microsoft Defender for Endpoint
 
-This repository provides an integration of Microsoft Defender for Endpoint (MDE) with [ANY.RUN](https://any.run/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=opencti_main&utm_content=linktolanding)'s services:  
+This repository provides connectors that enable interoperability between Microsoft Defender for Endpoint (MDE) and [ANY.RUN](https://any.run/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=ms_defender_main&utm_content=linktolanding)'s services:  
 
-* [Interactive Sandbox](https://any.run/features/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=opencti_main&utm_content=linktosandboxlanding)
-* [Threat Intelligence Feeds](https://any.run/threat-intelligence-feeds/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=opencti_main&utm_term=310725&utm_content=linktofeedslanding) 
+* [Interactive Sandbox](https://any.run/features/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=ms_defender_main&utm_content=linktosandboxlanding)
+* [Threat Intelligence Feeds](https://any.run/threat-intelligence-feeds/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=ms_defender_main&utm_term=310725&utm_content=linktofeedslanding) 
 
 The connector automates threat analysis from MDE alerts by retrieving up-to-date data from sandbox detonations of associated objects, enriching alerts with relevant intelligence to optimize investigations.
 
-## Connector capabilities
+## Malware Sandbox Connector
 
-### Malware Sandbox
-
-The connector triggers automatically on new MDE alerts, extracting entities like URLs or files for submission to the ANY.RUN Interactive Sandbox. It retrieves comprehensive reports—including verdict, threat score, malware tags—adding them as comments to the alert. This provides SOC teams with real-time insights into evasive threats, enabling faster triage, reduced false positives, and proactive response to minimize remedation time.
+The connector automatically sends MDE alerts’ suspicious files and URLs to ANY.RUN’s Interactive Sandbox for analysis and attaches the results (verdict, risk score, malware details) to the alert as comments. This helps SOC teams gain real-time insights into evasive threats, enabling faster triage, reduced false positives, and proactive response to minimize remediation time.
 
 [Open connector page](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/Microsoft%20Defender%20for%20Endpoint/ANYRUN-Sandbox-MDE)
 
-### Threat Intelligence Feeds
+## Threat Intelligence Feeds Connector
 
-The connector imports high-fidelity Indicators of Compromise (IoCs) such as IPs, domains, URLs, and hashes from ANY.RUN's real-time sandbox detonations directly into MDE's local Threat Intelligence lists. Continuously updated with indicators from new sandbox analyses of active threats in the wild, this feed expands coverage and empowers SOC teams to detect emerging attacks earlier, update defenses proactively, and correlate alerts with contextual data for more effective hunting and remediation.
+The connector pulls fresh, high-fidelity threat indicators (IPs, domains, URLs, and file hashes), extracted from real-time detonations of the latest threats inside ANY.RUN’s Interactive Sandbox, and feeds them straight into MDE’s threat lists. Updated in real time with threat data from over 15,000 SOCs around the world, TI Feeds enable teams to spot new threats sooner, block them faster, and connect the dots between alerts for smarter investigations and quicker response. 
 
 [Open connector page](https://github.com/rollehfoh/ANY.RUN/tree/main/connectors/Microsoft/Microsoft%20Defender%20for%20Endpoint/ANYRUN-TI-Feeds-MDE)
 
 ### Request support or access to ANY.RUN’s products 
 
-Feel free to reach out to us for help with integration, a quote, or demo via the [contact us form](https://app.any.run/contact-us/). 
+Feel free to reach out to us for help with integration, a quote, or demo via the [contact us form](https://app.any.run/contact-us/?utm_source=anyrungithub&utm_medium=documentation&utm_campaign=ms_defender_main&utm_content=linktocontactus). 
