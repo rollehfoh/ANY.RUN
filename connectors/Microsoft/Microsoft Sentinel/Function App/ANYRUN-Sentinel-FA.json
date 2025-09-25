@@ -17,6 +17,12 @@
             "metadata": {
                 "description": "Azure Blob Storage Connection String."
             }
+        },
+        "LogAnalyticsWorkspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Log Analytics Workspace Name."
+            }
         }
     },
     "variables": {
