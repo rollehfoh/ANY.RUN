@@ -221,6 +221,7 @@ Since the connectors use various resources available in Azure, the created appli
 | functionAppName              | Workflow name.                                                              |
 | AzureStorageAccountName      | Azure Blob Storage Account Name.                                            |
 | AzureStorageConnectionString | Azure Blob Storage Account Connection string.                               |
+| LogAnalyticsWorkspaceName    | Log Analytics Workspace Name.                                               |
 
 ### Deploy Azure Logic Apps App
 
