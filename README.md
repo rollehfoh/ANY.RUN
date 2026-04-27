@@ -368,7 +368,7 @@ The connector consists of two Azure Logic Apps:
   * [ANYRUN-Sandbox-File-Ubuntu](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Ubuntu)
   * [ANYRUN-Sandbox-File-Debian](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Debian)
 * **Child workflow** (uniform for all operating systems):
-  * [ANYRUN-Submit-File-to-Blob](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Common)
+  * [ANYRUN-Submit-File-to-Blob](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Submit-File-to-Blob)
 
 ###### Logic Apps description
 
