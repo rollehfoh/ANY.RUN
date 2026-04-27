@@ -255,31 +255,29 @@ This playbook makes the incident enrichment process in Microsoft Sentinel even m
 
 #### 1. Analyze URLs from Microsoft Sentinel Incidents via ANY.RUN Sandbox (Sandbox-URL)
 
-# Microsoft Sentinel Connector for automated URL analysis via ANY.RUN's Malware Sandbox
+##### Microsoft Sentinel Connector for automated URL analysis via ANY.RUN's Malware Sandbox
 
-## Overview
+###### Overview
 
 This playbook extracts URLs from incidents and submits them for analysis in ANY.RUN Sandbox to enrich the incident with a verdict using a single Azure Logic App.
 
-## Requirements:
+###### Requirements
 
 * ANY.RUN API-Key
 * Microsoft Sentinel
 * Azure Logic App (Flex Consumption plan)
 
-## Deployment
+###### Deployment
 
-### Import Azure Logic App template
-
-* Click below to deploy Azure Logic App with **Flex Consumption plan**
+Click below to deploy Azure Logic App with **Flex Consumption plan**
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fmaster%2FSolutions%2FANY.RUN%2FPlaybooks%2FSandbox-URL%2Fazuredeploy.json)
 
-* Enter the parameters required for deploying the Logic App and click **Review + create** .
+Enter the parameters required for deploying the Logic App and click **Review + create**.
 
 ![logic_app_deployment](Images/URL_004.png)
 
-* Description of the required parameters:
+Description of the required parameters:
 
 | Parameter Name | Description |
 | --- | --- |
@@ -290,28 +288,26 @@ This playbook extracts URLs from incidents and submits them for analysis in ANY.
 | keyVaultName | Key Vault name. |
 | keyVaultUri | Key Vault URI (copy Vault URI from your Key Vault overview). |
 
-## Logic App configuration (Optional)
+###### Logic App configuration (Optional)
 
-### ANY.RUN Sandbox analysis parameters
+###### ANY.RUN Sandbox analysis parameters
 
 ANY.RUN is an interactive online malware analysis service for dynamic and static research of most types of threats using a customizable VM environment. We offer a connector for Microsoft Sentinel, which you can independently adapt to your infrastructure and needs in just a few clicks. You can easily change the parameters used for analyzing the required URL.
 
-> Note:
-> You can learn more about the capabilities of ANY.RUN Sandbox by reviewing our
-> API documentation
-> .
+> Note:  
+> You can learn more about the capabilities of ANY.RUN Sandbox by reviewing our [API documentation](https://any.run/api/docs).
 
-The main setup and customization of the Logic App is available through the graphical editor ( **Development tools** > **Logic app designer** ) or the code editor ( **Development tools** > **Logic app code view** ).
+The main setup and customization of the Logic App is available through the graphical editor (**Development tools** > **Logic app designer**) or the code editor (**Development tools** > **Logic app code view**).
 
-* The URL analysis parameters in ANY.RUN Sandbox are defined in the **HTTP-RunNewURLAnalysis** action.
+The URL analysis parameters in ANY.RUN Sandbox are defined in the **HTTP-RunNewURLAnalysis** action.
 
 ![analysis_action](Images/URL_001.png)
 
-* Analysis options are specified in the HTTP request body.
+Analysis options are specified in the HTTP request body.
 
 ![analysis_parameters](Images/URL_002.png)
 
-* Description of the default parameters:
+Description of the default parameters:
 
 | Parameter Name | Description |
 | --- | --- |
@@ -324,34 +320,28 @@ The main setup and customization of the Logic App is available through the graph
 | opt_automated_interactivity | Controls the automated interactivity (ML) option (changing this is not recommended). |
 | auto_confirm_uac | Enables automatic confirmation of Windows UAC requests (changing this is not recommended). |
 
-> Note:
-> You can add more parameters for analysis. To see the full list of available parameters and their values, visit our
-> API documentation
-> .
+> Note:  
+> You can add more parameters for analysis. To see the full list of available parameters and their values, visit our [API documentation](https://any.run/api/docs).
 
-### Simultaneous Analysis of Objects in ANY.RUN Sandbox
+###### Simultaneous Analysis of Objects in ANY.RUN Sandbox
 
 ANY.RUN Sandbox allows users to perform multiple analyses simultaneously (availability and capability depend on your pricing plan). By default, if a Microsoft Sentinel incident contains multiple URLs, each analysis will run sequentially (a new URL analysis won't start until the previous one is finished).
 
-* To increase the speed of incident enrichment, you can analyze objects simultaneously. To do this, go to For each - URL loop > Settings and increase the Degree of parallelism value. Note that you should set a value that does not exceed the number of parallel analyses available at your pricing plan.
+To increase the speed of incident enrichment, you can analyze objects simultaneously. To do this, go to `For each - URL` loop > `Settings` and increase the `Degree of parallelism` value. Note that you should set a value that does not exceed the number of parallel analyses available at your pricing plan.
 
 ![parallel_analysis](Images/URL_003.png)
 
-> Note
-> : To upgrade your pricing plan capabilities,
-> contact us
-> .
+> Note:  
+> To upgrade your pricing plan capabilities, [contact us](https://app.any.run/contact-us/).
 
 #### 2. Analyze Files from Microsoft Sentinel Incidents via ANY.RUN Sandbox (Sandbox-File)
 
-# Microsoft Sentinel Connector for automated File analysis via ANY.RUN's Malware Sandbox
+##### Microsoft Sentinel Connector for automated File analysis via ANY.RUN's Malware Sandbox
 
-## Overview
+###### Overview
 
-> Note:
-> If you are using the Microsoft Sentinel & Microsoft Defender for Endpoint bundle in your infrastructure, we strongly recommend using the
-> corresponding connector
-> for this case.
+> Note:  
+> If you are using the Microsoft Sentinel & Microsoft Defender for Endpoint bundle in your infrastructure, we strongly recommend using the [corresponding connector](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Defender) for this case.
 
 This playbook allows you to send files from incidents for analysis in the ANY.RUN Sandbox. It uploads the file from the endpoint to Azure Blob Storage and then forwards it to ANY.RUN Sandbox using Azure Logic App and Azure Function App.
 
@@ -360,59 +350,51 @@ Templates are provided for endpoints running the following operating systems:
 * Windows
 * UNIX (Ubuntu, Debian)
 
-## Requirements:
+###### Requirements
 
 * ANY.RUN API-Key
 * Microsoft Sentinel
 * Azure Logic App (Flex Consumption plan)
 * Azure Function App (Flex Consumption plan)
 * Azure Blob Storage
-* Microsoft Defender for Endpoint ( **Optional** )
+* Microsoft Defender for Endpoint (**Optional**)
 
-## Solution overview
+###### Solution overview
 
 The connector consists of two Azure Logic Apps:
 
-* Parent workflow (varies depending on the host operating system):
-* [ANYRUN-Sandbox-File-Windows](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Windows)
-* [ANYRUN-Sandbox-File-Ubuntu](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Ubuntu)
-* [ANYRUN-Sandbox-File-Debian](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Debian)
-* Child workflow (uniform for all operating systems):
-* [ANYRUN-Submit-File-to-Blob](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Common)
+* **Parent workflow** (varies depending on the host operating system):
+  * [ANYRUN-Sandbox-File-Windows](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Windows)
+  * [ANYRUN-Sandbox-File-Ubuntu](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Ubuntu)
+  * [ANYRUN-Sandbox-File-Debian](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Debian)
+* **Child workflow** (uniform for all operating systems):
+  * [ANYRUN-Submit-File-to-Blob](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Common)
 
-## Logic Apps description
+###### Logic Apps description
 
-### Parent Workflow
-
+**Parent Workflow**  
 This Logic App serves as the main orchestration workflow for the connector. It is triggered by a Microsoft Sentinel incident webhook and processes file entities associated with the incident. The workflow submits files for analysis in ANY.RUN Sandbox obtained from Azure Blob Storage.
 
-### Child Workflow
-
+**Child Workflow**  
 This Logic App is a child workflow invoked by the parent to handle file upload from hosts to Azure Blob Storage using Microsoft Defender for Endpoint. It is triggered by an HTTP request from the parent and parses input data. For each file, it initiates MDE live response to execute a script on the host for upload file to Azure Blob Storage.
 
-> Note:
+> Note:  
 > The child playbook in this connector is designed to extract files from the endpoint and upload them to Azure Blob Storage using Microsoft Defender for Endpoint (MDE). If you use a different solution instead of MDE, you can replace this playbook with one adapted for your infrastructure.
-> If you are still using MDE to protect your devices, we recommend using the template of our connector
-> Microsoft Sentinel & Microsoft Defender for Endpoint
-> .
 
-## Deployment
+###### Deployment
 
-### Deploy Azure Logic App template
-
-#### Child Logic App
-
+**Child Logic App**  
 First, you need to deploy the child Logic App, as its parameters are required for configuring the parent one.
 
-* Click below to deploy Child Azure Logic App with **Flex Consumption plan**
+Click below to deploy Child Azure Logic App with **Flex Consumption plan**
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fmaster%2FSolutions%2FANY.RUN%2FPlaybooks%2FSandbox-File-Common%2Fazuredeploy.json)
 
 ![child_logic_app_deployment](Images/File_004.png)
 
-* Enter the parameters required for deploying the Logic App and click **Review + create** .
+Enter the parameters required for deploying the Logic App and click **Review + create**.
 
-* Description of the required parameters:
+Description of the required parameters:
 
 | Parameter Name | Description |
 | --- | --- |
@@ -422,25 +404,23 @@ First, you need to deploy the child Logic App, as its parameters are required fo
 | azureClientSecret | Client Secret for authentication. |
 | logAnalyticsWorkspaceName | Log Analytics Workspace Name. |
 
-#### Parent Logic App
-
-> Note:
-> You can deploy all the proposed parent Logic Apps or select specific ones depending on the operating system installed on your endpoints. The parent Logic Apps operate independently of each other.
+**Parent Logic App**  
+You can deploy all the proposed parent Logic Apps or select specific ones depending on the operating system installed on your endpoints. The parent Logic Apps operate independently of each other.
 
 Click below to deploy Parent Azure Logic App with **Flex Consumption plan**
 
-* ANYRUN-Sandbox-File-Windows 
+* ANYRUN-Sandbox-File-Windows  
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fmaster%2FSolutions%2FANY.RUN%2FPlaybooks%2FSandbox-File-Windows%2Fazuredeploy.json)
-* ANYRUN-Sandbox-File-Ubuntu 
+* ANYRUN-Sandbox-File-Ubuntu  
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fmaster%2FSolutions%2FANY.RUN%2FPlaybooks%2FSandbox-File-Ubuntu%2Fazuredeploy.json)
-* ANYRUN-Sandbox-File-Debian 
+* ANYRUN-Sandbox-File-Debian  
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fmaster%2FSolutions%2FANY.RUN%2FPlaybooks%2FSandbox-File-Debian%2Fazuredeploy.json)
 
 ![parent_logic_app_deployment](Images/File_015.png)
 
-* Enter the parameters required for deploying the Logic App and click **Review + create** .
+Enter the parameters required for deploying the Logic App and click **Review + create**.
 
-* Description of the required parameters:
+Description of the required parameters:
 
 | Parameter Name | Description |
 | --- | --- |
@@ -456,45 +436,42 @@ Click below to deploy Parent Azure Logic App with **Flex Consumption plan**
 | childWorkflowName | Name of the child Logic App (deployed before). |
 | functionAppName | Name of the Function App to call (deployed before). |
 
-## Storage Account Configuration
+###### Storage Account Configuration
 
 To generate an SAS token for Azure Blob Storage, you need to assign the appropriate role directly to the Logic App.
 
-Open your Storage Account.
-Navigate to **Access Control (IAM)** and click Add.
+Open your Storage Account.  
+Navigate to **Access Control (IAM)** and click **Add**.
 
 ![storage_child_logic_app](Images/File_006.png)
 
-Specify the child Logic App ANYRUN-Submit-File-to-Blob .
+Specify the child Logic App `ANYRUN-Submit-File-to-Blob`.  
 Select the following role:
 
 | Name | Description |
 | --- | --- |
 | Storage Account Contributor | Lets you manage storage accounts, including accessing storage account keys which provide full access to storage account data. |
 
-## Logic App configuration (Optional)
+###### Logic App configuration (Optional)
 
-### ANY.RUN Sandbox analysis parameters
+###### ANY.RUN Sandbox analysis parameters
 
 ANY.RUN is an interactive online malware analysis service for dynamic and static research of most types of threats using a customizable VM environment. We offer a connector for Microsoft Sentinel, which you can independently adapt to your infrastructure and needs in just a few clicks. You can easily change the parameters used for analyzing the required file.
 
-> Note:
-> You can learn more about the capabilities of ANY.RUN Sandbox by reviewing our
-> API documentation
-> .
+> Note:  
+> You can learn more about the capabilities of ANY.RUN Sandbox by reviewing our [API documentation](https://any.run/api/docs).
 
-The main setup and customization of the Logic App is available through the graphical editor ( **Development tools** > **Logic app designer** ) or the code editor ( **Development tools** > **Logic app code view** ).
+The main setup and customization of the Logic App is available through the graphical editor (**Development tools** > **Logic app designer**) or the code editor (**Development tools** > **Logic app code view**).
 
-For File analysis - in the following three actions which are responsible for declaring the parameters:
+For File analysis — in the following three actions which are responsible for declaring the parameters:
 * ANY.RUN general analysis options
 * ANY.RUN Windows analysis options
 * ANY.RUN Linux analysis options
 
-* In the ANY.RUN general analysis options action, you can modify parameters that define general, OS-independent options such as analysis duration, virtual machine network settings, privacy, and more. For example, if you need to **increase the initial analysis time** for a more detailed examination of the object, select the **opt_timeout** variable and set the desired value in seconds, for example 360 .
+In the ANY.RUN general analysis options action, you can modify parameters that define general, OS-independent options such as analysis duration, virtual machine network settings, privacy, and more.  
+In the ANY.RUN Windows analysis options and ANY.RUN Linux analysis options actions, you can modify parameters that affect OS-specific virtual machine settings.
 
-* In the ANY.RUN Windows analysis options and ANY.RUN Linux analysis options actions, you can modify parameters that affect OS-specific virtual machine settings, such as the OS version and configuration, initial object location and launch parameters, and more. For example, if you need to run the analysis on a virtual machine with Windows 11 instead of Windows 10, click on the ANY.RUN Windows analysis options action, select the **windows_env_version** variable, and set the value to 11 .
-
-* Description of the main parameters:
+Description of the main parameters:
 
 | Parameter Name | Description |
 | --- | --- |
@@ -508,31 +485,29 @@ For File analysis - in the following three actions which are responsible for dec
 | run_as_root | Allow the file to run with superuser privileges on Linux. |
 | obj_ext_extension | Specify whether to change the file extension to a valid one. |
 
-### Simultaneous Analysis of Objects in ANY.RUN Sandbox
+###### Simultaneous Analysis of Objects in ANY.RUN Sandbox
 
-ANY.RUN Sandbox allows users to perform multiple analyses simultaneously (availability and capability depend on your pricing plan). By default, if a Microsoft Sentinel incident contains multiple files, each analysis will run sequentially (a new file analysis won't start until the previous one is finished).
+ANY.RUN Sandbox allows users to perform multiple analyses simultaneously (availability and capability depend on your pricing plan). By default, if a Microsoft Sentinel incident contains multiple files, each analysis will run sequentially.
 
-* To increase the speed of incident enrichment, you can analyze objects simultaneously. To do this, open For each - detonate files to ANY.RUN Sandbox loop > Settings and increase the Degree of parallelism value. Note that you should set a value that does not exceed the number of parallel analyses available at your pricing plan.
+To increase the speed of incident enrichment, you can analyze objects simultaneously. To do this, open `For each - detonate files to ANY.RUN Sandbox` loop > `Settings` and increase the `Degree of parallelism` value.
 
-> Note
-> : To expand your capabilities by upgrading your pricing plan,
-> contact us
-> .
+> Note:  
+> To expand your capabilities by upgrading your pricing plan, [contact us](https://app.any.run/contact-us/).
 
 #### 3. Analyze All Entities via ANY.RUN Sandbox and Microsoft Defender for Endpoint (Sandbox-File-Defender)
 
-# ANY.RUN Malware Sandbox Integration with Microsoft Sentinel and Defender for Endpoint for automated file and URL analysis
+##### ANY.RUN Malware Sandbox Integration with Microsoft Sentinel and Defender for Endpoint for automated file and URL analysis
 
-## Overview
+###### Overview
 
-This template makes the incident enrichment process in Microsoft Sentinel even more automated if you are also using Microsoft Defender for Endpoint (MDE).
+This template makes the incident enrichment process in Microsoft Sentinel even more automated if you are also using Microsoft Defender for Endpoint (MDE).  
 In this case, the entire automation mechanism can be combined into Azure Logic App and Azure Function App, leveraging MDE's capabilities to extract files from UNIX- or Windows-endpoints using the bash and PowerShell script we offer.
 
 This Logic App allows you to send URLs and files contained in the incident entities for analysis in ANY.RUN Sandbox. The playbook enables initiating Live Response sessions to hosts connected to Microsoft Defender for Endpoint. Within these Live Response sessions, a script is launched that extracts files from the endpoint and sends them for temporary storage to an Azure Blob Storage container. Once the file arrives in Blob Storage, the Logic App retrieves it and forwards it for analysis to ANY.RUN API.
 
 After the analysis is completed in ANY.RUN Sandbox, its key results (verdict, score, and tags) enrich the incident. They help you obtain more detailed information on your sample. Additionally, IOCs discovered during the analysis in ANY.RUN Sandbox will be added to the Sentinel TI Portal.
 
-## Requirements:
+###### Requirements
 
 * ANY.RUN API-Key
 * Microsoft Sentinel
@@ -541,19 +516,17 @@ After the analysis is completed in ANY.RUN Sandbox, its key results (verdict, sc
 * Azure Blob Storage
 * Microsoft Defender for Endpoint
 
-## Deployment
+###### Deployment
 
-### Deploy Azure Logic App template
-
-* Click below to deploy Azure Logic App with **Flex Consumption plan**
+Click below to deploy Azure Logic App with **Flex Consumption plan**
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fmaster%2FSolutions%2FANY.RUN%2FPlaybooks%2FSandbox-File-Defender%2Fazuredeploy.json)
 
 ![logic_app_deployment](Images/Defender_011.png)
 
-* Enter the parameters required for deploying the Logic App.
+Enter the parameters required for deploying the Logic App.
 
-* Description of the required parameters:
+Description of the required parameters:
 
 | Parameter Name | Description |
 | --- | --- |
@@ -569,93 +542,63 @@ After the analysis is completed in ANY.RUN Sandbox, its key results (verdict, sc
 | logAnalyticsWorkspaceName | Log Analytics Workspace Name. |
 | functionAppName | Name of the Function App to call (deployed before). |
 
-## Storage Account Configuration
+###### Storage Account Configuration
 
 To generate an SAS token for Azure Blob Storage, you need to assign the appropriate role directly to the Logic App.
 
-Open your Storage Account.
-Navigate to **Access Control (IAM)** and click Add.
+Open your Storage Account.  
+Navigate to **Access Control (IAM)** and click **Add**.
 
 ![storage_logic_app](Images/Defender_010.png)
 
-Specify the Logic App ANYRUN-Sandbox-Defender .
+Specify the Logic App `ANYRUN-Sandbox-Defender`.  
 Select the following role:
 
 | Name | Description |
 | --- | --- |
 | Storage Account Contributor | Lets you manage storage accounts, including accessing storage account keys which provide full access to storage account data. |
 
-## Microsoft Defender for Endpoint configuration and additional script
+###### Microsoft Defender for Endpoint configuration and additional script
 
-> Note:
-> To allow the connector to extract all files of interest from endpoints (including potentially dangerous ones), we recommend setting
-> Quarantine
-> as the default action for your MDE.
-> !ATTENTION!
-> Be careful when configuring antivirus policies, as this can be potentially dangerous. See:
-> Configure remediation for Microsoft Defender Antivirus detections
-> Settings for Microsoft Defender Antivirus policy in Microsoft Intune for Windows devices
+> Note:  
+> To allow the connector to extract all files of interest from endpoints (including potentially dangerous ones), we recommend setting **Quarantine** as the default action for your MDE.
 
-### Enable Live Response Sessions
-
-Open your [MDE portal](https://security.microsoft.com) .
-Navigate to **System** > **Settings** > **Endpoints** > **General** > **Advanced features** .
-Enable the following settings: **Live Response** , **Live Response for Servers** , and **Live Response unsigned script execution** .
+**Enable Live Response Sessions**  
+Open your [MDE portal](https://security.microsoft.com).  
+Navigate to **System** > **Settings** > **Endpoints** > **General** > **Advanced features**.  
+Enable the following settings: **Live Response**, **Live Response for Servers**, and **Live Response unsigned script execution**.
 
 ![enable_live_response](Images/Defender_002.png)
 
-### Upload Helper Scripts to the Local Library of Your Endpoints
-
-Open your MDE portal .
-Navigate to **Assets** > **Devices** .
-Open the required device.
-Click on ... in the upper right corner and then **Initiate Live Response Session** .
+**Upload Helper Scripts to the Local Library of Your Endpoints**  
+Open your MDE portal.  
+Navigate to **Assets** > **Devices**.  
+Open the required device.  
+Click on `...` in the upper right corner and then **Initiate Live Response Session**.
 
 ![run_live_response](Images/Defender_003.png)
 
-* Click **Upload file to library** .
+Click **Upload file to library**.
 
 ![click_upload_file](Images/Defender_004.png)
 
-* Click **Upload file to library** again, select the script from your file system (after downloading it from our [library](https://github.com/rollehfoh/ANY.RUN/tree/main/scripts) ), or create your own script. After that, click **Submit** .
+Click **Upload file to library** again, select the script from your file system (after downloading it from our [library](https://github.com/rollehfoh/ANY.RUN/tree/main/scripts)), or create your own script. After that, click **Submit**.
 
 ![select_file_to_upload](Images/Defender_005.png)
 
-### Declaring Script Names in the Deployed Logic App (Optional)
+###### Logic App configuration (Optional)
 
-The Logic App we propose dynamically selects the script extension (.sh or .ps1) depending on the endpoint's operating system. If you need to run a script with a different name from the local library, you can change it in the Logic App.
-
-Open the deployed **ANYRUN-Sandbox-Defender** Logic App.
-Navigate to **Development Tools** > **Logic app designer** .
-In the Logic app designer, expand the following action blocks: **For each - Host** > **For each - Find file path on the target host** > **Condition - Check if KQL Result is not empty (True)** > **Condition - Windows Machine** .
-In the expanded condition, select the actions **Set variable - Windows OS Script Name** and **Set variable - UNIX OS Script Name** and change the script name to the one you need. Additionally, you might also need to change the script launch parameters in the actions **Set variable - Windows OS Script Parameters** and **Set variable - UNIX OS Script Parameters** .
-
-## Logic App configuration (Optional)
-
-### ANY.RUN Sandbox analysis parameters
-
-ANY.RUN is an interactive online malware analysis service for dynamic and static research of most types of threats using a customizable VM environment. We offer a connector for Microsoft Sentinel, which you can independently adapt to your infrastructure and needs in just a few clicks. You can easily change the parameters used for analyzing the required file.
-
-> Note:
-> You can learn more about the capabilities of ANY.RUN Sandbox by reviewing our
-> API documentation
-> .
-
-The main setup and customization of the Logic App is available through the graphical editor ( **Development tools** > **Logic app designer** ) or the code editor ( **Development tools** > **Logic app code view** ).
+###### ANY.RUN Sandbox analysis parameters
 
 The analysis parameters in ANY.RUN Sandbox are defined in the actions of the deployed Logic App.
-For URL analysis - HTTP-RunNewURLAnalysis
 
-For File analysis - in the following three actions which are responsible for declaring the parameters:
+For URL analysis — **HTTP-RunNewURLAnalysis**  
+For File analysis — in the following three actions:
 * ANY.RUN general analysis options
 * ANY.RUN Windows analysis options
 * ANY.RUN Linux analysis options
 
-* In the ANY.RUN general analysis options action, you can modify parameters that define general, OS-independent options such as analysis duration, virtual machine network settings, privacy, and more. For example, if you need to **increase the initial analysis time** for a more detailed examination of the object, select the **opt_timeout** variable and set the desired value in seconds, for example 360 .
-
-* In the ANY.RUN Windows analysis options and ANY.RUN Linux analysis options actions, you can modify parameters that affect OS-specific virtual machine settings, such as the OS version and configuration, initial object location and launch parameters, and more. For example, if you need to run the analysis on a virtual machine with Windows 11 instead of Windows 10, click on the ANY.RUN Windows analysis options action, select the **windows_env_version** variable, and set the value to 11 .
-
-* Description of the main parameters:
+Description of the main parameters:
 
 | Parameter Name | Description |
 | --- | --- |
@@ -669,16 +612,14 @@ For File analysis - in the following three actions which are responsible for dec
 | run_as_root | Allow the file to run with superuser privileges on Linux. |
 | obj_ext_extension | Specify whether to change the file extension to a valid one. |
 
-### Simultaneous Analysis of Objects in ANY.RUN Sandbox
+###### Simultaneous Analysis of Objects in ANY.RUN Sandbox
 
-ANY.RUN Sandbox allows users to perform multiple analyses simultaneously (availability and capability depend on your pricing plan). By default, if a Microsoft Sentinel incident contains multiple files, each analysis will run sequentially (a new file analysis won't start until the previous one is finished).
+ANY.RUN Sandbox allows users to perform multiple analyses simultaneously (availability and capability depend on your pricing plan). By default, if a Microsoft Sentinel incident contains multiple files, each analysis will run sequentially.
 
-* To increase the speed of incident enrichment, you can analyze objects simultaneously. To do this, open For each - URLs and For each - detonate files to ANY.RUN Sandbox loop > Settings and increase the Degree of parallelism value. Note that you should set a value that does not exceed the number of parallel analyses available at your pricing plan.
+To increase the speed of incident enrichment, you can analyze objects simultaneously. To do this, open `For each - URLs` and `For each - detonate files to ANY.RUN Sandbox` loop > `Settings` and increase the `Degree of parallelism` value.
 
-> Note
-> : To expand your capabilities by upgrading your pricing plan,
-> contact us
-> .
+> Note:  
+> To expand your capabilities by upgrading your pricing plan, [contact us](https://app.any.run/contact-us/).
 
 ## Request Support or Access to ANY.RUN’s Products
 
