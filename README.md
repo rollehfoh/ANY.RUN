@@ -234,7 +234,7 @@ Since the connectors use various resources available in Azure, the created appli
 
 ### Deploy Azure Function App
 
-> **Note:** This section is only required for workflows with file analysis (e.g. Sandbox-File-*, Sandbox-File-Defender).
+> **Note:** This section is only required for workflows with file analysis (Sandbox-File-*, Sandbox-File-Defender).
 
 - Click below to deploy Azure Function App with **Flex Consumption plan**
 
@@ -255,12 +255,123 @@ Since the connectors use various resources available in Azure, the created appli
 
 ### Deploy Azure Logic Apps App
 
-- After completing the preliminary settings above, you can proceed to deploy the Azure Logic Apps necessary for integrating Microsoft Sentinel and ANY.RUN Sandbox:
-  - [Sandbox-URL](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-URL)
-  - [Sandbox-File-Windows](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Windows)
-  - [Sandbox-File-Ubuntu](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Ubuntu)
-  - [Sandbox-File-Debian](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Debian)
-  - [Sandbox-File-Defender](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/ANY.RUN/Playbooks/Sandbox-File-Defender)
+#### 1. Analyze URLs from Microsoft Sentinel Incidents via ANY.RUN Sandbox (Sandbox-URL)
+
+**Overview**  
+This playbook extracts URLs from incidents and submits them for analysis in ANY.RUN Sandbox to enrich the incident with a verdict using a single Azure Logic App.
+
+**Requirements:**  
+- ANY.RUN API-Key  
+- Microsoft Sentinel  
+- Azure Logic App (Flex Consumption plan)
+
+**Deployment**
+
+- Click below to deploy Azure Logic App with **Flex Consumption plan**
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fmaster%2FSolutions%2FANY.RUN%2FPlaybooks%2FSandbox-URL%2Fazuredeploy.json)
+
+- Enter the parameters required for deploying the Logic App and click **Review + create**.
+
+![logic_app_deployment](Images/URL_004.png)
+
+- Description of the required parameters:
+
+| Parameter Name                  | Description                                                                 |
+|---------------------------------|-----------------------------------------------------------------------------|
+| LogicAppName                    | Workflow name.                                                              |
+| AzureTenantId                   | Tenant ID for authentication in connections.                                |
+| AzureClientId                   | Client ID for authentication (ID of the App Registration created before).   |
+| azureClientSecret               | Client Secret for authentication.                                           |
+| keyVaultName                    | Key Vault name.                                                             |
+| keyVaultUri                     | Key Vault URI (copy Vault URI from your Key Vault overview).                |
+
+**Logic App configuration (Optional)**
+
+**ANY.RUN Sandbox analysis parameters**  
+The URL analysis parameters in ANY.RUN Sandbox are defined in the **HTTP-RunNewURLAnalysis** action.
+
+![analysis_action](Images/URL_001.png)
+
+- Analysis options are specified in the HTTP request body.
+
+![analysis_parameters](Images/URL_002.png)
+
+- Description of the default parameters: (таблица из оригинала)
+
+**Simultaneous Analysis of Objects in ANY.RUN Sandbox**  
+To increase the speed of incident enrichment, you can analyze objects simultaneously. To do this, go to `For each - URL` loop > `Settings` and increase the `Degree of parallelism` value.
+
+![parallel_analysis](Images/URL_003.png)
+
+#### 2. Analyze Files from Microsoft Sentinel Incidents via ANY.RUN Sandbox (Sandbox-File)
+
+**Overview**  
+This playbook allows you to send files from incidents for analysis in the ANY.RUN Sandbox. It uploads the file from the endpoint to Azure Blob Storage and then forwards it to ANY.RUN Sandbox using Azure Logic App and Azure Function App.
+
+**Requirements:**  
+- ANY.RUN API-Key  
+- Microsoft Sentinel  
+- Azure Logic App (Flex Consumption plan)  
+- Azure Function App (Flex Consumption plan)  
+- Azure Blob Storage  
+
+**Deployment**
+
+**Child Logic App**  
+First, you need to deploy the child Logic App.
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fmaster%2FSolutions%2FANY.RUN%2FPlaybooks%2FSandbox-File-Common%2Fazuredeploy.json)
+
+![child_logic_app_deployment](Images/File_004.png)
+
+**Parent Logic Apps** (Windows / Ubuntu / Debian)
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fmaster%2FSolutions%2FANY.RUN%2FPlaybooks%2FSandbox-File-Windows%2Fazuredeploy.json)  
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fmaster%2FSolutions%2FANY.RUN%2FPlaybooks%2FSandbox-File-Ubuntu%2Fazuredeploy.json)  
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fmaster%2FSolutions%2FANY.RUN%2FPlaybooks%2FSandbox-File-Debian%2Fazuredeploy.json)
+
+![parent_logic_app_deployment](Images/File_015.png)
+
+**Storage Account Configuration**  
+Assign **Storage Account Contributor** role to the child Logic App `ANYRUN-Submit-File-to-Blob`.
+
+![storage_child_logic_app](Images/File_006.png)
+
+#### 3. Analyze All Entities via ANY.RUN Sandbox and Microsoft Defender for Endpoint (Sandbox-File-Defender)
+
+**Overview**  
+This template makes the incident enrichment process in Microsoft Sentinel even more automated if you are also using Microsoft Defender for Endpoint (MDE).
+
+**Deployment**
+
+- Click below to deploy Azure Logic App with **Flex Consumption plan**
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fmaster%2FSolutions%2FANY.RUN%2FPlaybooks%2FSandbox-File-Defender%2Fazuredeploy.json)
+
+![logic_app_deployment](Images/Defender_011.png)
+
+**Storage Account Configuration**
+
+![storage_logic_app](Images/Defender_010.png)
+
+**Microsoft Defender for Endpoint configuration and additional script**
+
+Enable **Live Response**, **Live Response for Servers**, and **Live Response unsigned script execution**.
+
+![enable_live_response](Images/Defender_002.png)
+
+Upload helper scripts:
+
+![run_live_response](Images/Defender_003.png)  
+![click_upload_file](Images/Defender_004.png)  
+![select_file_to_upload](Images/Defender_005.png)
+
+**Logic App configuration (Optional)**
+
+![analysis_action_url](Images/Defender_007.png)  
+![analysis_parameters_file](Images/Defender_018.png)  
+![general_parametrs_actions](Images/Defender_019.png)
 
 ## Request Support or Access to ANY.RUN’s Products
 
