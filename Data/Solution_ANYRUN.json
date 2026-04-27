@@ -12,7 +12,7 @@
         "Playbooks/Sandbox-File-Debian/azuredeploy.json",
         "Playbooks/Sandbox-File-Defender/azuredeploy.json"
     ],
-    "BasePath": "/Users/sotrudnik/GitHub/Azure-Sentinel",
+    "BasePath": "/Users/sotrudnik/GitHub/Azure-Sentinel/ANY.RUN",
     "Version": "1.0.0",
     "Metadata": "SolutionMetadata.json",
     "TemplateSpec": true
