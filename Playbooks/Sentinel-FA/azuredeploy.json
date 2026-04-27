@@ -181,7 +181,7 @@
                 "WaitSection"
             ],
             "properties": {
-                "packageUri": "https://github.com/anyrun/anyrun-integration-microsoft/raw/refs/heads/main/Microsoft%20Sentinel/Function%20App/ANYRUN-Sentinel-FA.zip",
+                "packageUri": "https://github.com/Azure/Azure-Sentinel/raw/refs/heads/master/Solutions/ANY.RUN/Playbooks/Sentinel-FA/Sentinel-FA.zip",
                 "remoteBuild": true
             }
         },
