@@ -388,7 +388,7 @@ First, you need to deploy the child Logic App, as its parameters are required fo
 
 Click below to deploy Child Azure Logic App with **Flex Consumption plan**
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fmaster%2FSolutions%2FANY.RUN%2FPlaybooks%2FSandbox-File-Common%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FAzure-Sentinel%2Fmaster%2FSolutions%2FANY.RUN%2FPlaybooks%2FSubmit-File-to-Blob%2Fazuredeploy.json)
 
 ![child_logic_app_deployment](Images/File_004.png)
 
